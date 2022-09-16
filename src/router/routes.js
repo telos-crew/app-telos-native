@@ -1,3 +1,5 @@
+import { resolveRoutes } from "src/pages/resolve/routes";
+
 const routes = [
   {
     path: "/",
@@ -119,6 +121,14 @@ const routes = [
     path: "/profiles/add/profileLogin",
     component: () => import("pages/profiles/read/ProfileLogin.vue"),
     name: "profileLogin",
+  },
+
+  // arbitration portal
+  {
+    path: "/resolve",
+    component: () => import("pages/resolve/ResolvePortal.vue"),
+    name: "resolvePortal",
+    children: [...resolveRoutes],
   },
 ];
 

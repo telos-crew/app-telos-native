@@ -1,56 +1,80 @@
 <script>
 export default {
-  name: 'page-index',
+  name: "page-index",
   methods: {
-    goTo (route) {
-      this.$router.push({ path: route })
-    }
+    goTo(route) {
+      this.$router.push({ path: route });
+    },
   },
-  data () {
+  data() {
     return {
       cards: [
         {
-          title: 'Join <b>Groups</b>',
-          img: '../statics/app-icons/users.svg',
-          icon: 'group_work',
-          color: 'accent',
-          description: 'Register to vote in Telos Governance and other Decide groups.  Create your own.',
-          route: '/trails/treasuries'
+          title: "Join <b>Groups</b>",
+          img: "../statics/app-icons/users.svg",
+          icon: "group_work",
+          color: "accent",
+          description:
+            "Register to vote in Telos Governance and other Decide groups.  Create your own.",
+          route: "/trails/treasuries",
         },
         {
-          title: '<b>Decide</b> Together',
-          img: '../statics/app-icons/bar-chart.svg',
-          icon: 'how_to_vote',
-          color: 'negative',
-          description: 'Vote on Works, Amend and other eco-system ballots.',
-          route: '/trails/ballots'
-        }
-      ]
-    }
-  }
-}
+          title: "<b>Decide</b> Together",
+          img: "../statics/app-icons/bar-chart.svg",
+          icon: "how_to_vote",
+          color: "negative",
+          description: "Vote on Works, Amend and other eco-system ballots.",
+          route: "/trails/ballots",
+        },
+        {
+          title: "<b>Resolve</b> Disputes",
+          img: "../statics/app-icons/bar-chart.svg",
+          icon: "savings",
+          color: "primary",
+          description: "Resolve disagreements something something",
+          route: "/resolve",
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <template>
   <q-page>
     <div class="card-container q-pa-md row items-start">
-      <div v-for="card in cards" v-bind:key="card.title" class="landing-card" @click="goTo(card.route)">
+      <div
+        v-for="card in cards"
+        v-bind:key="card.title"
+        class="landing-card"
+        @click="goTo(card.route)"
+      >
         <div class="row">
-          <div class="col-1">
-          </div>
+          <div class="col-1"></div>
           <div class="col-6">
             <div v-html="card.title" class="card-title q-pa-md text-h4"></div>
           </div>
-          <div class="col-1">
-          </div>
+          <div class="col-1"></div>
           <div class="col-4 q-pa-md">
-              <q-avatar :color="card.color" text-color="white" class="card-avatar" font-size="70px" size="90px" :icon="card.icon">
-                <q-img v-if="!card.icon" class="card-img" :src="card.img"></q-img>
-              </q-avatar>
+            <q-avatar
+              :color="card.color"
+              text-color="white"
+              class="card-avatar"
+              font-size="70px"
+              size="90px"
+              :icon="card.icon"
+            >
+              <q-img v-if="!card.icon" class="card-img" :src="card.img"></q-img>
+            </q-avatar>
           </div>
         </div>
         <div class="row">
-              <div class="card-description q-pa-md text-h6" style="text-align: center">{{ card.description }}</div>
+          <div
+            class="card-description q-pa-md text-h6"
+            style="text-align: center"
+          >
+            {{ card.description }}
+          </div>
         </div>
       </div>
     </div>
@@ -88,5 +112,4 @@ export default {
 .card-img
   width: 100%
   height: auto
-
 </style>
