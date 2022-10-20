@@ -67,6 +67,7 @@ export default {
     developer: "Developer",
     advanced: "Advanced",
     resolve: "Resolve",
+    welcome: "Welcome",
     admin: "Admin",
     arbitrator: "Arbitrator",
     cases: "Cases",
