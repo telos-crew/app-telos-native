@@ -66,6 +66,10 @@ export default {
     authorizedApps: "Authorized apps",
     developer: "Developer",
     advanced: "Advanced",
+    resolve: "Resolve",
+    admin: "Admin",
+    arbitrator: "Arbitrator",
+    cases: "Cases",
   },
   notifications: {
     title: "Transactions",

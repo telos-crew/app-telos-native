@@ -19,10 +19,14 @@ export default {
         {
           label: this.$t("menu.elections"),
           route: "/trails/elections",
-        },        
+        },
         {
           label: this.$t("menu.proposals"),
           route: "/trails/ballots",
+        },
+        {
+          label: this.$t("menu.resolve"),
+          route: "/resolve",
         },
       ],
       localFileter: this.activeFilter,
