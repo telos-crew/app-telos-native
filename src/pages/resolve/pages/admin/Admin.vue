@@ -1,6 +1,6 @@
 <template>
     <div v-if="isResolveStoresAvailable" class="container">
-        <div class="q-pa-md stepper-wrap">
+        <div class="q-pa-md container__stepper-wrap">
             <q-stepper
                 v-model="electionStatus"
                 vertical
@@ -85,7 +85,7 @@
                 </q-step>
             </q-stepper>
         </div>
-        <div class="form-wrapper">
+        <div class="container__form-wrapper">
             <q-dialog v-model="form">
                 <init-election-modal
                     v-if="formType === 'initelection'"
@@ -189,11 +189,12 @@ export default {
 .container {
     display: flex;
     flex-direction: row;
+    max-width: none;
 
-    .stepper-wrap {
+    .container__stepper-wrap {
         flex: 1;
     }
-    .form-wrapper {
+    .container__form-wrapper {
         flex: 1;
     }
 }

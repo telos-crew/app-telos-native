@@ -1,5 +1,6 @@
 <template>
-    <div class="container">
+    <div class="case-action">
+        <p>
         <div v-if="act.name === 'readycase'">
             <strong>{{ authorization[0].actor }}</strong> changed case
             <strong>{{ actionData.case_id }}</strong
@@ -50,7 +51,7 @@
         <div v-if="act.name === 'respondoffer'">
             <strong>{{ authorization[0].actor }}</strong
             >&nbsp; {{ actionData.accept ? 'accepted' : 'rejected' }}
-            <span class="underline"
+            <span class="case-action__tooltip--underline"
                 >offer<q-tooltip>
                     {{ getOfferSyntax(parseInt(actionData.offer_id)) }}
                 </q-tooltip></span
@@ -108,11 +109,7 @@
             <strong>{{ authorization[0].actor }}</strong
             >&nbsp;<strong>closed case</strong> ({{ action.timestamp }})
         </div>
-        <!-- {{ action.timestamp }}
-    {{ action.timestamp }}
-    {{ action.timestamp }}
-    {{ action.timestamp }}
-    {{ action.timestamp }} -->
+        </p>
     </div>
 </template>
 
@@ -170,20 +167,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.padding {
-}
 
-.underline {
+.case-action__tooltip--underline {
     text-decoration: underline;
-}
-
-.q-tooltip .offer-tooltip {
-    font-size: 2rem;
-    line-height: 2.2rem;
-}
-
-.q-tooltip {
-    font-size: 1rem;
-    line-height: 1rem;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div v-if="isResolveStoresAvailable">
-        <div class="q-pb-xl stepper-wrap">
+        <div class="q-pb-xl arbitrator__stepper-wrap">
             <q-btn-toggle
                 :disable="[3, 4].includes(getArbitratorStatus)"
                 :model-value="getArbitratorStatus"
@@ -82,10 +82,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.stepper-wrap {
-    flex: 1;
-}
-.form-wrapper {
+.arbitrator__stepper-wrap {
     flex: 1;
 }
 </style>

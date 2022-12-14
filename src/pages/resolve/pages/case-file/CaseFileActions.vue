@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="case-file-actions">
         <case-file-action
             v-for="(action, index) in actions"
             :key="index"
@@ -19,7 +19,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.container {
+.case-file-actions {
     padding: 20px;
+    max-width: none;
 }
 </style>

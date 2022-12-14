@@ -1,8 +1,8 @@
 <template>
     <div v-if="isResolveStoresAvailable && caseFile">
         <div class="row">
-            <div class="part">
-                <intro-card heading="Case Summary">
+            <div class="row__block">
+                <intro-card heading="Case Summary" class="intro">
                     <p>
                         <strong>{{ caseFile.claimant }}</strong> is the
                         claimant, with
@@ -32,7 +32,7 @@
                         to submit their offers
                     </p>
                     <template v-slot:buttons>
-                        <div class="intro-buttons-wrap">
+                        <div class="intro__buttons-wrap">
                             <q-btn
                                 v-if="isAddClaimButtonVisible()"
                                 color="primary"
@@ -55,7 +55,7 @@
                     </template>
                 </intro-card>
             </div>
-            <div class="part">
+            <div class="row__block">
                 <case-steps :caseFile="caseFile" :claims="claims" />
             </div>
         </div>
@@ -76,7 +76,7 @@
             <h2 v-else>Case History</h2>
             <case-file-actions :actions="caseActionsHistory" :claims="claims" />
         </div>
-        <div class="case-file-modal-wrap">
+        <div class="case__modal">
             <q-dialog id="case-file-modal" v-model="form">
                 <add-claim-form
                     v-if="formType === 'addclaim'"
@@ -105,7 +105,6 @@ import AddClaimForm from './AddClaimForm.vue';
 import ShredCaseForm from '../../components/ShredCaseForm.vue';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
-import OffersTable from '../../components/OffersTable.vue';
 import { fetchClaims } from '../../util';
 
 export default {
@@ -115,8 +114,7 @@ export default {
         CaseSteps,
         CaseFileActions,
         AddClaimForm,
-        ShredCaseForm,
-        OffersTable
+        ShredCaseForm
     },
     data() {
         return {
@@ -268,19 +266,15 @@ export default {
 .row {
     flex-direction: row;
 
-    .part {
+    .row__block {
         flex: 4;
-
-        .part:last-child() {
-            flex: 6;
-        }
     }
 
-    .intro-buttons-wrap {
+    .intro__buttons-wrap {
         flex-direction: column;
     }
 
-    .case-file-modal-wrap {
+    .case__modal {
         flex: 1;
     }
 }
