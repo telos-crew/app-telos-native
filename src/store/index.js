@@ -2,14 +2,7 @@ import { createStore } from 'vuex';
 
 import accounts from './accounts';
 import profiles from './profiles';
-import works from './works';
 import notifications from './notifications';
-import trails from './trails';
-import transfers from './transfers';
-import tokens from './tokens';
-import validators from './validators';
-import testnet from './testnet';
-import poc from './poc';
 import general from './general';
 import { store } from 'quasar/wrappers';
 
@@ -23,14 +16,7 @@ export default store(function (/* { ssrContext } */) {
         modules: {
             accounts,
             profiles,
-            works,
             notifications,
-            poc,
-            testnet,
-            tokens,
-            trails,
-            transfers,
-            validators,
             general,
         },
 
