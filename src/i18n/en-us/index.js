@@ -62,6 +62,7 @@ export default {
         elections: 'Elections',
         proposals: 'Proposals',
         workerProposals: 'Worker proposals',
+        wishlist: 'Wishlist',
         tokens: 'Tokens',
         trailsTreasuries: 'DAOs',
         profiles: 'Profiles',

@@ -1,0 +1,54 @@
+<template>
+  <div id="ballot-filters">
+    <div class="sortWrap">
+      <q-select
+        v-model="sort"
+        label="Sort"
+        :options="options"
+        style="width: 250px"
+      >
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey"> No results </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+    </div>
+  </div>
+</template>
+
+<script>
+const options = [
+  { label: "Highest Approval", value: "highest-approval" },
+  { label: "Lowest Approval", value: "lowest-approval" }
+];
+export default {
+  data() {
+    return {
+      options,
+      sort: null,
+    };
+  },
+  watch: {
+    sort(newValue) {
+      this.$emit("onSortChange", newValue);
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+#ballot-filters {
+  width: 100%;
+  background: white;
+  box-shadow: 0px 20px 48px rgb(0 9 26 / 8%), 0px 7px 15px rgb(0 9 26 / 5%),
+    0px 3px 6px rgb(0 9 26 / 4%), 0px 1px 2.25px rgb(0 9 26 / 4%);
+  border-radius: 12px;
+  margin-bottom: 60px;
+  padding: 20px;
+
+  .sortWrap {
+    max-width: 300px;
+  }
+}
+</style>

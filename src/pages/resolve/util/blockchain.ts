@@ -1,3 +1,4 @@
+import { Ballot } from 'src/pages/wishlist/types/blockchain';
 import { Arbitrator, SymbolInfo } from '../types';
 
 const VALID_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz12345';
@@ -135,7 +136,10 @@ export const getSymbolInfo = (balance: string): SymbolInfo => {
             whole,
             decimal,
             symbol,
-            amount
+            amount,
+            amountNum: parseFloat(amount),
+            wholeNum: parseInt(whole, 10),
+            decimalNum: parseInt(decimal, 10)
         };
     }
     const [amount, symbol] = balance.split(' ');
@@ -149,7 +153,10 @@ export const getSymbolInfo = (balance: string): SymbolInfo => {
         whole,
         decimal,
         symbol,
-        amount
+        amount,
+        amountNum: parseFloat(amount),
+        wholeNum: parseInt(whole, 10),
+        decimalNum: 0
     };
 };
 
@@ -163,3 +170,34 @@ export const getAvailableArbitratorStatus = (arbitrator: Arbitrator) => {
     }
     return arbitrator.arb_status;
 };
+
+type BallotResults = {
+    netYes: number,
+    yes: number,
+    no: number,
+    abstain: number,
+    yesRatio: number,
+    adjustedYesRatio: number
+}
+
+export const getBallotResults = (ballot: Ballot): BallotResults => {
+    const { options } = ballot;
+    const yes: string =
+      options.find((option) => option.key === "yes")?.value || "0 WISH";
+    const no: string =
+      options.find((option) => option.key === "no")?.value || "0 WISH";
+    const abstain: string =
+      options.find((option) => option.key === "no")?.value || "0 WISH";
+    const yesNum = getSymbolInfo(yes).amountNum;
+    const noNum = getSymbolInfo(no).amountNum;
+    const abstainNum = getSymbolInfo(abstain).amountNum;
+    const netYes = yesNum - noNum;
+    return {
+        netYes,
+        yes: yesNum,
+        no: noNum,
+        abstain: abstainNum,
+        yesRatio: (yesNum + noNum === 0) ? 0 : yesNum / (yesNum + noNum),
+        adjustedYesRatio: (yesNum + noNum + abstainNum === 0) ? 0 : yesNum / (yesNum + noNum + abstainNum)
+    }
+}

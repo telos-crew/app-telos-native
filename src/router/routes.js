@@ -139,6 +139,11 @@ const routes = [
         name: 'resolvePortal',
         children: [...resolveRoutes],
     },
+    {
+        path: '/wishlist',
+        component: () => import('pages/wishlist/Wishlist.vue'),
+        name: 'wishlist',
+    },
 ];
 
 // Always leave this as last one
