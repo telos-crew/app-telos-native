@@ -32,25 +32,25 @@
 <script lang="ts">
 import { mapGetters } from 'vuex';
 export default {
-    methods: {
-        navigateToAdmin(): void {
-            (this as any).$router.push('/resolve/admin');
-        },
-        navigateToArbitrator(): void {
-            (this as any).$router.push('/resolve/arbitrator');
-        }
-    },
-    computed: {
-        ...mapGetters({
-            isArbitrator: 'resolve/isArbitrator'
-        }),
-        isResolveAdmin(): any {
-            return (this as any).$store.getters['resolve/isResolveAdmin'];
-        },
-        isAuthenticated(): any {
-            return (this as any).$store.getters['accounts/isAuthenticated'];
-        }
-    }
+	methods: {
+		navigateToAdmin(): void {
+			(this as any).$router.push('/resolve/admin');
+		},
+		navigateToArbitrator(): void {
+			(this as any).$router.push('/resolve/arbitrator');
+		}
+	},
+	computed: {
+		...mapGetters({
+			isArbitrator: 'resolve/isArbitrator'
+		}),
+		isResolveAdmin(): any {
+			return (this as any).$store.getters['resolve/isResolveAdmin'];
+		},
+		isAuthenticated(): any {
+			return (this as any).$store.getters['accounts/isAuthenticated'];
+		}
+	}
 };
 </script>
 

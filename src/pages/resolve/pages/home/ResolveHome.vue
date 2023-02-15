@@ -14,10 +14,10 @@ import Intro from './ResolveIntro.vue';
 import ElectionsStatus from './ElectionsStatus.vue';
 
 export default {
-    components: {
-        Intro,
-        ElectionsStatus
-    }
+	components: {
+		Intro,
+		ElectionsStatus
+	}
 };
 </script>
 

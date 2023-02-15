@@ -57,60 +57,60 @@ import { OFFER_STATUS_LIST } from '../constants';
 import RespondOfferForm from './RespondOfferForm.vue';
 
 export default {
-    props: ['caseId', 'caseFile'],
-    components: {
-        RespondOfferForm
-    },
-    data() {
-        return {
-            interval: null,
-            offer: null,
-            form: false,
-            formType: null,
-            columns: [
-                { name: 'status', label: this.$t('pages.resolve.offers_table_status'), field: 'status' },
-                {
-                    name: 'estimated_hours',
-                    label: this.$t('pages.resolve.offers_table_hours'),
-                    field: 'estimated_hours'
-                },
-                {
-                    name: 'arbitrator',
-                    label: this.$t('pages.resolve.offers_table_arb'),
-                    field: 'arbitrator'
-                },
-                { name: 'hourly_rate', label: this.$t('pages.resolve.offers_table_rate'), field: 'hourly_rate' },
-                { name: 'total', label: this.$t('pages.resolve.offers_table_total'), field: 'total' },
-                { name: 'actions', label: this.$t('pages.resolve.offers_table_actions'), field: 'actions' }
-            ]
-        };
-    },
-    methods: {
-        closeModal() {
-            this.form = false;
-            this.formType = null;
-        },
-        getOfferStatus(index) {
-            return this.$t(OFFER_STATUS_LIST[index]);
-        },
-        canAccountAcceptOffer(status) {
-            if (this.account !== this.caseFile.claimant) return false;
-            if (status !== 1) return false;
-            return true;
-        }
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account',
-            offers: 'resolve/offers'
-        }),
-        offers() {
-            return this.$store.state.resolve.offers.filter(offer => {
-                const isCase = offer.case_id === this.caseId;
-                return isCase;
-            });
-        }
-    }
+	props: ['caseId', 'caseFile'],
+	components: {
+		RespondOfferForm
+	},
+	data() {
+		return {
+			interval: null,
+			offer: null,
+			form: false,
+			formType: null,
+			columns: [
+				{ name: 'status', label: this.$t('pages.resolve.offers_table_status'), field: 'status' },
+				{
+					name: 'estimated_hours',
+					label: this.$t('pages.resolve.offers_table_hours'),
+					field: 'estimated_hours'
+				},
+				{
+					name: 'arbitrator',
+					label: this.$t('pages.resolve.offers_table_arb'),
+					field: 'arbitrator'
+				},
+				{ name: 'hourly_rate', label: this.$t('pages.resolve.offers_table_rate'), field: 'hourly_rate' },
+				{ name: 'total', label: this.$t('pages.resolve.offers_table_total'), field: 'total' },
+				{ name: 'actions', label: this.$t('pages.resolve.offers_table_actions'), field: 'actions' }
+			]
+		};
+	},
+	methods: {
+		closeModal() {
+			this.form = false;
+			this.formType = null;
+		},
+		getOfferStatus(index) {
+			return this.$t(OFFER_STATUS_LIST[index]);
+		},
+		canAccountAcceptOffer(status) {
+			if (this.account !== this.caseFile.claimant) return false;
+			if (status !== 1) return false;
+			return true;
+		}
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account',
+			offers: 'resolve/offers'
+		}),
+		offers() {
+			return this.$store.state.resolve.offers.filter(offer => {
+				const isCase = offer.case_id === this.caseId;
+				return isCase;
+			});
+		}
+	}
 };
 </script>
 

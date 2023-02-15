@@ -4,12 +4,12 @@
 
 <script>
 export default {
-    props: ['hash'],
-    computed: {
-        hashLink() {
-            return `https://api.dstor.cloud/ipfs/${this.hash}`;
-        }
-    }
+	props: ['hash'],
+	computed: {
+		hashLink() {
+			return `https://api.dstor.cloud/ipfs/${this.hash}`;
+		}
+	}
 };
 </script>
 

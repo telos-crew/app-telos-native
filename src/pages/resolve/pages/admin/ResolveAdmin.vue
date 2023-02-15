@@ -99,66 +99,66 @@ import { mapGetters } from 'vuex';
 import { IS_TIME_PASSED } from '../../util';
 
 export default {
-    components: {
-        InitElectionModal,
-        BeginVotingModal
-    },
-    data() {
-        return {
-            form: null,
-            formType: null
-        };
-    },
-    methods: {
-        closeModal() {
-            this.form = null;
-        },
-        async endElection() {
-            const endElectionActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'endelection',
-                    data: {}
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(endElectionActions);
-            } catch (err) {
-                console.log('endElection error: ', err);
-            }
-        }
-    },
-    computed: {
-        ...mapGetters({
-            arbSeatsAvailable: 'resolve/arbSeatsAvailable',
-            isResolveStoresAvailable: 'resolve/isResolveStoresAvailable'
-        }),
-        electionStatus() {
-            const resolve = this.$store.state.resolve;
-            if (resolve && resolve.config && resolve.elections) {
-                const { current_election_id } = resolve;
-                const currentElection = resolve.elections.find(
-                    e => e.id === current_election_id
-                );
-                if (!currentElection) return null;
-                const {
-                    status,
-                    end_voting_ts,
-                    end_add_candidates_ts
-                } = currentElection;
-                if (status === 1) {
-                    return (IS_TIME_PASSED(end_add_candidates_ts) ? 'election-ready' : 'candidate-registration');
-                }
-                if (status === 2) {
-                    // see if voting period has ended
-                    return (IS_TIME_PASSED(end_voting_ts) ? 'election-finalization' : 'voting');
-                }
-                return status;
-            }
-            return null;
-        }
-    },
-    mounted() {}
+	components: {
+		InitElectionModal,
+		BeginVotingModal
+	},
+	data() {
+		return {
+			form: null,
+			formType: null
+		};
+	},
+	methods: {
+		closeModal() {
+			this.form = null;
+		},
+		async endElection() {
+			const endElectionActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'endelection',
+					data: {}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(endElectionActions);
+			} catch (err) {
+				console.log('endElection error: ', err);
+			}
+		}
+	},
+	computed: {
+		...mapGetters({
+			arbSeatsAvailable: 'resolve/arbSeatsAvailable',
+			isResolveStoresAvailable: 'resolve/isResolveStoresAvailable'
+		}),
+		electionStatus() {
+			const resolve = this.$store.state.resolve;
+			if (resolve && resolve.config && resolve.elections) {
+				const { current_election_id } = resolve;
+				const currentElection = resolve.elections.find(
+					e => e.id === current_election_id
+				);
+				if (!currentElection) return null;
+				const {
+					status,
+					end_voting_ts,
+					end_add_candidates_ts
+				} = currentElection;
+				if (status === 1) {
+					return (IS_TIME_PASSED(end_add_candidates_ts) ? 'election-ready' : 'candidate-registration');
+				}
+				if (status === 2) {
+					// see if voting period has ended
+					return (IS_TIME_PASSED(end_voting_ts) ? 'election-finalization' : 'voting');
+				}
+				return status;
+			}
+			return null;
+		}
+	},
+	mounted() {}
 };
 </script>
 

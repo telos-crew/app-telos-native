@@ -33,49 +33,49 @@ import FileUploadInput from './FileUploadInput.vue';
 
 // claimant, claim_link, respondant, claim_category
 export default {
-    props: ['close', 'caseId', 'claimId'],
-    components: {
-        FileUploadInput
-    },
-    data() {
-        return {
-            decisionLink: ''
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        })
-    },
-    methods: {
-        validateId,
-        setDecisionLink(link) {
-            this.decisionLink = link;
-        },
-        isLinkValid() {
-            const isValid = validateIpfsHash(this.decisionLink);
-            return isValid;
-        },
-        async submit() {
-            const setRulingActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'setruling',
-                    data: {
-                        case_id: this.caseId,
-                        assigned_arb: this.account,
-                        case_ruling: this.decisionLink
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(setRulingActions);
-                this.close();
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+	props: ['close', 'caseId', 'claimId'],
+	components: {
+		FileUploadInput
+	},
+	data() {
+		return {
+			decisionLink: ''
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		})
+	},
+	methods: {
+		validateId,
+		setDecisionLink(link) {
+			this.decisionLink = link;
+		},
+		isLinkValid() {
+			const isValid = validateIpfsHash(this.decisionLink);
+			return isValid;
+		},
+		async submit() {
+			const setRulingActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'setruling',
+					data: {
+						case_id: this.caseId,
+						assigned_arb: this.account,
+						case_ruling: this.decisionLink
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(setRulingActions);
+				this.close();
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

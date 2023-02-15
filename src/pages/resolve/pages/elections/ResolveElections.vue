@@ -56,58 +56,58 @@ import TelosProfileAvatar from 'src/components/common/TelosProfileAvatar.vue';
 import { mapGetters } from 'vuex';
 
 export default {
-    components: {
-        ElectionsTable,
-        ElectionSteps,
-        IntroCard,
-        TelosProfileAvatar
-    },
-    data() {
-        return {};
-    },
-    computed: {
-        ...mapGetters({
-            isPastNomination: 'resolve/isPastNomination',
-            isPastAddCandidates: 'resolve/isPastAddCandidates',
-            isResolveStoresAvailable: 'resolve/isResolveStoresAvailable',
-            account: 'accounts/account'
-        }),
-        nominees() {
-            const nomineesList = this.$store.state.resolve.nominees;
-            if (nomineesList) {
-                return nomineesList;
-            }
-            return [];
-        }
-    },
-    methods: {
-        isRemoveNomineeVisible(account) {
-            return (
-                !this.isPastNomination &&
+	components: {
+		ElectionsTable,
+		ElectionSteps,
+		IntroCard,
+		TelosProfileAvatar
+	},
+	data() {
+		return {};
+	},
+	computed: {
+		...mapGetters({
+			isPastNomination: 'resolve/isPastNomination',
+			isPastAddCandidates: 'resolve/isPastAddCandidates',
+			isResolveStoresAvailable: 'resolve/isResolveStoresAvailable',
+			account: 'accounts/account'
+		}),
+		nominees() {
+			const nomineesList = this.$store.state.resolve.nominees;
+			if (nomineesList) {
+				return nomineesList;
+			}
+			return [];
+		}
+	},
+	methods: {
+		isRemoveNomineeVisible(account) {
+			return (
+				!this.isPastNomination &&
                 this.isPastAddCandidates &&
                 account === this.account
-            );
-        },
-        async removeNominee() {
-            const unregNomineeActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'unregnominee',
-                    data: {
-                        nominee: this.account
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(unregNomineeActions);
-            } catch (err) {
-                console.log('endElection error: ', err);
-            }
-        },
-        getIpfsLink(nominee) {
-            return `https://api.dstor.cloud/ipfs/${nominee.credentials_link}`;
-        }
-    }
+			);
+		},
+		async removeNominee() {
+			const unregNomineeActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'unregnominee',
+					data: {
+						nominee: this.account
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(unregNomineeActions);
+			} catch (err) {
+				console.log('endElection error: ', err);
+			}
+		},
+		getIpfsLink(nominee) {
+			return `https://api.dstor.cloud/ipfs/${nominee.credentials_link}`;
+		}
+	}
 };
 </script>
 

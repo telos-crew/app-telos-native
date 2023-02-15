@@ -169,42 +169,42 @@ import IpfsLink2 from '../../components/IpfsLink2.vue';
 import { DECISION_CLASS_LIST } from '../../constants';
 
 export default {
-    components: { IpfsLink2 },
-    props: ['action', 'index', 'claims'],
-    computed: {
-        offers() {
-            return this.$store.state.resolve.offers;
-        },
-        act() {
-            return this.action.act;
-        },
-        authorization() {
-            return this.action.act.authorization;
-        },
-        actionData() {
-            return this.action.act.data;
-        }
-    },
-    methods: {
-        decisionClass(type) {
-            return this.$t(DECISION_CLASS_LIST[type]);
-        },
-        createIpfsLink(hash) {
-            return `https://api.dstor.cloud/ipfs/${hash}`;
-        },
-        getOffer(id) {
-            if (!this.offers) return null;
-            const offer = this.offers.find(
-                (offer) => offer.offer_id === id
-            );
-            return offer;
-        },
-        getOfferSyntax(id) {
-            const offer = this.getOffer(id);
-            if (!offer) return null;
-            return `${offer.arbitrator} estimated ${offer.estimated_hours} hours at ${offer.hourly_rate} per hour`;
-        }
-    }
+	components: { IpfsLink2 },
+	props: ['action', 'index', 'claims'],
+	computed: {
+		offers() {
+			return this.$store.state.resolve.offers;
+		},
+		act() {
+			return this.action.act;
+		},
+		authorization() {
+			return this.action.act.authorization;
+		},
+		actionData() {
+			return this.action.act.data;
+		}
+	},
+	methods: {
+		decisionClass(type) {
+			return this.$t(DECISION_CLASS_LIST[type]);
+		},
+		createIpfsLink(hash) {
+			return `https://api.dstor.cloud/ipfs/${hash}`;
+		},
+		getOffer(id) {
+			if (!this.offers) return null;
+			const offer = this.offers.find(
+				(offer) => offer.offer_id === id
+			);
+			return offer;
+		},
+		getOfferSyntax(id) {
+			const offer = this.getOffer(id);
+			if (!offer) return null;
+			return `${offer.arbitrator} estimated ${offer.estimated_hours} hours at ${offer.hourly_rate} per hour`;
+		}
+	}
 };
 </script>
 

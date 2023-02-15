@@ -9,90 +9,90 @@
 
 <script>
 import {
-    fetchArbTable
+	fetchArbTable
 } from './util';
 
 export default {
-    data() {
-        return {
-            tab: 'mails',
-            interval: null
-        };
-    },
-    computed: {
-        getCurrentRouteName() {
-            if (this.$route.params && this.$route.params.id) {
-                return `${this.$route.name} ${this.$route.params.id}`;
-            }
-            return this.$route.name;
-        }
-    },
-    methods: {
-        async getArbConfig() {
-            try {
-                const [config] = await fetchArbTable(this, 'config');
-                this.$store.commit('resolve/setArbConfig', config);
-            } catch (err) {
-                console.warn('fetchConfig error: ', err);
-            }
-        },
-        async getArbitrators() {
-            try {
-                const arbitrators = await fetchArbTable(this, 'arbitrators');
-                this.$store.commit('resolve/setArbitrators', arbitrators);
-            } catch (err) {
-                console.warn('fetchArbitrators error: ', err);
-            }
-        },
-        async getElections() {
-            try {
-                const elections = await fetchArbTable(this, 'elections', { reverse: true });
-                this.$store.commit('resolve/setElections', elections);
-            } catch (err) {
-                console.warn('getElections error: ', err);
-            }
-        },
-        async getNominees() {
-            try {
-                const nominees = await fetchArbTable(this, 'nominees');
-                this.$store.commit('resolve/setNominees', nominees);
-            } catch (err) {
-                console.warn('getNominees error: ', err);
-            }
-        },
-        async getCaseFiles() {
-            try {
-                const caseFilesConfig = { reverse: true };
-                const caseFiles = await fetchArbTable(this, 'casefiles', caseFilesConfig);
-                this.$store.commit('resolve/setCaseFiles', caseFiles);
-            } catch (err) {
-                console.warn('getCaseFiles error: ', err);
-            }
-        },
-        async getOffers() {
-            try {
-                const offers = await fetchArbTable(this, 'offers', { limit: 1000 });
-                this.$store.commit('resolve/setOffers', offers);
-            } catch (err) {
-                console.warn('getOffers error: ', err);
-            }
-        },
-        fetchAllData() {
-            this.getArbConfig();
-            this.getArbitrators();
-            this.getElections();
-            this.getNominees();
-            this.getCaseFiles();
-            this.getOffers();
-        }
-    },
-    mounted() {
-        this.fetchAllData();
-        this.interval = setInterval(this.fetchAllData, 10000);
-    },
-    unmounted() {
-        clearInterval(this.interval);
-    }
+	data() {
+		return {
+			tab: 'mails',
+			interval: null
+		};
+	},
+	computed: {
+		getCurrentRouteName() {
+			if (this.$route.params && this.$route.params.id) {
+				return `${this.$route.name} ${this.$route.params.id}`;
+			}
+			return this.$route.name;
+		}
+	},
+	methods: {
+		async getArbConfig() {
+			try {
+				const [config] = await fetchArbTable(this, 'config');
+				this.$store.commit('resolve/setArbConfig', config);
+			} catch (err) {
+				console.warn('fetchConfig error: ', err);
+			}
+		},
+		async getArbitrators() {
+			try {
+				const arbitrators = await fetchArbTable(this, 'arbitrators');
+				this.$store.commit('resolve/setArbitrators', arbitrators);
+			} catch (err) {
+				console.warn('fetchArbitrators error: ', err);
+			}
+		},
+		async getElections() {
+			try {
+				const elections = await fetchArbTable(this, 'elections', { reverse: true });
+				this.$store.commit('resolve/setElections', elections);
+			} catch (err) {
+				console.warn('getElections error: ', err);
+			}
+		},
+		async getNominees() {
+			try {
+				const nominees = await fetchArbTable(this, 'nominees');
+				this.$store.commit('resolve/setNominees', nominees);
+			} catch (err) {
+				console.warn('getNominees error: ', err);
+			}
+		},
+		async getCaseFiles() {
+			try {
+				const caseFilesConfig = { reverse: true };
+				const caseFiles = await fetchArbTable(this, 'casefiles', caseFilesConfig);
+				this.$store.commit('resolve/setCaseFiles', caseFiles);
+			} catch (err) {
+				console.warn('getCaseFiles error: ', err);
+			}
+		},
+		async getOffers() {
+			try {
+				const offers = await fetchArbTable(this, 'offers', { limit: 1000 });
+				this.$store.commit('resolve/setOffers', offers);
+			} catch (err) {
+				console.warn('getOffers error: ', err);
+			}
+		},
+		fetchAllData() {
+			this.getArbConfig();
+			this.getArbitrators();
+			this.getElections();
+			this.getNominees();
+			this.getCaseFiles();
+			this.getOffers();
+		}
+	},
+	mounted() {
+		this.fetchAllData();
+		this.interval = setInterval(this.fetchAllData, 10000);
+	},
+	unmounted() {
+		clearInterval(this.interval);
+	}
 };
 </script>
 

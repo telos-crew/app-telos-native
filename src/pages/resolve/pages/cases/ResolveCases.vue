@@ -37,29 +37,29 @@ import { mapGetters } from 'vuex';
 import CreateNewCaseModal from '../case-file/CreateNewCaseModal.vue';
 
 export default {
-    components: {
-        IntroCard,
-        CaseFilesTable,
-        MeetArbitrators,
-        CreateNewCaseModal
-    },
-    data() {
-        return {
-            isModalVisible: false
-        };
-    },
-    methods: {
-        toggleModal() {
-            this.isModalVisible = !this.isModalVisible;
-        },
-        createNewCase() {}
-    },
-    computed: {
-        ...mapGetters({
-            isResolveStoresAvailable: 'resolve/isResolveStoresAvailable',
-            isAuthenticated: 'accounts/isAuthenticated'
-        })
-    }
+	components: {
+		IntroCard,
+		CaseFilesTable,
+		MeetArbitrators,
+		CreateNewCaseModal
+	},
+	data() {
+		return {
+			isModalVisible: false
+		};
+	},
+	methods: {
+		toggleModal() {
+			this.isModalVisible = !this.isModalVisible;
+		},
+		createNewCase() {}
+	},
+	computed: {
+		...mapGetters({
+			isResolveStoresAvailable: 'resolve/isResolveStoresAvailable',
+			isAuthenticated: 'accounts/isAuthenticated'
+		})
+	}
 };
 </script>
 

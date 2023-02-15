@@ -31,99 +31,99 @@ import { mapGetters } from 'vuex';
 import { GET_TABLE_ROWS } from '../util';
 
 export default {
-    props: ['close', 'caseId', 'afterReadyCase'],
-    data() {
-        return {
-            balance: 0,
-            fee: this.$store.state.resolve.config.fee_usd,
-            exchangeRate: null
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        }),
-        tlosFee() {
-            // todo use strings for math
-            return parseFloat(this.fee.replace(' USD', '')) / this.exchangeRate;
-        },
-        deficit() {
-            if (!this.balance) return 0;
-            return this.tlosFee - this.balance.replace(' TLOS', '');
-        },
-        adjustedDeficit() {
-            return this.deficit * 1.01;
-        }
-    },
-    methods: {
-        async submit() {
-            let actions = [];
-            if (this.deficit > 0) {
-                actions.push({
-                    account: 'eosio.token',
-                    name: 'transfer',
-                    data: {
-                        from: this.account,
-                        to: process.env.ARB_CONTRACT,
-                        quantity: `${this.adjustedDeficit.toFixed(4)} TLOS`,
-                        memo: 'For arbitration fee'
-                    }
-                });
-            }
-            actions.push({
-                account: process.env.ARB_CONTRACT,
-                name: 'readycase',
-                data: {
-                    claimant: this.account,
-                    case_id: this.caseId
-                }
-            });
-            try {
-                await this.$store.$api.signTransaction(actions);
-                setTimeout(this.afterReadyCase, 5000);
-                this.close();
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        },
-        async getAccountBalance() {
-            try {
-                let balance = '0.0000 TLOS';
-                const { rows } = await GET_TABLE_ROWS({
-                    limit: 1,
-                    code: process.env.ARB_CONTRACT,
-                    scope: this.account,
-                    table: 'accounts'
-                });
-                if (rows[0]) {
-                    balance = rows[0].balance;
-                }
-                this.balance = balance;
-            } catch (err) {
-                console.log('getAccountBalance error: ', err);
-            }
-        },
-        async getExchangeRate() {
-            try {
-                const { rows: exchangeRates } = await GET_TABLE_ROWS({
-                    limit: 10,
-                    code: 'delphioracle',
-                    scope: 'tlosusd',
-                    table: 'datapoints'
-                });
-                this.exchangeRate =
+	props: ['close', 'caseId', 'afterReadyCase'],
+	data() {
+		return {
+			balance: 0,
+			fee: this.$store.state.resolve.config.fee_usd,
+			exchangeRate: null
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		}),
+		tlosFee() {
+			// todo use strings for math
+			return parseFloat(this.fee.replace(' USD', '')) / this.exchangeRate;
+		},
+		deficit() {
+			if (!this.balance) return 0;
+			return this.tlosFee - this.balance.replace(' TLOS', '');
+		},
+		adjustedDeficit() {
+			return this.deficit * 1.01;
+		}
+	},
+	methods: {
+		async submit() {
+			let actions = [];
+			if (this.deficit > 0) {
+				actions.push({
+					account: 'eosio.token',
+					name: 'transfer',
+					data: {
+						from: this.account,
+						to: process.env.ARB_CONTRACT,
+						quantity: `${this.adjustedDeficit.toFixed(4)} TLOS`,
+						memo: 'For arbitration fee'
+					}
+				});
+			}
+			actions.push({
+				account: process.env.ARB_CONTRACT,
+				name: 'readycase',
+				data: {
+					claimant: this.account,
+					case_id: this.caseId
+				}
+			});
+			try {
+				await this.$store.$api.signTransaction(actions);
+				setTimeout(this.afterReadyCase, 5000);
+				this.close();
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		},
+		async getAccountBalance() {
+			try {
+				let balance = '0.0000 TLOS';
+				const { rows } = await GET_TABLE_ROWS({
+					limit: 1,
+					code: process.env.ARB_CONTRACT,
+					scope: this.account,
+					table: 'accounts'
+				});
+				if (rows[0]) {
+					balance = rows[0].balance;
+				}
+				this.balance = balance;
+			} catch (err) {
+				console.log('getAccountBalance error: ', err);
+			}
+		},
+		async getExchangeRate() {
+			try {
+				const { rows: exchangeRates } = await GET_TABLE_ROWS({
+					limit: 10,
+					code: 'delphioracle',
+					scope: 'tlosusd',
+					table: 'datapoints'
+				});
+				this.exchangeRate =
                     exchangeRates.reduce((acc, curr) => acc + curr.value, 0) /
                     exchangeRates.length /
                     10000;
-            } catch (err) {
-                console.log('getExchangeRate error: ', err);
-            }
-        }
-    },
-    mounted() {
-        this.getAccountBalance();
-        this.getExchangeRate();
-    }
+			} catch (err) {
+				console.log('getExchangeRate error: ', err);
+			}
+		}
+	},
+	mounted() {
+		this.getAccountBalance();
+		this.getExchangeRate();
+	}
 };
 </script>
 

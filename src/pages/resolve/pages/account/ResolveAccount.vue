@@ -17,15 +17,15 @@ import IntroCard from '../../components/IntroCard.vue';
 import AccountBalance from './AccountBalance.vue';
 
 export default {
-    components: {
-        IntroCard,
-        AccountBalance
-    },
-    data () {
-        return {
+	components: {
+		IntroCard,
+		AccountBalance
+	},
+	data () {
+		return {
 
-        };
-    }
+		};
+	}
 };
 </script>
 

@@ -25,47 +25,47 @@ import { validateIpfsHash } from '../util';
 import FileUploadInput from './FileUploadInput.vue';
 
 export default {
-    props: ['close', 'onSubmit'],
-    components: {
-        FileUploadInput
-    },
-    data() {
-        return {
-            credentialsLink: ''
-        };
-    },
-    computed: {
-        isCredentialsLinkValid() {
-            return validateIpfsHash(this.credentialsLink);
-        },
-        account_name() {
-            return this.$store.state.accounts.account;
-        }
-    },
-    methods: {
-        setCredentialsLink(link) {
-            this.credentialsLink = link;
-        },
-        async nominateSelf() {
-            const nominateSelfActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'regarb',
-                    data: {
-                        credentials_link: this.credentialsLink,
-                        nominee: this.account_name
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(nominateSelfActions);
-                this.close();
-                setTimeout(this.onSubmit, 5000);
-            } catch (err) {
-                console.log('nominateSelf error: ', err);
-            }
-        }
-    }
+	props: ['close', 'onSubmit'],
+	components: {
+		FileUploadInput
+	},
+	data() {
+		return {
+			credentialsLink: ''
+		};
+	},
+	computed: {
+		isCredentialsLinkValid() {
+			return validateIpfsHash(this.credentialsLink);
+		},
+		account_name() {
+			return this.$store.state.accounts.account;
+		}
+	},
+	methods: {
+		setCredentialsLink(link) {
+			this.credentialsLink = link;
+		},
+		async nominateSelf() {
+			const nominateSelfActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'regarb',
+					data: {
+						credentials_link: this.credentialsLink,
+						nominee: this.account_name
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(nominateSelfActions);
+				this.close();
+				setTimeout(this.onSubmit, 5000);
+			} catch (err) {
+				console.log('nominateSelf error: ', err);
+			}
+		}
+	}
 };
 </script>
 

@@ -21,45 +21,45 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    props: ['close', 'caseId'],
-    data() {
-        return {
-            hourly_rate: 1,
-            estimated_hours: 1
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        })
-    },
-    methods: {
-        async submit() {
-            const { offers } = this.$store.state.resolve;
-            const arbCaseOffer = offers.find(
-                offer =>
-                    offer.case_id === this.caseId &&
+	props: ['close', 'caseId'],
+	data() {
+		return {
+			hourly_rate: 1,
+			estimated_hours: 1
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		})
+	},
+	methods: {
+		async submit() {
+			const { offers } = this.$store.state.resolve;
+			const arbCaseOffer = offers.find(
+				offer =>
+					offer.case_id === this.caseId &&
                     offer.arbitrator === this.account
-            );
+			);
 
-            const dismissOfferActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'dismissoffer',
-                    data: {
-                        case_id: this.caseId,
-                        offer_id: arbCaseOffer.offer_id
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(dismissOfferActions);
-                setTimeout(this.close, 2000);
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+			const dismissOfferActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'dismissoffer',
+					data: {
+						case_id: this.caseId,
+						offer_id: arbCaseOffer.offer_id
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(dismissOfferActions);
+				setTimeout(this.close, 2000);
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

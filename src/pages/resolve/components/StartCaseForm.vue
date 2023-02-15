@@ -35,46 +35,46 @@ import { mapGetters } from 'vuex';
 import FileUploadInput from './FileUploadInput.vue';
 
 export default {
-    props: ['close', 'caseId'],
-    components: {
-        FileUploadInput
-    },
-    data() {
-        return {
-            number_days_respondant: 7,
-            response_info_required: null
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        })
-    },
-    methods: {
-        setNewResponseNeededLink(link) {
-            this.response_info_required = link;
-        },
-        async submit() {
-            const startCaseActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'startcase',
-                    data: {
-                        case_id: this.caseId,
-                        assigned_arb: this.account,
-                        number_days_respondant: this.number_days_respondant,
-                        response_info_required: this.response_info_required
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(startCaseActions);
-                setTimeout(this.close, 2000);
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+	props: ['close', 'caseId'],
+	components: {
+		FileUploadInput
+	},
+	data() {
+		return {
+			number_days_respondant: 7,
+			response_info_required: null
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		})
+	},
+	methods: {
+		setNewResponseNeededLink(link) {
+			this.response_info_required = link;
+		},
+		async submit() {
+			const startCaseActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'startcase',
+					data: {
+						case_id: this.caseId,
+						assigned_arb: this.account,
+						number_days_respondant: this.number_days_respondant,
+						response_info_required: this.response_info_required
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(startCaseActions);
+				setTimeout(this.close, 2000);
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

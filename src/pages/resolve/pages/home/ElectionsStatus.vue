@@ -14,64 +14,64 @@
 import { mapGetters } from 'vuex';
 import { ELECTION_STATUS_LIST } from '../../constants/elections';
 const electionStatus = {
-    CREATED: {
-        heading: 'pages.resolve.election_status_created_heading',
-        text:
+	CREATED: {
+		heading: 'pages.resolve.election_status_created_heading',
+		text:
             'pages.resolve.election_status_created_text',
-        buttonText: 'pages.resolve.election_status_created_cta',
-        buttonRoute: '/resolve/elections'
-    },
-    LIVE: {
-        heading: 'pages.resolve.election_status_live_heading',
-        text:
+		buttonText: 'pages.resolve.election_status_created_cta',
+		buttonRoute: '/resolve/elections'
+	},
+	LIVE: {
+		heading: 'pages.resolve.election_status_live_heading',
+		text:
             'pages.resolve.election_status_live_text',
-        buttonText: 'pages.resolve.election_status_live_cta',
-        buttonRoute: '/resolve/elections'
-    },
-    FINALIZING: {
-        heading: 'pages.resolve.election_status_finalizing_heading',
-        text:
+		buttonText: 'pages.resolve.election_status_live_cta',
+		buttonRoute: '/resolve/elections'
+	},
+	FINALIZING: {
+		heading: 'pages.resolve.election_status_finalizing_heading',
+		text:
             'pages.resolve.election_status_finalizing_text',
-        buttonText: 'pages.resolve.election_status_finalizing_cta',
-        buttonRoute: '/resolve/elections'
-    },
-    ENDED: {
-        heading: 'pages.resolve.election_status_ended_heading',
-        text:
+		buttonText: 'pages.resolve.election_status_finalizing_cta',
+		buttonRoute: '/resolve/elections'
+	},
+	ENDED: {
+		heading: 'pages.resolve.election_status_ended_heading',
+		text:
             'pages.resolve.election_status_ended_text',
-        buttonText: 'pages.resolve.election_status_ended_cta',
-        buttonRoute: '/resolve/cases'
-    }
+		buttonText: 'pages.resolve.election_status_ended_cta',
+		buttonRoute: '/resolve/cases'
+	}
 };
 export default {
-    computed: {
-        ...mapGetters({
-            currentElection: 'resolve/getCurrentElection',
-            isResolveStoresAvailable: 'resolve/isResolveStoresAvailable'
-        }),
-        currentElectionStatus() {
-            return this.currentElection.status;
-        },
-        currentElectionContent() {
-            let statusString =
+	computed: {
+		...mapGetters({
+			currentElection: 'resolve/getCurrentElection',
+			isResolveStoresAvailable: 'resolve/isResolveStoresAvailable'
+		}),
+		currentElectionStatus() {
+			return this.currentElection.status;
+		},
+		currentElectionContent() {
+			let statusString =
                 ELECTION_STATUS_LIST[this.currentElection.status || 3];
-            if (statusString === 'LIVE') {
-                const endVotingUnixTimestamp = new Date(
-                    `${this.currentElection.end_voting_ts}Z`
-                ).getTime();
-                const rightNow = new Date().getTime();
-                if (endVotingUnixTimestamp < rightNow) {
-                    statusString = 'FINALIZING';
-                }
-            }
-            return electionStatus[statusString];
-        }
-    },
-    methods: {
-        onClickButton(path) {
-            this.$router.push(path);
-        }
-    }
+			if (statusString === 'LIVE') {
+				const endVotingUnixTimestamp = new Date(
+					`${this.currentElection.end_voting_ts}Z`
+				).getTime();
+				const rightNow = new Date().getTime();
+				if (endVotingUnixTimestamp < rightNow) {
+					statusString = 'FINALIZING';
+				}
+			}
+			return electionStatus[statusString];
+		}
+	},
+	methods: {
+		onClickButton(path) {
+			this.$router.push(path);
+		}
+	}
 };
 </script>
 

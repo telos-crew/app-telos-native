@@ -41,18 +41,18 @@ import { ARBITRATOR_STATUS_LIST } from '../constants';
 import { getAvailableArbitratorStatus } from '../util';
 
 export default {
-    props: ['arbitrator'],
-    computed: {
-        ...mapGetters({
-            'account': 'accounts/account'
-        })
-    },
-    methods: {
-        getStatusText(status) {
-            return this.$t(ARBITRATOR_STATUS_LIST[status]);
-        },
-        getArbitratorStatus: getAvailableArbitratorStatus
-    }
+	props: ['arbitrator'],
+	computed: {
+		...mapGetters({
+			'account': 'accounts/account'
+		})
+	},
+	methods: {
+		getStatusText(status) {
+			return this.$t(ARBITRATOR_STATUS_LIST[status]);
+		},
+		getArbitratorStatus: getAvailableArbitratorStatus
+	}
 };
 </script>
 

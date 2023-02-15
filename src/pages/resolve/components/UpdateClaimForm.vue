@@ -21,51 +21,51 @@ import { validateIpfsHash, validateId } from '../util';
 import FileUploadInput from './FileUploadInput.vue';
 
 export default {
-    props: ['close', 'caseId', 'claimId'],
-    components: {
-        FileUploadInput
-    },
-    data() {
-        return {
-            newClaimLink: ''
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        }),
-        isLinkValid() {
-            const isValid = validateIpfsHash(this.newClaimLink);
-            return isValid;
-        }
-    },
-    methods: {
-        validateId,
-        setNewClaimLink(link) {
-            this.newClaimLink = link;
-        },
+	props: ['close', 'caseId', 'claimId'],
+	components: {
+		FileUploadInput
+	},
+	data() {
+		return {
+			newClaimLink: ''
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		}),
+		isLinkValid() {
+			const isValid = validateIpfsHash(this.newClaimLink);
+			return isValid;
+		}
+	},
+	methods: {
+		validateId,
+		setNewClaimLink(link) {
+			this.newClaimLink = link;
+		},
 
-        async submit() {
-            const updateClaimActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'updateclaim',
-                    data: {
-                        claimant: this.account,
-                        claim_link: this.newClaimLink,
-                        claim_id: this.claimId,
-                        case_id: this.caseId
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(updateClaimActions);
-                this.close();
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+		async submit() {
+			const updateClaimActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'updateclaim',
+					data: {
+						claimant: this.account,
+						claim_link: this.newClaimLink,
+						claim_id: this.claimId,
+						case_id: this.caseId
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(updateClaimActions);
+				this.close();
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

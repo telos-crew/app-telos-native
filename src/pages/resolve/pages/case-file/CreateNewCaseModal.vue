@@ -58,62 +58,62 @@ import FileUploadInput from '../../components/FileUploadInput.vue';
 
 // claimant, claim_link, respondant, claim_category
 export default {
-    props: ['close'],
-    components: {
-        FileUploadInput
-    },
-    data() {
-        const options = CLAIM_CATEGORY_LIST.map((item, index) => ({
-            label: this.$t(item),
-            value: index
-        }));
-        return {
-            category: null,
-            respondant: '',
-            claimLink: '',
-            categories: options
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        }),
-        isSubmitReady () {
-            if (!this.category || !this.respondant || !this.claimLink) return false;
-            return true;
-        }
-    },
-    methods: {
-        validateId,
-        setClaimLink(link) {
-            this.claimLink = link;
-        },
-        isLinkValid() {
-            const isValid = validateIpfsHash(this.claimLink);
-            return isValid;
-        },
-        async submit() {
-            const newCaseActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'filecase',
-                    data: {
-                        claimant: this.account,
-                        claim_link: this.claimLink,
-                        respondant: this.respondant,
-                        claim_category: this.category.value,
-                        lang_codes: [0]
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(newCaseActions);
-                this.close();
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+	props: ['close'],
+	components: {
+		FileUploadInput
+	},
+	data() {
+		const options = CLAIM_CATEGORY_LIST.map((item, index) => ({
+			label: this.$t(item),
+			value: index
+		}));
+		return {
+			category: null,
+			respondant: '',
+			claimLink: '',
+			categories: options
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		}),
+		isSubmitReady () {
+			if (!this.category || !this.respondant || !this.claimLink) return false;
+			return true;
+		}
+	},
+	methods: {
+		validateId,
+		setClaimLink(link) {
+			this.claimLink = link;
+		},
+		isLinkValid() {
+			const isValid = validateIpfsHash(this.claimLink);
+			return isValid;
+		},
+		async submit() {
+			const newCaseActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'filecase',
+					data: {
+						claimant: this.account,
+						claim_link: this.claimLink,
+						respondant: this.respondant,
+						claim_category: this.category.value,
+						lang_codes: [0]
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(newCaseActions);
+				this.close();
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

@@ -19,33 +19,33 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    props: ['close', 'caseId', 'afterShredCase'],
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        })
-    },
-    methods: {
-        async submit() {
-            const shredCaseActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'shredcase',
-                    data: {
-                        claimant: this.account,
-                        case_id: this.caseId
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(shredCaseActions);
-                setTimeout(this.afterShredCase, 5000);
-                this.close();
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+	props: ['close', 'caseId', 'afterShredCase'],
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		})
+	},
+	methods: {
+		async submit() {
+			const shredCaseActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'shredcase',
+					data: {
+						claimant: this.account,
+						case_id: this.caseId
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(shredCaseActions);
+				setTimeout(this.afterShredCase, 5000);
+				this.close();
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

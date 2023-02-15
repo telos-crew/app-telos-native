@@ -42,41 +42,41 @@
 import { validateId, generateRandomId } from '../util';
 
 export default {
-    props: ['form', 'close', 'onSubmit'],
-    data() {
-        return {
-            ballot_name: generateRandomId()
-        };
-    },
-    computed: {
-        isBallotNameValid() {
-            return validateId(this.ballot_name);
-        }
-    },
-    methods: {
-        generateNewId() {
-            this.ballot_name = generateRandomId();
-        },
-        async beginVoting() {
-            const beginVotingActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'beginvoting',
-                    data: {
-                        ballot_name: this.ballot_name,
-                        runoff: false
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(beginVotingActions);
-                this.close();
-                setTimeout(this.onSubmit, 5000);
-            } catch (err) {
-                console.log('beginVoting error: ', err);
-            }
-        }
-    }
+	props: ['form', 'close', 'onSubmit'],
+	data() {
+		return {
+			ballot_name: generateRandomId()
+		};
+	},
+	computed: {
+		isBallotNameValid() {
+			return validateId(this.ballot_name);
+		}
+	},
+	methods: {
+		generateNewId() {
+			this.ballot_name = generateRandomId();
+		},
+		async beginVoting() {
+			const beginVotingActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'beginvoting',
+					data: {
+						ballot_name: this.ballot_name,
+						runoff: false
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(beginVotingActions);
+				this.close();
+				setTimeout(this.onSubmit, 5000);
+			} catch (err) {
+				console.log('beginVoting error: ', err);
+			}
+		}
+	}
 };
 </script>
 

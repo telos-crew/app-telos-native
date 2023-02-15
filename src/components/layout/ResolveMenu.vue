@@ -69,21 +69,21 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    computed: {
-        ...mapGetters({
-            isAuthenticated: 'accounts/account',
-            selfArbitrator: 'resolve/isArbitrator',
-        }),
-        isResolveRoute () {
-            return this.$route.path.includes('/resolve');
-        }
-    },
-    mounted () {
-        const el = document.getElementById('resolve-menu-dropdown');
-        const bottomBorder = document.createElement('div');
-        bottomBorder.classList.add('resolve-dropdown-bottom');
-        el?.appendChild(bottomBorder);
-    }
+	computed: {
+		...mapGetters({
+			isAuthenticated: 'accounts/account',
+			selfArbitrator: 'resolve/isArbitrator',
+		}),
+		isResolveRoute () {
+			return this.$route.path.includes('/resolve');
+		}
+	},
+	mounted () {
+		const el = document.getElementById('resolve-menu-dropdown');
+		const bottomBorder = document.createElement('div');
+		bottomBorder.classList.add('resolve-dropdown-bottom');
+		el?.appendChild(bottomBorder);
+	}
 };
 </script>
 

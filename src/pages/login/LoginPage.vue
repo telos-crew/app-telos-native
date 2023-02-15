@@ -3,38 +3,38 @@ import { mapActions, mapGetters } from 'vuex';
 import RequestAccount from './components/RequestAccount';
 
 export default {
-    name: 'LoginPage',
-    components: {
-        RequestAccount,
-    },
-    data() {
-        return {
-            idx: null,
-        };
-    },
-    computed: {
-        ...mapGetters('accounts', ['loading']),
-    },
-    methods: {
-        ...mapActions('accounts', ['login']),
-        async onLogin(idx) {
-            this.idx = idx;
-            await this.login({
-                idx: this.idx,
-                returnUrl: this.$route.query.returnUrl,
-            });
-        },
-        async onAccountEntered(account) {
-            await this.login({
-                idx: this.idx,
-                account,
-                returnUrl: this.$route.query.returnUrl,
-            });
-        },
-        openUrl(url) {
-            window.open(url);
-        },
-    },
+	name: 'LoginPage',
+	components: {
+		RequestAccount,
+	},
+	data() {
+		return {
+			idx: null,
+		};
+	},
+	computed: {
+		...mapGetters('accounts', ['loading']),
+	},
+	methods: {
+		...mapActions('accounts', ['login']),
+		async onLogin(idx) {
+			this.idx = idx;
+			await this.login({
+				idx: this.idx,
+				returnUrl: this.$route.query.returnUrl,
+			});
+		},
+		async onAccountEntered(account) {
+			await this.login({
+				idx: this.idx,
+				account,
+				returnUrl: this.$route.query.returnUrl,
+			});
+		},
+		openUrl(url) {
+			window.open(url);
+		},
+	},
 };
 </script>
 

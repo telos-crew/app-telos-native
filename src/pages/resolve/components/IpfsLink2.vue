@@ -6,12 +6,12 @@
 
 <script>
 export default {
-    props: ['hash', 'length', 'ellipsis'],
-    computed: {
-        hashLink() {
-            return `https://api.dstor.cloud/ipfs/${this.hash}`;
-        }
-    }
+	props: ['hash', 'length', 'ellipsis'],
+	computed: {
+		hashLink() {
+			return `https://api.dstor.cloud/ipfs/${this.hash}`;
+		}
+	}
 };
 </script>
 

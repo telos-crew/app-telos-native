@@ -119,123 +119,123 @@ import moment from 'moment';
 import { fetchArbTable } from '../../util';
 
 export default {
-    components: {
-        ClaimsTable,
-        IntroCard,
-        CaseSteps,
-        CaseFileActions,
-        AddClaimForm,
-        ShredCaseForm
-    },
-    data() {
-        return {
-            isLoadingHistory: false,
-            historyProgress: 0,
-            caseFile: null,
-            claims: [],
-            caseActionsHistory: [],
-            form: null,
-            formType: null,
-            fetchCaseInterval: null
-        };
-    },
-    methods: {
-        setProgress(progress) {
-            this.historyProgress = parseInt(progress);
-        },
-        closeModal() {
-            this.form = null;
-        },
-        formatContractDate() {
-            const date = moment(
-                new Date(this.caseFile.sending_offers_until_ts + 'Z')
-            ).format('YYYY-MM-DD HH:mm:ss');
-            return date;
-        },
-        getCaseStatus() {
-            const index = this.caseFile.case_status;
-            return this.$t(CASE_STATUS_LIST[index]);
-        },
-        async fetchCaseFile() {
-            const id = this.$route.params.id;
-            if (!id) return;
-            try {
-                const { rows } = await GET_TABLE_ROWS({
-                    code: process.env.ARB_CONTRACT,
-                    scope: process.env.ARB_CONTRACT,
-                    table: 'casefiles',
-                    key_type: 'i64',
-                    index_position: '1',
-                    upper_bound: this.$route.params.id,
-                    lower_bound: this.$route.params.id
-                });
-                const [caseFile] = rows;
-                this.caseFile = caseFile;
-            } catch (err) {
-                console.log('fetchCaseFile error:', err);
-            }
-        },
-        async getClaims() {
-            try {
-                const rows = await fetchArbTable(this, 'claims', {
-                    scope: this.$route.params.id,
-                    limit: 50
-                });
-                this.claims = rows;
-            } catch (err) {
-                console.log('getClaims error:', err);
-            }
-        },
-        isAddClaimButtonVisible() {
-            if (!this.isClaimant) return false;
-            if (this.caseFile.case_status !== 0) return false;
-            if (this.caseFile.number_claims > this.config.max_claims_per_case)
-                return false;
-            return true;
-        },
-        isShredCaseButtonVisible() {
-            if (!this.isClaimant) return false;
-            if (this.caseFile.case_status !== 0) return false;
-            return true;
-        }
-    },
-    computed: {
-        ...mapGetters({
-            isResolveStoresAvailable: 'resolve/isResolveStoresAvailable',
-            isResolveAdmin: 'resolve/isResolveAdmin',
-            account: 'accounts/account'
-        }),
-        config() {
-            return this.$store.state.resolve.config;
-        },
-        isClaimant() {
-            if (!this.caseFile) return false;
-            return this.account === this.caseFile.claimant;
-        },
-        isRespondant() {
-            if (!this.caseFile) return false;
-            return this.account === this.caseFile.respondant;
-        }
-    },
-    async mounted() {
-        this.fetchCaseFile();
-        this.getClaims();
-        this.isLoadingHistory = true;
-        const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
-            this,
-            this.$route.params.id,
-            this.setProgress
-        );
-        setTimeout(() => (this.isLoadingHistory = false), 2000);
-        this.caseActionsHistory = actionsHistory;
-        this.fetchCaseInterval = setInterval(() => {
-            this.fetchCaseFile();
-            this.getClaims();
-        }, 10000);
-    },
-    beforeUnmount() {
-        clearInterval(this.fetchCaseInterval);
-    }
+	components: {
+		ClaimsTable,
+		IntroCard,
+		CaseSteps,
+		CaseFileActions,
+		AddClaimForm,
+		ShredCaseForm
+	},
+	data() {
+		return {
+			isLoadingHistory: false,
+			historyProgress: 0,
+			caseFile: null,
+			claims: [],
+			caseActionsHistory: [],
+			form: null,
+			formType: null,
+			fetchCaseInterval: null
+		};
+	},
+	methods: {
+		setProgress(progress) {
+			this.historyProgress = parseInt(progress);
+		},
+		closeModal() {
+			this.form = null;
+		},
+		formatContractDate() {
+			const date = moment(
+				new Date(this.caseFile.sending_offers_until_ts + 'Z')
+			).format('YYYY-MM-DD HH:mm:ss');
+			return date;
+		},
+		getCaseStatus() {
+			const index = this.caseFile.case_status;
+			return this.$t(CASE_STATUS_LIST[index]);
+		},
+		async fetchCaseFile() {
+			const id = this.$route.params.id;
+			if (!id) return;
+			try {
+				const { rows } = await GET_TABLE_ROWS({
+					code: process.env.ARB_CONTRACT,
+					scope: process.env.ARB_CONTRACT,
+					table: 'casefiles',
+					key_type: 'i64',
+					index_position: '1',
+					upper_bound: this.$route.params.id,
+					lower_bound: this.$route.params.id
+				});
+				const [caseFile] = rows;
+				this.caseFile = caseFile;
+			} catch (err) {
+				console.log('fetchCaseFile error:', err);
+			}
+		},
+		async getClaims() {
+			try {
+				const rows = await fetchArbTable(this, 'claims', {
+					scope: this.$route.params.id,
+					limit: 50
+				});
+				this.claims = rows;
+			} catch (err) {
+				console.log('getClaims error:', err);
+			}
+		},
+		isAddClaimButtonVisible() {
+			if (!this.isClaimant) return false;
+			if (this.caseFile.case_status !== 0) return false;
+			if (this.caseFile.number_claims > this.config.max_claims_per_case)
+				return false;
+			return true;
+		},
+		isShredCaseButtonVisible() {
+			if (!this.isClaimant) return false;
+			if (this.caseFile.case_status !== 0) return false;
+			return true;
+		}
+	},
+	computed: {
+		...mapGetters({
+			isResolveStoresAvailable: 'resolve/isResolveStoresAvailable',
+			isResolveAdmin: 'resolve/isResolveAdmin',
+			account: 'accounts/account'
+		}),
+		config() {
+			return this.$store.state.resolve.config;
+		},
+		isClaimant() {
+			if (!this.caseFile) return false;
+			return this.account === this.caseFile.claimant;
+		},
+		isRespondant() {
+			if (!this.caseFile) return false;
+			return this.account === this.caseFile.respondant;
+		}
+	},
+	async mounted() {
+		this.fetchCaseFile();
+		this.getClaims();
+		this.isLoadingHistory = true;
+		const actionsHistory = await FETCH_CASE_ACTIONS_HISTORY(
+			this,
+			this.$route.params.id,
+			this.setProgress
+		);
+		setTimeout(() => (this.isLoadingHistory = false), 2000);
+		this.caseActionsHistory = actionsHistory;
+		this.fetchCaseInterval = setInterval(() => {
+			this.fetchCaseFile();
+			this.getClaims();
+		}, 10000);
+	},
+	beforeUnmount() {
+		clearInterval(this.fetchCaseInterval);
+	}
 };
 </script>
 

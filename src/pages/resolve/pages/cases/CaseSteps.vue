@@ -168,121 +168,121 @@ import StartCaseForm from '../../components/StartCaseForm.vue';
 import SetRulingForm from '../../components/SetRulingForm.vue';
 
 export default {
-    props: ['caseFile', 'claims'],
-    components: {
-        ReadyCaseForm,
-        MakeOfferForm,
-        OffersTable,
-        DismissOfferForm,
-        StartCaseForm,
-        SetRulingForm
-    },
-    data() {
-        return {
-            form: null,
-            formType: null
-        };
-    },
-    computed: {
-        ...mapGetters({
-            isResolveAdmin: 'resolve/isResolveAdmin',
-            isArbitrator: 'resolve/isArbitrator',
-            account: 'accounts/account'
-        }),
-        caseStatus() {
-            return this.caseFile.case_status;
-        },
-        isClaimant() {
-            return this.account === this.caseFile.claimant;
-        },
-        existingArbOffer() {
-            return this.$store.state.resolve.offers.find(
-                offer =>
-                    offer.case_id === this.caseFile.case_id &&
+	props: ['caseFile', 'claims'],
+	components: {
+		ReadyCaseForm,
+		MakeOfferForm,
+		OffersTable,
+		DismissOfferForm,
+		StartCaseForm,
+		SetRulingForm
+	},
+	data() {
+		return {
+			form: null,
+			formType: null
+		};
+	},
+	computed: {
+		...mapGetters({
+			isResolveAdmin: 'resolve/isResolveAdmin',
+			isArbitrator: 'resolve/isArbitrator',
+			account: 'accounts/account'
+		}),
+		caseStatus() {
+			return this.caseFile.case_status;
+		},
+		isClaimant() {
+			return this.account === this.caseFile.claimant;
+		},
+		existingArbOffer() {
+			return this.$store.state.resolve.offers.find(
+				offer =>
+					offer.case_id === this.caseFile.case_id &&
                     offer.arbitrator === this.account
-            );
-        },
-        areAllClaimsSettled() {
-            return this.claims.every(claim => ![1, 2].includes(claim.status));
-        }
-    },
-    methods: {
-        closeModal() {
-            this.form = null;
-        },
-        isCaseArbitrator() {
-            return this.caseFile.arbitrators.includes(this.account);
-        },
-        canArbitratorSubmitOffer() {
-            // is arbitrator available
-            if (!this.isArbitrator) return false;
-            if (this.caseFile.case_status !== 1) return false;
-            const arbitrators = this.$store.state.resolve.arbitrators;
-            const foundArbitrator = arbitrators.find(
-                arb => arb.arb === this.account
-            );
-            if (foundArbitrator.arb_status !== 1) return false;
-            if (
-                this.caseFile.claimant === this.account ||
+			);
+		},
+		areAllClaimsSettled() {
+			return this.claims.every(claim => ![1, 2].includes(claim.status));
+		}
+	},
+	methods: {
+		closeModal() {
+			this.form = null;
+		},
+		isCaseArbitrator() {
+			return this.caseFile.arbitrators.includes(this.account);
+		},
+		canArbitratorSubmitOffer() {
+			// is arbitrator available
+			if (!this.isArbitrator) return false;
+			if (this.caseFile.case_status !== 1) return false;
+			const arbitrators = this.$store.state.resolve.arbitrators;
+			const foundArbitrator = arbitrators.find(
+				arb => arb.arb === this.account
+			);
+			if (foundArbitrator.arb_status !== 1) return false;
+			if (
+				this.caseFile.claimant === this.account ||
                 this.caseFile.respondant === this.account
-            )
-                return false;
-            if (this.existingArbOffer) {
-                return 'update';
-            }
-            return 'new';
-        },
-        async startCase() {
-            const startCaseActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'startcase',
-                    data: {
-                        case_id: this.caseFile.case_id,
-                        assigned_arb: this.account
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(startCaseActions);
-            } catch (err) {
-                console.log('endElection error: ', err);
-            }
-        },
-        async validateCase(isProceed) {
-            const validateCaseActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'validatecase',
-                    data: {
-                        case_id: this.caseFile.case_id,
-                        proceed: isProceed
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(validateCaseActions);
-            } catch (err) {
-                console.log('endElection error: ', err);
-            }
-        },
-        async closeCase() {
-            const validateCaseActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'closecase',
-                    data: {
-                        case_id: this.caseFile.case_id
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(validateCaseActions);
-            } catch (err) {
-                console.log('endElection error: ', err);
-            }
-        }
-    }
+			)
+				return false;
+			if (this.existingArbOffer) {
+				return 'update';
+			}
+			return 'new';
+		},
+		async startCase() {
+			const startCaseActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'startcase',
+					data: {
+						case_id: this.caseFile.case_id,
+						assigned_arb: this.account
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(startCaseActions);
+			} catch (err) {
+				console.log('endElection error: ', err);
+			}
+		},
+		async validateCase(isProceed) {
+			const validateCaseActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'validatecase',
+					data: {
+						case_id: this.caseFile.case_id,
+						proceed: isProceed
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(validateCaseActions);
+			} catch (err) {
+				console.log('endElection error: ', err);
+			}
+		},
+		async closeCase() {
+			const validateCaseActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'closecase',
+					data: {
+						case_id: this.caseFile.case_id
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(validateCaseActions);
+			} catch (err) {
+				console.log('endElection error: ', err);
+			}
+		}
+	}
 };
 </script>
 

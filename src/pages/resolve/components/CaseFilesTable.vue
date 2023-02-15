@@ -78,58 +78,58 @@ import TelosProfileAvatar from 'src/components/common/TelosProfileAvatar.vue';
 import { CASE_STATUS_LIST } from '../constants';
 
 export default {
-    props: ['caseFiles', 'title'],
-    components: {
-        TelosProfileAvatar
-    },
-    data() {
-        return {
-            columns: [
-                { name: 'case_id', label: this.$t('pages.resolve.case_files_id'), field: 'case_id' },
-                { name: 'claimant', label: this.$t('pages.resolve.case_files_claimant'), field: 'claimant' },
-                {
-                    name: 'respondant',
-                    label: this.$t('pages.resolve.case_files_respondant'),
-                    field: 'respondant'
-                },
-                {
-                    name: 'arbitrators',
-                    label: this.$t('pages.resolve.case_files_arbitrators'),
-                    field: 'arbitrators'
-                },
-                { name: 'approvals', label: this.$t('pages.resolve.case_files_approvals'), field: 'approvals' },
-                { name: 'case_status', label: this.$t('pages.resolve.case_files_status'), field: 'case_status' },
-                {
-                    name: 'update_ts',
-                    label: this.$t('pages.resolve.case_files_updated'),
-                    field: 'update_ts'
-                },
-                { name: 'actions', label: this.$t('pages.resolve.case_files_actions'), field: 'actions' }
-            ],
-            pagination: {
-                rowsPerPage: 20
-            }
-        };
-    },
-    computed: {
-        useableCaseFiles() {
-            return this.caseFiles || this.$store.state.resolve.case_files || [];
-        },
-        finalTitle() {
-            return this.title || this.$t('pages.resolve.case_files_title');
-        }
-    },
-    methods: {
-        goToCaseFile(caseFileId) {
-            this.$router.push({
-                path: `case/${caseFileId}`,
-                params: { caseFileId }
-            });
-        },
-        getCaseFileStatusSyntax(index) {
-            return this.$t(CASE_STATUS_LIST[index]);
-        }
-    }
+	props: ['caseFiles', 'title'],
+	components: {
+		TelosProfileAvatar
+	},
+	data() {
+		return {
+			columns: [
+				{ name: 'case_id', label: this.$t('pages.resolve.case_files_id'), field: 'case_id' },
+				{ name: 'claimant', label: this.$t('pages.resolve.case_files_claimant'), field: 'claimant' },
+				{
+					name: 'respondant',
+					label: this.$t('pages.resolve.case_files_respondant'),
+					field: 'respondant'
+				},
+				{
+					name: 'arbitrators',
+					label: this.$t('pages.resolve.case_files_arbitrators'),
+					field: 'arbitrators'
+				},
+				{ name: 'approvals', label: this.$t('pages.resolve.case_files_approvals'), field: 'approvals' },
+				{ name: 'case_status', label: this.$t('pages.resolve.case_files_status'), field: 'case_status' },
+				{
+					name: 'update_ts',
+					label: this.$t('pages.resolve.case_files_updated'),
+					field: 'update_ts'
+				},
+				{ name: 'actions', label: this.$t('pages.resolve.case_files_actions'), field: 'actions' }
+			],
+			pagination: {
+				rowsPerPage: 20
+			}
+		};
+	},
+	computed: {
+		useableCaseFiles() {
+			return this.caseFiles || this.$store.state.resolve.case_files || [];
+		},
+		finalTitle() {
+			return this.title || this.$t('pages.resolve.case_files_title');
+		}
+	},
+	methods: {
+		goToCaseFile(caseFileId) {
+			this.$router.push({
+				path: `case/${caseFileId}`,
+				params: { caseFileId }
+			});
+		},
+		getCaseFileStatusSyntax(index) {
+			return this.$t(CASE_STATUS_LIST[index]);
+		}
+	}
 };
 </script>
 

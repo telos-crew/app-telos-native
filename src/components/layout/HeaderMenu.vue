@@ -5,48 +5,48 @@ import ResolveMenu from './ResolveMenu.vue';
 const NETWORK_ENV = process.env.NETWORK_ENV;
 
 export default {
-    name: 'HeaderMenu',
-    computed: {
-        ...mapGetters('accounts', ['isAuthenticated']),
-        isTestnet () {
-            return NETWORK_ENV === 'testnet';
-        }
-    },
-    props: {
-        activeFilter: {},
-    },
-    components: {
-        ResolveMenu,
-    },
-    data() {
-        return {
-            menuItems: [
-                {
-                    label: this.$t('menu.daos'),
-                    route: '/trails/treasuries',
-                },
-                {
-                    label: this.$t('menu.elections'),
-                    route: '/trails/elections',
-                },
-                {
-                    label: this.$t('menu.proposals'),
-                    route: '/trails/ballots',
-                }
-            ],
-            localFileter: this.activeFilter,
-        };
-    },
-    watch: {
-        activeFilter: function () {
-            this.localFileter = this.activeFilter;
-        },
-        $route(to) {
-            if (!to.path.includes('/trails/ballots')) {
-                this.localFileter = '';
-            }
-        },
-    },
+	name: 'HeaderMenu',
+	computed: {
+		...mapGetters('accounts', ['isAuthenticated']),
+		isTestnet () {
+			return NETWORK_ENV === 'testnet';
+		}
+	},
+	props: {
+		activeFilter: {},
+	},
+	components: {
+		ResolveMenu,
+	},
+	data() {
+		return {
+			menuItems: [
+				{
+					label: this.$t('menu.daos'),
+					route: '/trails/treasuries',
+				},
+				{
+					label: this.$t('menu.elections'),
+					route: '/trails/elections',
+				},
+				{
+					label: this.$t('menu.proposals'),
+					route: '/trails/ballots',
+				}
+			],
+			localFileter: this.activeFilter,
+		};
+	},
+	watch: {
+		activeFilter: function () {
+			this.localFileter = this.activeFilter;
+		},
+		$route(to) {
+			if (!to.path.includes('/trails/ballots')) {
+				this.localFileter = '';
+			}
+		},
+	},
 };
 </script>
 

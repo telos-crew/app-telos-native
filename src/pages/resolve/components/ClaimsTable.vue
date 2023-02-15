@@ -228,105 +228,105 @@ import { mapGetters } from 'vuex';
 import { getDstorLink } from '../util';
 
 export default {
-    props: ['caseId', 'caseFile', 'claims'],
-    components: {
-        RespondClaimForm,
-        UpdateClaimForm,
-        ReviewClaimForm,
-        SettleClaimForm
-    },
-    data() {
-        return {
-            interval: null,
-            form: false,
-            claimId: null,
-            formType: null,
-            columns: [
-                { name: 'claim_id',
-                    label: this.$t('pages.resolve.claims_table_id'),
-                    field: 'claim_id'
-                },
-                {
-                    name: 'claim_summary',
-                    label: this.$t('pages.resolve.claims_table_summary'),
-                    field: 'claim_summary'
-                },
-                {
-                    name: 'claimant_limit_time',
-                    label: this.$t('pages.resolve.claims_table_claimant_deadline'),
-                    field: 'claimant_limit_time'
-                },
-                {
-                    name: 'claim_category',
-                    label: this.$t('pages.resolve.claims_table_category'),
-                    field: 'claim_category'
-                },
-                {
-                    name: 'response_link',
-                    label: this.$t('pages.resolve.claims_table_response'),
-                    field: 'response_link'
-                },
-                {
-                    name: 'decision_link',
-                    label: this.$t('pages.resolve.claims_table_decision'),
-                    field: 'decision_link'
-                },
-                {
-                    name: 'respondant_limit_time',
-                    label: this.$t('pages.resolve.claims_table_respoondant_deadline'),
-                    field: 'respondant_limit_time'
-                },
-                { name: 'status', label: this.$t('pages.resolve.claims_table_status'), field: 'status' },
-                { name: 'actions', label: this.$t('pages.resolve.claims_table_actions_column'), field: 'actions' }
-            ]
-        };
-    },
-    methods: {
-        getDstorLink,
-        isClaimant() {
-            if (!this.caseFile) return false;
-            return this.account === this.caseFile.claimant;
-        },
-        isRespondant() {
-            if (!this.caseFile) return false;
-            return this.account === this.caseFile.respondant;
-        },
-        isPendingInfoNeeded(claim) {
-            let isPending = false;
-            if (claim.claim_info_needed) {
-                const claimantDeadline = new Date(claim.claimant_limit_time);
-                if (claimantDeadline > new Date()) {
-                    isPending = true;
-                }
-            }
-            if (claim.response_info_needed) {
-                const responseDeadline = new Date(claim.respondant_limit_time);
-                if (responseDeadline > new Date()) {
-                    isPending = true;
-                }
-            }
-            return isPending;
-        },
-        getClaimCategory(id) {
-            return this.$t(CLAIM_CATEGORY_LIST[id]);
-        },
-        getStatus(statusId) {
-            return this.$t(CLAIM_STATUS_LIST[statusId]);
-        },
-        closeModal() {
-            this.form = false;
-            this.formType = null;
-            this.claimId = null;
-        },
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        }),
-        isCaseArbitrator() {
-            return this.caseFile.arbitrators.includes(this.account);
-        },
-    }
+	props: ['caseId', 'caseFile', 'claims'],
+	components: {
+		RespondClaimForm,
+		UpdateClaimForm,
+		ReviewClaimForm,
+		SettleClaimForm
+	},
+	data() {
+		return {
+			interval: null,
+			form: false,
+			claimId: null,
+			formType: null,
+			columns: [
+				{ name: 'claim_id',
+					label: this.$t('pages.resolve.claims_table_id'),
+					field: 'claim_id'
+				},
+				{
+					name: 'claim_summary',
+					label: this.$t('pages.resolve.claims_table_summary'),
+					field: 'claim_summary'
+				},
+				{
+					name: 'claimant_limit_time',
+					label: this.$t('pages.resolve.claims_table_claimant_deadline'),
+					field: 'claimant_limit_time'
+				},
+				{
+					name: 'claim_category',
+					label: this.$t('pages.resolve.claims_table_category'),
+					field: 'claim_category'
+				},
+				{
+					name: 'response_link',
+					label: this.$t('pages.resolve.claims_table_response'),
+					field: 'response_link'
+				},
+				{
+					name: 'decision_link',
+					label: this.$t('pages.resolve.claims_table_decision'),
+					field: 'decision_link'
+				},
+				{
+					name: 'respondant_limit_time',
+					label: this.$t('pages.resolve.claims_table_respoondant_deadline'),
+					field: 'respondant_limit_time'
+				},
+				{ name: 'status', label: this.$t('pages.resolve.claims_table_status'), field: 'status' },
+				{ name: 'actions', label: this.$t('pages.resolve.claims_table_actions_column'), field: 'actions' }
+			]
+		};
+	},
+	methods: {
+		getDstorLink,
+		isClaimant() {
+			if (!this.caseFile) return false;
+			return this.account === this.caseFile.claimant;
+		},
+		isRespondant() {
+			if (!this.caseFile) return false;
+			return this.account === this.caseFile.respondant;
+		},
+		isPendingInfoNeeded(claim) {
+			let isPending = false;
+			if (claim.claim_info_needed) {
+				const claimantDeadline = new Date(claim.claimant_limit_time);
+				if (claimantDeadline > new Date()) {
+					isPending = true;
+				}
+			}
+			if (claim.response_info_needed) {
+				const responseDeadline = new Date(claim.respondant_limit_time);
+				if (responseDeadline > new Date()) {
+					isPending = true;
+				}
+			}
+			return isPending;
+		},
+		getClaimCategory(id) {
+			return this.$t(CLAIM_CATEGORY_LIST[id]);
+		},
+		getStatus(statusId) {
+			return this.$t(CLAIM_STATUS_LIST[statusId]);
+		},
+		closeModal() {
+			this.form = false;
+			this.formType = null;
+			this.claimId = null;
+		},
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		}),
+		isCaseArbitrator() {
+			return this.caseFile.arbitrators.includes(this.account);
+		},
+	}
 };
 </script>
 

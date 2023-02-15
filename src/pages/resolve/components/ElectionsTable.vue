@@ -87,67 +87,67 @@ import { ELECTION_STATUS } from '../constants';
 import { mapGetters } from 'vuex';
 
 export default {
-    components: {
-        CandidatesCell
-    },
-    data() {
-        return {
-            columns: [
-                { name: 'election_id', label: this.$t('pages.resolve.elections_table_id'), field: 'election_id' },
-                {
-                    name: 'ballot_name',
-                    label: this.$t('pages.resolve.elections_table_ballot_name'),
-                    field: 'ballot_name'
-                },
-                {
-                    name: 'candidates',
-                    label: this.$t('pages.resolve.elections_table_candidates'),
-                    field: 'candidates'
-                },
-                {
-                    name: 'available_seats',
-                    label: this.$t('pages.resolve.elections_table_seats'),
-                    field: 'available_seats'
-                },
-                {
-                    name: 'end_add_candidates_ts',
-                    label: this.$t('pages.resolve.elections_table_end_add'),
-                    field: 'end_add_candidates_ts'
-                },
-                {
-                    name: 'begin_voting_ts',
-                    label: this.$t('pages.resolve.elections_table_start_voting'),
-                    field: 'begin_voting_ts'
-                },
-                {
-                    name: 'end_voting_ts',
-                    label: this.$t('pages.resolve.elections_table_end_voting'),
-                    field: 'end_voting_ts'
-                },
-                { name: 'status', label: this.$t('pages.resolve.elections_table_status'), field: 'status' }
-            ],
-            expandedRows: [],
-            ELECTION_STATUS
-        };
-    },
-    methods: {
-        toggleRow(electionId) {
-            this.expandedRows[electionId] = !this.expandedRows[electionId];
-        }
-    },
-    computed: {
-        ...mapGetters({
-            currentElection: 'resolve/getCurrentElection'
-        }),
-        electionData() {
-            return this.$store.state.resolve.elections;
-        }
-    },
-    mounted() {
-        if (this.currentElection) {
-            this.expandedRows[this.currentElection.election_id] = true;
-        }
-    }
+	components: {
+		CandidatesCell
+	},
+	data() {
+		return {
+			columns: [
+				{ name: 'election_id', label: this.$t('pages.resolve.elections_table_id'), field: 'election_id' },
+				{
+					name: 'ballot_name',
+					label: this.$t('pages.resolve.elections_table_ballot_name'),
+					field: 'ballot_name'
+				},
+				{
+					name: 'candidates',
+					label: this.$t('pages.resolve.elections_table_candidates'),
+					field: 'candidates'
+				},
+				{
+					name: 'available_seats',
+					label: this.$t('pages.resolve.elections_table_seats'),
+					field: 'available_seats'
+				},
+				{
+					name: 'end_add_candidates_ts',
+					label: this.$t('pages.resolve.elections_table_end_add'),
+					field: 'end_add_candidates_ts'
+				},
+				{
+					name: 'begin_voting_ts',
+					label: this.$t('pages.resolve.elections_table_start_voting'),
+					field: 'begin_voting_ts'
+				},
+				{
+					name: 'end_voting_ts',
+					label: this.$t('pages.resolve.elections_table_end_voting'),
+					field: 'end_voting_ts'
+				},
+				{ name: 'status', label: this.$t('pages.resolve.elections_table_status'), field: 'status' }
+			],
+			expandedRows: [],
+			ELECTION_STATUS
+		};
+	},
+	methods: {
+		toggleRow(electionId) {
+			this.expandedRows[electionId] = !this.expandedRows[electionId];
+		}
+	},
+	computed: {
+		...mapGetters({
+			currentElection: 'resolve/getCurrentElection'
+		}),
+		electionData() {
+			return this.$store.state.resolve.elections;
+		}
+	},
+	mounted() {
+		if (this.currentElection) {
+			this.expandedRows[this.currentElection.election_id] = true;
+		}
+	}
 };
 </script>
 

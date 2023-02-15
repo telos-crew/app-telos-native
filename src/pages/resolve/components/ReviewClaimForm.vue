@@ -79,78 +79,78 @@ import { mapGetters } from 'vuex';
 import FileUploadInput from './FileUploadInput.vue';
 
 export default {
-    components: {
-        FileUploadInput
-    },
-    props: ['close', 'caseId', 'claimId'],
-    data() {
-        return {
-            number_days_claimant: 2,
-            number_days_respondant: 2,
-            response_info_needed: false,
-            response_info_required: '',
-            claim_info_needed: false,
-            claim_info_required: '',
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        }),
-        isSubmitEnabled () {
-            if (!this.claim_info_needed && !this.response_info_needed) return false;
-            if (this.claim_info_needed) {
-                if (!this.claim_info_required) return false;
-                if (this.number_days_claimant < 1) return false;
-            }
-            if (this.response_info_needed) {
-                if (!this.response_info_required) return false;
-                if (this.number_days_respondant < 1) return false;
-            }
-            return true;
-        }
-    },
-    methods: {
-        setClaimRequiredLink (hash) {
-            this.claim_info_required = hash;
-        },
-        setResponseRequiredLink (hash) {
-            this.response_info_required = hash;
-        },
-        async submit() {
-            if (!this.claim_info_needed && !this.response_info_needed) {
-                this.$q.notify({
-                    message:
+	components: {
+		FileUploadInput
+	},
+	props: ['close', 'caseId', 'claimId'],
+	data() {
+		return {
+			number_days_claimant: 2,
+			number_days_respondant: 2,
+			response_info_needed: false,
+			response_info_required: '',
+			claim_info_needed: false,
+			claim_info_required: '',
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		}),
+		isSubmitEnabled () {
+			if (!this.claim_info_needed && !this.response_info_needed) return false;
+			if (this.claim_info_needed) {
+				if (!this.claim_info_required) return false;
+				if (this.number_days_claimant < 1) return false;
+			}
+			if (this.response_info_needed) {
+				if (!this.response_info_required) return false;
+				if (this.number_days_respondant < 1) return false;
+			}
+			return true;
+		}
+	},
+	methods: {
+		setClaimRequiredLink (hash) {
+			this.claim_info_required = hash;
+		},
+		setResponseRequiredLink (hash) {
+			this.response_info_required = hash;
+		},
+		async submit() {
+			if (!this.claim_info_needed && !this.response_info_needed) {
+				this.$q.notify({
+					message:
                         this.$t('pages.resolve.review_claim_no_info_needed'),
-                    color: 'negative'
-                });
-                return;
-            }
-            const reviewClaimActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'reviewclaim',
-                    data: {
-                        claim_id: this.claimId,
-                        case_id: this.caseId,
-                        assigned_arb: this.account,
-                        number_days_respondant: this.number_days_respondant,
-                        number_days_claimant: this.number_days_claimant,
-                        claim_info_needed: this.claim_info_needed,
-                        response_info_needed: this.response_info_needed,
-                        claim_info_required: this.claim_info_required,
-                        response_info_required: this.response_info_required
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(reviewClaimActions);
-                setTimeout(this.close, 2000);
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+					color: 'negative'
+				});
+				return;
+			}
+			const reviewClaimActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'reviewclaim',
+					data: {
+						claim_id: this.claimId,
+						case_id: this.caseId,
+						assigned_arb: this.account,
+						number_days_respondant: this.number_days_respondant,
+						number_days_claimant: this.number_days_claimant,
+						claim_info_needed: this.claim_info_needed,
+						response_info_needed: this.response_info_needed,
+						claim_info_required: this.claim_info_required,
+						response_info_required: this.response_info_required
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(reviewClaimActions);
+				setTimeout(this.close, 2000);
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

@@ -13,8 +13,8 @@
 import CaseFileAction from './CaseFileAction.vue';
 
 export default {
-    components: { CaseFileAction },
-    props: ['actions', 'claims', 'offers']
+	components: { CaseFileAction },
+	props: ['actions', 'claims', 'offers']
 };
 </script>
 

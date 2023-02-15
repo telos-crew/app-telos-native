@@ -19,51 +19,51 @@ import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
 import md5 from 'md5';
 
 export default {
-    name: 'TelosProfileAvatar',
-    components: {
-        ProfileAvatar,
-    },
-    props: ['account_name', 'size', 'childClass'],
-    data() {
-        return {
-            isError: false,
-            avatar: '',
-            hash: md5(this.account_name || ''),
-            styleClass: this.size
-                ? { ...this.childClass, height: this.size, width: this.size }
-                : this.childClass,
-        };
-    },
-    methods: {
-        onError() {
-            console.log('Telos profile image load error');
-            this.isError = true;
-        },
-    },
-    async beforeMount() {
-        try {
-            const { rows } = await GET_TABLE_ROWS({
-                code: 'profiles',
-                scope: 'profiles',
-                table: 'profiles',
-                json: true,
-                limit: 1,
-                lower_bound: this.account_name,
-                upper_bound: this.account_name,
-            });
-            const [profile] = rows;
-            if (profile) {
-                const { avatar } = profile;
-                if (profile.account_name === this.account_name) {
-                    if (avatar) {
-                        this.avatar = avatar;
-                    }
-                }
-            }
-        } catch (err) {
-            console.log('err: ', err);
-        }
-    },
+	name: 'TelosProfileAvatar',
+	components: {
+		ProfileAvatar,
+	},
+	props: ['account_name', 'size', 'childClass'],
+	data() {
+		return {
+			isError: false,
+			avatar: '',
+			hash: md5(this.account_name || ''),
+			styleClass: this.size
+				? { ...this.childClass, height: this.size, width: this.size }
+				: this.childClass,
+		};
+	},
+	methods: {
+		onError() {
+			console.log('Telos profile image load error');
+			this.isError = true;
+		},
+	},
+	async beforeMount() {
+		try {
+			const { rows } = await GET_TABLE_ROWS({
+				code: 'profiles',
+				scope: 'profiles',
+				table: 'profiles',
+				json: true,
+				limit: 1,
+				lower_bound: this.account_name,
+				upper_bound: this.account_name,
+			});
+			const [profile] = rows;
+			if (profile) {
+				const { avatar } = profile;
+				if (profile.account_name === this.account_name) {
+					if (avatar) {
+						this.avatar = avatar;
+					}
+				}
+			}
+		} catch (err) {
+			console.log('err: ', err);
+		}
+	},
 };
 </script>
 

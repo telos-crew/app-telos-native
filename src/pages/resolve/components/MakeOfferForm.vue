@@ -50,54 +50,54 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    props: ['close', 'caseId', 'afterReadyCase'],
-    data() {
-        return {
-            hourly_rate: 1,
-            estimated_hours: 1
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        }),
-        total() {
-            return (this.hourly_rate * this.estimated_hours).toFixed(2);
-        }
-    },
-    methods: {
-        async submit() {
-            const { offers } = this.$store.state.resolve;
-            const arbCaseOffer = offers.find(
-                offer =>
-                    offer.case_id === this.caseId &&
+	props: ['close', 'caseId', 'afterReadyCase'],
+	data() {
+		return {
+			hourly_rate: 1,
+			estimated_hours: 1
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		}),
+		total() {
+			return (this.hourly_rate * this.estimated_hours).toFixed(2);
+		}
+	},
+	methods: {
+		async submit() {
+			const { offers } = this.$store.state.resolve;
+			const arbCaseOffer = offers.find(
+				offer =>
+					offer.case_id === this.caseId &&
                     offer.arbitrator === this.account
-            );
+			);
 
-            const makeOfferActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'makeoffer',
-                    data: {
-                        case_id: this.caseId,
-                        arbitrator: this.account,
-                        hourly_rate: this.hourly_rate.toFixed(4) + ' USD',
-                        estimated_hours: this.estimated_hours,
-                        offer_id:
+			const makeOfferActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'makeoffer',
+					data: {
+						case_id: this.caseId,
+						arbitrator: this.account,
+						hourly_rate: this.hourly_rate.toFixed(4) + ' USD',
+						estimated_hours: this.estimated_hours,
+						offer_id:
                             arbCaseOffer?.offer_id > -1
-                                ? arbCaseOffer.offer_id
-                                : -1
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(makeOfferActions);
-                setTimeout(this.close, 2000);
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+                            	? arbCaseOffer.offer_id
+                            	: -1
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(makeOfferActions);
+				setTimeout(this.close, 2000);
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
 

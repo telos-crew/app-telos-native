@@ -42,92 +42,92 @@ import { getBallot, getSymbolInfo } from '../util';
 import TelosProfileAvatar from 'src/components/common/TelosProfileAvatar.vue';
 
 export default {
-    props: ['election'],
-    components: {
-        TelosProfileAvatar
-    },
-    data() {
-        return {
-            results: [],
-            interval: null
-        };
-    },
-    methods: {
-        totalVotes() {
-            if (!this.results.length) return 0;
-            const sum = this.results.reduce((previous, current) => {
-                const { amount } = getSymbolInfo(current.value);
-                return previous + parseFloat(amount);
-            }, 0);
-            return sum;
-        },
-        getCandidateVotes(account_name) {
-            if (this.election.status < 2) return '0.0000 VOTE';
-            else {
-                const option = this.results.find(
-                    result => result.key === account_name
-                );
-                if (!option) return '0.0000 VOTE';
-                return option.value;
-            }
-        },
-        getCandidateIpfsLink(account_name) {
-            const nominees = this.$store.state.resolve.nominees;
-            const nominee = nominees.find(
-                item => item.nominee_name === account_name
-            );
-            const hash = nominee?.credentials_link;
-            const url = `https://api.dstor.cloud/ipfs/${hash}`;
-            return url;
-        },
-        async getBallotResults() {
-            if (this.election.status < 2) return;
-            try {
-                const ballot = await getBallot(this, this.election.ballot_name);
-                if (!ballot) return;
-                this.results = ballot.options;
-            } catch (err) {
-                console.log('getBallotResults error: ', err);
-            }
-        },
-        isRemoveCandidateButtonVisible(account_name) {
-            if (
-                this.currentElection.status === 1 &&
+	props: ['election'],
+	components: {
+		TelosProfileAvatar
+	},
+	data() {
+		return {
+			results: [],
+			interval: null
+		};
+	},
+	methods: {
+		totalVotes() {
+			if (!this.results.length) return 0;
+			const sum = this.results.reduce((previous, current) => {
+				const { amount } = getSymbolInfo(current.value);
+				return previous + parseFloat(amount);
+			}, 0);
+			return sum;
+		},
+		getCandidateVotes(account_name) {
+			if (this.election.status < 2) return '0.0000 VOTE';
+			else {
+				const option = this.results.find(
+					result => result.key === account_name
+				);
+				if (!option) return '0.0000 VOTE';
+				return option.value;
+			}
+		},
+		getCandidateIpfsLink(account_name) {
+			const nominees = this.$store.state.resolve.nominees;
+			const nominee = nominees.find(
+				item => item.nominee_name === account_name
+			);
+			const hash = nominee?.credentials_link;
+			const url = `https://api.dstor.cloud/ipfs/${hash}`;
+			return url;
+		},
+		async getBallotResults() {
+			if (this.election.status < 2) return;
+			try {
+				const ballot = await getBallot(this, this.election.ballot_name);
+				if (!ballot) return;
+				this.results = ballot.options;
+			} catch (err) {
+				console.log('getBallotResults error: ', err);
+			}
+		},
+		isRemoveCandidateButtonVisible(account_name) {
+			if (
+				this.currentElection.status === 1 &&
                 account_name === this.account &&
                 !this.isPastAddCandidates
-            ) {
-                return true;
-            }
-            return false;
-        },
-        getPercentage(searchName) {
-            if (!this.results.length) return 0;
-            const candidateData = this.results.find(
-                ({ key }) => key === searchName
-            );
-            if (!candidateData) return 0;
-            const { value } = candidateData;
-            const { amount } = getSymbolInfo(value);
-            const voteAmount = parseFloat(amount);
-            const totalVotes = this.totalVotes();
-            const percentage = voteAmount / totalVotes;
-            return percentage;
-        }
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account',
-            currentElection: 'resolve/getCurrentElection',
-            isPastAddCandidates: 'resolve/isPastAddCandidates'
-        })
-    },
-    mounted() {
-        this.getBallotResults();
-        this.interval = setInterval(this.getBallotResults, 10000);
-    },
-    unmounted() {
-        clearInterval(this.interval);
-    }
+			) {
+				return true;
+			}
+			return false;
+		},
+		getPercentage(searchName) {
+			if (!this.results.length) return 0;
+			const candidateData = this.results.find(
+				({ key }) => key === searchName
+			);
+			if (!candidateData) return 0;
+			const { value } = candidateData;
+			const { amount } = getSymbolInfo(value);
+			const voteAmount = parseFloat(amount);
+			const totalVotes = this.totalVotes();
+			const percentage = voteAmount / totalVotes;
+			return percentage;
+		}
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account',
+			currentElection: 'resolve/getCurrentElection',
+			isPastAddCandidates: 'resolve/isPastAddCandidates'
+		})
+	},
+	mounted() {
+		this.getBallotResults();
+		this.interval = setInterval(this.getBallotResults, 10000);
+	},
+	unmounted() {
+		clearInterval(this.interval);
+	}
 };
 </script>
 

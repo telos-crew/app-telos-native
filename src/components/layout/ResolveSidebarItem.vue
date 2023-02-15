@@ -37,16 +37,16 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    data () {
-        return {
-            isResolveRoute: this.$route.path.includes('/resolve')
-        };
-    },
-    computed: {
-        ...mapGetters ({
-            selfArbitrator: 'resolve/isArbitrator',
-        }),
-    }
+	data () {
+		return {
+			isResolveRoute: this.$route.path.includes('/resolve')
+		};
+	},
+	computed: {
+		...mapGetters ({
+			selfArbitrator: 'resolve/isArbitrator',
+		}),
+	}
 };
 </script>
 

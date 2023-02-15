@@ -32,75 +32,75 @@ import 'vue-croppa/dist/vue-croppa.css';
 import croppa from 'vue-croppa';
 
 export default {
-    name: 'EditImage',
-    props: {
-        imgKey: String,
-        identity: String,
-    },
-    data: function () {
-        return {
-            url: '',
-            croppa: croppa,
-            loadingFile: false,
-            mImgKey: '',
-            mIdentity: '',
-            imageChanged: false,
-            isFirstDraw: true,
-        };
-    },
-    watch: {
-        imgKey: async function () {
-            this.updateUrl();
-        },
-        identity: async function () {
-            this.updateUrl();
-        },
-    },
-    async created() {
-        this.updateUrl();
-    },
-    methods: {
-        isEdited() {
-            if (!this.isFirstDraw) {
-                this.imageChanged = true;
-            } else this.isFirstDraw = false;
-        },
-        choseImage() {
-            this.imageChanged = true;
-            this.$refs.myCroppa.chooseFile();
-        },
-        getBlob() {
-            const self = this;
-            return new Promise(function (resolve, reject) {
-                try {
-                    if (!self.imageChanged) {
-                        reject(new Error('No image has changed'));
-                    }
-                    if (self.croppa.hasImage()) {
-                        self.croppa.generateBlob((blob) => {
-                            resolve(blob);
-                        });
-                    } else {
-                        reject(new Error('No selected image'));
-                    }
-                } catch (e) {
-                    reject(new Error(e));
-                }
-            });
-        },
-        async updateUrl() {
-            this.url = '';
+	name: 'EditImage',
+	props: {
+		imgKey: String,
+		identity: String,
+	},
+	data: function () {
+		return {
+			url: '',
+			croppa: croppa,
+			loadingFile: false,
+			mImgKey: '',
+			mIdentity: '',
+			imageChanged: false,
+			isFirstDraw: true,
+		};
+	},
+	watch: {
+		imgKey: async function () {
+			this.updateUrl();
+		},
+		identity: async function () {
+			this.updateUrl();
+		},
+	},
+	async created() {
+		this.updateUrl();
+	},
+	methods: {
+		isEdited() {
+			if (!this.isFirstDraw) {
+				this.imageChanged = true;
+			} else this.isFirstDraw = false;
+		},
+		choseImage() {
+			this.imageChanged = true;
+			this.$refs.myCroppa.chooseFile();
+		},
+		getBlob() {
+			const self = this;
+			return new Promise(function (resolve, reject) {
+				try {
+					if (!self.imageChanged) {
+						reject(new Error('No image has changed'));
+					}
+					if (self.croppa.hasImage()) {
+						self.croppa.generateBlob((blob) => {
+							resolve(blob);
+						});
+					} else {
+						reject(new Error('No selected image'));
+					}
+				} catch (e) {
+					reject(new Error(e));
+				}
+			});
+		},
+		async updateUrl() {
+			this.url = '';
 
-        },
-        onInit() {
-            this.croppa.addClipPlugin(function (ctx, x, y, w, h) {
+		},
+		onInit() {
+			this.croppa.addClipPlugin(function (ctx, x, y, w, h) {
 
-                ctx.beginPath();
-                ctx.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI, true);
-                ctx.closePath();
-            });
-        },
-    },
+				ctx.beginPath();
+				ctx.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI, true);
+				ctx.closePath();
+			});
+		},
+	},
 };
 </script>
 

@@ -13,531 +13,531 @@ const TYPE_OF_BALLOT_1 = 'yes.no.abst';
 const TYPE_OF_BALLOT_2 = 'multi.op';
 
 export default {
-    name: 'BallotForm',
-    components: {
-        BallotListItem,
-    },
-    mixins: [validation],
-    props: {
-        show: { type: Boolean, required: true },
-    },
-    emits: ['close'],
-    data() {
-        return {
-            showSaveDialog: false,
-            moment: moment,
-            step: ref(1),
-            ballotTypes: [TYPE_OF_BALLOT_0, TYPE_OF_BALLOT_1, TYPE_OF_BALLOT_2],
-            isBallotListRowDirection: true,
-            form: {
-                isOfficial: true,
-                openForVoting: true,
-                onlyOneOption: true,
-                typeOfBallot: TYPE_OF_BALLOT_0,
-                newOptionLabel: '',
-                newOptionValue: '',
-                defaultLabels:['Yes', 'No', 'Abstain'],
-                optionsLabels:['Yes', 'No'],
-                optionsValues:['yes', 'no'],
-                optionsError: '',
-                title: '',
-                category: 'poll',
-                description: '',
-                imageUrl: '',
-                IPFSString: null,
-                treasurySymbol: null,
-                votingMethod: '1token1vote',
-                maxOptions: 1,
-                minOptions: 1,
-                initialOptions: [],
-                endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
-                config: 'votestake',
-                file: null
-            },
-            prompt: false,
-            userBalance: null,
-            votingMethodOptions: [
-                { value: '1acct1vote', label: 'One vote per account' },
-                { value: '1tokennvote', label: 'All tokens to each vote' },
-                { value: '1token1vote', label: 'All tokens split to each vote' },
-                { value: '1tsquare1v', label: 'One token equals one square vote' },
-                { value: 'quadratic', label: 'Quadratic' },
-            ],
-            categoryOptions: [
-                { value: 'election', label: 'Election' },
-                { value: 'poll', label: 'Poll' },
-                { value: 'referendum', label: 'Referendum' },
-            ],
-            submitting: false,
-            cid: null,
-        };
-    },
-    computed: {
-        ...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees', 'ballot']),
-        ...mapGetters('accounts', ['account','accountData']),
-        tinyDevice() {
-            return this.$q.screen.width < 600;
-        },
-        smallDevice() {
-            return this.$q.screen.width < 800;
-        },
-        mediumDevice() {
-            return this.$q.screen.width < 1024;
-        },
-        sectionClass() {
-            // we need to get rid of the padding if we are in a tiny device
-            return this.tinyDevice ? 'q-pa-none' : 'q-pa-md';
-        },
-        textClass() {
-            if (this.tinyDevice) return 'text-x-small';
-            if (this.smallDevice) return 'text-small';
-            return '';
-        },
-        radioBtnVertical() {
-            return this.smallDevice || this.tinyDevice;
-        },
-        previewVertical() {
-            return this.smallDevice || this.tinyDevice;
-        },
-        stepperVertical() {
-            // stepper turn from horizontal to vertical on small devices
-            return this.mediumDevice;
-        },
-        maximized() {
-            return this.tinyDevice;
-        },
-        imageHintText() {
-            // if we don't have much space. Do not show this text.
-            return this.maximized ?
-                '' :
-                'Upload an image and paste the url here to include it in your poll.';
-        },
-        filename() {
-            if (!this.form.file) return '';
-            return this.form.file.name;
-        },
-        optionsAsText() {
-            return this.form.optionsLabels.join() + this.form.minOptions + this.form.maxOptions;
-        },
-        treasury() {
-            if (!this.form.treasurySymbol) return null;
-            return this.treasuries.find(
-                (t) => t.symbol === this.form.treasurySymbol.symbol
-            );
-        },
-        getTreasurySymbols() {
-            let result = [];
-            if (this.userTreasury) {
-                const symbols = this.userTreasury.map((treasury) => ({
-                    symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, ''),
-                }));
-                result = this.treasuries
-                    .filter((v) => {
-                        return symbols.some((v2) => {
-                            return v.symbol === v2.symbol && v.symbol !== 'VOTE';
-                        });
-                    })
-                    .map(this.treasuryToOption);
-            }
+	name: 'BallotForm',
+	components: {
+		BallotListItem,
+	},
+	mixins: [validation],
+	props: {
+		show: { type: Boolean, required: true },
+	},
+	emits: ['close'],
+	data() {
+		return {
+			showSaveDialog: false,
+			moment: moment,
+			step: ref(1),
+			ballotTypes: [TYPE_OF_BALLOT_0, TYPE_OF_BALLOT_1, TYPE_OF_BALLOT_2],
+			isBallotListRowDirection: true,
+			form: {
+				isOfficial: true,
+				openForVoting: true,
+				onlyOneOption: true,
+				typeOfBallot: TYPE_OF_BALLOT_0,
+				newOptionLabel: '',
+				newOptionValue: '',
+				defaultLabels:['Yes', 'No', 'Abstain'],
+				optionsLabels:['Yes', 'No'],
+				optionsValues:['yes', 'no'],
+				optionsError: '',
+				title: '',
+				category: 'poll',
+				description: '',
+				imageUrl: '',
+				IPFSString: null,
+				treasurySymbol: null,
+				votingMethod: '1token1vote',
+				maxOptions: 1,
+				minOptions: 1,
+				initialOptions: [],
+				endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
+				config: 'votestake',
+				file: null
+			},
+			prompt: false,
+			userBalance: null,
+			votingMethodOptions: [
+				{ value: '1acct1vote', label: 'One vote per account' },
+				{ value: '1tokennvote', label: 'All tokens to each vote' },
+				{ value: '1token1vote', label: 'All tokens split to each vote' },
+				{ value: '1tsquare1v', label: 'One token equals one square vote' },
+				{ value: 'quadratic', label: 'Quadratic' },
+			],
+			categoryOptions: [
+				{ value: 'election', label: 'Election' },
+				{ value: 'poll', label: 'Poll' },
+				{ value: 'referendum', label: 'Referendum' },
+			],
+			submitting: false,
+			cid: null,
+		};
+	},
+	computed: {
+		...mapGetters('trails', ['treasuries', 'userTreasury', 'ballotFees', 'ballot']),
+		...mapGetters('accounts', ['account','accountData']),
+		tinyDevice() {
+			return this.$q.screen.width < 600;
+		},
+		smallDevice() {
+			return this.$q.screen.width < 800;
+		},
+		mediumDevice() {
+			return this.$q.screen.width < 1024;
+		},
+		sectionClass() {
+			// we need to get rid of the padding if we are in a tiny device
+			return this.tinyDevice ? 'q-pa-none' : 'q-pa-md';
+		},
+		textClass() {
+			if (this.tinyDevice) return 'text-x-small';
+			if (this.smallDevice) return 'text-small';
+			return '';
+		},
+		radioBtnVertical() {
+			return this.smallDevice || this.tinyDevice;
+		},
+		previewVertical() {
+			return this.smallDevice || this.tinyDevice;
+		},
+		stepperVertical() {
+			// stepper turn from horizontal to vertical on small devices
+			return this.mediumDevice;
+		},
+		maximized() {
+			return this.tinyDevice;
+		},
+		imageHintText() {
+			// if we don't have much space. Do not show this text.
+			return this.maximized ?
+				'' :
+				'Upload an image and paste the url here to include it in your poll.';
+		},
+		filename() {
+			if (!this.form.file) return '';
+			return this.form.file.name;
+		},
+		optionsAsText() {
+			return this.form.optionsLabels.join() + this.form.minOptions + this.form.maxOptions;
+		},
+		treasury() {
+			if (!this.form.treasurySymbol) return null;
+			return this.treasuries.find(
+				(t) => t.symbol === this.form.treasurySymbol.symbol
+			);
+		},
+		getTreasurySymbols() {
+			let result = [];
+			if (this.userTreasury) {
+				const symbols = this.userTreasury.map((treasury) => ({
+					symbol: treasury.delegated.replace(/[^a-zA-Z]/gi, ''),
+				}));
+				result = this.treasuries
+					.filter((v) => {
+						return symbols.some((v2) => {
+							return v.symbol === v2.symbol && v.symbol !== 'VOTE';
+						});
+					})
+					.map(this.treasuryToOption);
+			}
 
-            if (result.length === 0) {
-                result = [{
-                    label: 'You are not registered to any private DAO',
-                    value: null,
-                    disable: true
-                }];
-            }
+			if (result.length === 0) {
+				result = [{
+					label: 'You are not registered to any private DAO',
+					value: null,
+					disable: true
+				}];
+			}
 
-            return result;
-        },
-        isStakeable() {
-            let selectedTreasurySettings = this.treasuries.find(
-                (t) =>
-                    (t.access === 'public' || t.manager === this.account) &&
+			return result;
+		},
+		isStakeable() {
+			let selectedTreasurySettings = this.treasuries.find(
+				(t) =>
+					(t.access === 'public' || t.manager === this.account) &&
           t.symbol === this.form.treasurySymbol?.symbol
-            )?.settings;
-            return selectedTreasurySettings
-                ? selectedTreasurySettings.find((i) => i.key === 'stakeable').value
-                : null;
-        },
-        configEnable() {
-            return this.form.treasurySymbol?.symbol !== 'VOTE' && this.isStakeable;
-        },
-        available() {
-            if (this.userBalance) {
-                const ballotFee = this.onlyNumbers(this.ballotFees.value);
-                return this.userBalance >= ballotFee;
-            } else {
-                return null;
-            }
-        },
-        fee() {
-            return this.ballotFees ? this.ballotFees.value : 0;
-        },
-    },
-    methods: {
-        ...mapActions('trails', [
-            'setBallot',
-            'addBallot',
-            'fetchTreasuriesForUser',
-            'fetchFees',
-        ]),
-        debug(){
-        },
-        // auxiliar not-implemented-yet functions
-        async nextStep() {
-            if (this.step >= 5) return;
-            let list = {};
-            switch(this.step) {
-            case 1: {
-                list = {title:1, description:1, img:1};
-                break;
-            }
-            case 2: {
-                list = {treasurySymbol:1};
-                break;
-            }
-            case 3: {
-                if (this.form.typeOfBallot === this.ballotTypes[0]) {
-                    list = {op_a_1:1,op_a_2:1};
-                } else if (this.form.typeOfBallot === this.ballotTypes[1]) {
-                    list = {op_b_1:1,op_b_2:1,op_b_3:1};
-                } else if (this.form.typeOfBallot === this.ballotTypes[2]) {
-                    list = {optionsLabels:1, minimun:1, maximun:1};
-                }
-                break;
-            }
-            case 4:
-                if (this.form.openForVoting) {
-                    list = {endTime:1};
-                } else {
-                    list = {};
-                }
-                break;
-            }
-            this.rules.setActive(true);
-            let ok = await this.validate(list);
-            if (ok) {
-                this.rules.setActive(false);
-                this.updateBallot();
-                this.$refs.stepper.next();
-            }
-        },
-        validateImage(active) {
-            this.rules.setActive(active);
-            this.$refs.img.validate();
-        },
-        slugify(text) {
-            return text
-                .toLowerCase()
-                .replace(/[^a-z12345]/gi, '')
-                .substring(0,12);
-        },
-        createContentField() {
+			)?.settings;
+			return selectedTreasurySettings
+				? selectedTreasurySettings.find((i) => i.key === 'stakeable').value
+				: null;
+		},
+		configEnable() {
+			return this.form.treasurySymbol?.symbol !== 'VOTE' && this.isStakeable;
+		},
+		available() {
+			if (this.userBalance) {
+				const ballotFee = this.onlyNumbers(this.ballotFees.value);
+				return this.userBalance >= ballotFee;
+			} else {
+				return null;
+			}
+		},
+		fee() {
+			return this.ballotFees ? this.ballotFees.value : 0;
+		},
+	},
+	methods: {
+		...mapActions('trails', [
+			'setBallot',
+			'addBallot',
+			'fetchTreasuriesForUser',
+			'fetchFees',
+		]),
+		debug(){
+		},
+		// auxiliar not-implemented-yet functions
+		async nextStep() {
+			if (this.step >= 5) return;
+			let list = {};
+			switch(this.step) {
+			case 1: {
+				list = {title:1, description:1, img:1};
+				break;
+			}
+			case 2: {
+				list = {treasurySymbol:1};
+				break;
+			}
+			case 3: {
+				if (this.form.typeOfBallot === this.ballotTypes[0]) {
+					list = {op_a_1:1,op_a_2:1};
+				} else if (this.form.typeOfBallot === this.ballotTypes[1]) {
+					list = {op_b_1:1,op_b_2:1,op_b_3:1};
+				} else if (this.form.typeOfBallot === this.ballotTypes[2]) {
+					list = {optionsLabels:1, minimun:1, maximun:1};
+				}
+				break;
+			}
+			case 4:
+				if (this.form.openForVoting) {
+					list = {endTime:1};
+				} else {
+					list = {};
+				}
+				break;
+			}
+			this.rules.setActive(true);
+			let ok = await this.validate(list);
+			if (ok) {
+				this.rules.setActive(false);
+				this.updateBallot();
+				this.$refs.stepper.next();
+			}
+		},
+		validateImage(active) {
+			this.rules.setActive(active);
+			this.$refs.img.validate();
+		},
+		slugify(text) {
+			return text
+				.toLowerCase()
+				.replace(/[^a-z12345]/gi, '')
+				.substring(0,12);
+		},
+		createContentField() {
 
-            // final object
-            let final = {
-                version: 'DCMSv2',
-                optionData: {}
-            };
+			// final object
+			let final = {
+				version: 'DCMSv2',
+				optionData: {}
+			};
 
-            // Option display texts
-            this.updateOptionValues().forEach((v,i) => {
-                final.optionData[v] = {displayText:this.form.optionsLabels[i]};
-            });
+			// Option display texts
+			this.updateOptionValues().forEach((v,i) => {
+				final.optionData[v] = {displayText:this.form.optionsLabels[i]};
+			});
 
-            // image
-            if (this.form.imageUrl) {
-                final.imageUrls = [this.form.imageUrl];
-            }
+			// image
+			if (this.form.imageUrl) {
+				final.imageUrls = [this.form.imageUrl];
+			}
 
-            // PDF hash
-            if (this.form.IPFSString) {
-                final.contentUrls = [this.form.IPFSString];
-            }
+			// PDF hash
+			if (this.form.IPFSString) {
+				final.contentUrls = [this.form.IPFSString];
+			}
 
-            let final_str = JSON.stringify(final);
+			let final_str = JSON.stringify(final);
 
-            return final_str;
-        },
-        treasuryToOption(treasury) {
-            if (!treasury) return null;
-            return {
-                label: treasury.title
-                    ? `${treasury.title} (${treasury.supply})`
-                    : treasury.supply,
-                value: treasury.supply,
-                symbol: treasury.supply.replace(/[^a-zA-Z]/gi, ''),
-            };
-        },
-        setOfficialDAO() {
-            let off_tr = this.treasuries.find((v) => v.symbol === 'VOTE');
-            this.form.treasurySymbol = this.treasuryToOption(off_tr);
-            this.form.config = 'votestake';
-        },
-        isNewOptionRequired(val) {
-            return !this.form.newOptionRequired || !!val || this.$t('forms.errors.required');
-        },
-        addOption() {
-            // if not newOptionLabel then alert the error and require the field to be tot empty
-            this.form.newOptionRequired = this.form.newOptionLabel === '';
-            if (this.form.newOptionLabel) {
-                this.form.optionsLabels.push(this.form.newOptionLabel);
-                this.form.newOptionLabel = '';
-            } else {
-                this.$refs.newOptionInput.validate();
-            }
-        },
-        deleteOption(index) {
-            this.form.optionsLabels.splice(index,1);
-        },
-        cleanOptions() {
-            this.form.optionsLabels = [];
-        },
-        updateOptionValues() {
-            this.form.optionsValues = this.form.optionsLabels.map( t => this.slugify(t) );
-            return this.form.optionsValues;
-        },
-        setDefaultOptions(num) {
-            this.form.optionsLabels = this.form.defaultLabels.map(t => t).filter((_,i) => i<num);
-        },
-        // empty functions BallotListItem, to use it as preview
-        getLoser() {
-            return false;
-        },
-        isBallotOpened(ballot) {
-            if (!ballot) return false;
-            return false;
-        },
-        getStartTime() {
-            return moment(new Date()).add(1,'minutes').toDate().getTime();
-        },
-        async onAddBallot() {
-            this.submitting = true;
-            const success = await this.addBallot(this.createBallotObject());
-            this.submitting = false;
-            if (success) {
-                let url = `/trails/ballot/${this.ballot.ballot_name}/${Date.now()}`;
-                this.$emit('close');
-                this.resetBallot();
-                setTimeout(() => {
-                    this.$router.push(url);
-                }, 1000);
+			return final_str;
+		},
+		treasuryToOption(treasury) {
+			if (!treasury) return null;
+			return {
+				label: treasury.title
+					? `${treasury.title} (${treasury.supply})`
+					: treasury.supply,
+				value: treasury.supply,
+				symbol: treasury.supply.replace(/[^a-zA-Z]/gi, ''),
+			};
+		},
+		setOfficialDAO() {
+			let off_tr = this.treasuries.find((v) => v.symbol === 'VOTE');
+			this.form.treasurySymbol = this.treasuryToOption(off_tr);
+			this.form.config = 'votestake';
+		},
+		isNewOptionRequired(val) {
+			return !this.form.newOptionRequired || !!val || this.$t('forms.errors.required');
+		},
+		addOption() {
+			// if not newOptionLabel then alert the error and require the field to be tot empty
+			this.form.newOptionRequired = this.form.newOptionLabel === '';
+			if (this.form.newOptionLabel) {
+				this.form.optionsLabels.push(this.form.newOptionLabel);
+				this.form.newOptionLabel = '';
+			} else {
+				this.$refs.newOptionInput.validate();
+			}
+		},
+		deleteOption(index) {
+			this.form.optionsLabels.splice(index,1);
+		},
+		cleanOptions() {
+			this.form.optionsLabels = [];
+		},
+		updateOptionValues() {
+			this.form.optionsValues = this.form.optionsLabels.map( t => this.slugify(t) );
+			return this.form.optionsValues;
+		},
+		setDefaultOptions(num) {
+			this.form.optionsLabels = this.form.defaultLabels.map(t => t).filter((_,i) => i<num);
+		},
+		// empty functions BallotListItem, to use it as preview
+		getLoser() {
+			return false;
+		},
+		isBallotOpened(ballot) {
+			if (!ballot) return false;
+			return false;
+		},
+		getStartTime() {
+			return moment(new Date()).add(1,'minutes').toDate().getTime();
+		},
+		async onAddBallot() {
+			this.submitting = true;
+			const success = await this.addBallot(this.createBallotObject());
+			this.submitting = false;
+			if (success) {
+				let url = `/trails/ballot/${this.ballot.ballot_name}/${Date.now()}`;
+				this.$emit('close');
+				this.resetBallot();
+				setTimeout(() => {
+					this.$router.push(url);
+				}, 1000);
         
-            }
-        },
-        async openConfirmation() {
-            this.resetValidation(this.form);
-            if (!(await this.validate(this.form))) return;
-            this.prompt = true;
-        },
-        resetBallot() {
-            this.form = {
-                newOptionLabel: '',
-                newOptionRequired: false,
-                defaultLabels:['Yes', 'No', 'Abstain'],
-                optionsLabels:['Yes', 'No'],
-                optionsValues:['yes', 'no'],
-                optionsError: '',
-                title: '',
-                category: 'poll',
-                description: '',
-                imageUrl: '',
-                IPFSString: null,
-                treasurySymbol: null,
-                votingMethod: '1token1vote',
-                maxOptions: 1,
-                minOptions: 1,
-                initialOptions: [],
-                endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
-                config: 'votestake',
-                file: null
-            };
-            this.rules.setActive(false);
-            this.step = 1;
-            this.form.typeOfBallot = this.ballotTypes[0];
-            this.form.isOfficial = true;
-            this.form.onlyOneOption = true;
-            this.form.openForVoting = true;
-            this.badImage = false;
-            this.cid = null;
-            this.setOfficialDAO();
-        },
-        onCancel() {
-            localStorage.removeItem('ballot_creation');
-            this.$emit('close');
-        },
-        save() {
-            localStorage.setItem('ballot_creation', JSON.stringify(this.form));
-        },
-        load() {
-            try {
-                let str = localStorage.getItem('ballot_creation');
-                if (str) {
-                    let object = JSON.parse(str);
-                    this.form = object;
-                    setTimeout(() => {
-                        object = JSON.parse(str);
-                        this.form = object;
-                    }, 1000);
-                }
-                return true;
-            } catch (e) {
-                console.error('ERROR: ', e);
-            }
-            return false;
-        },
-        onWannaLeave() {
-            this.showSaveDialog = true;
-        },
-        async onSave() {
-            await this.save();
-            this.$emit('close');
-        },
-        addBallotOption(val, done) {
-            done(val.toLowerCase(), 'add-unique');
-        },
-        createBallotObject() {
-            return {
-                title: this.form.title,
-                category: this.form.category,
-                description:
+			}
+		},
+		async openConfirmation() {
+			this.resetValidation(this.form);
+			if (!(await this.validate(this.form))) return;
+			this.prompt = true;
+		},
+		resetBallot() {
+			this.form = {
+				newOptionLabel: '',
+				newOptionRequired: false,
+				defaultLabels:['Yes', 'No', 'Abstain'],
+				optionsLabels:['Yes', 'No'],
+				optionsValues:['yes', 'no'],
+				optionsError: '',
+				title: '',
+				category: 'poll',
+				description: '',
+				imageUrl: '',
+				IPFSString: null,
+				treasurySymbol: null,
+				votingMethod: '1token1vote',
+				maxOptions: 1,
+				minOptions: 1,
+				initialOptions: [],
+				endTime: moment(new Date()).add(20, 'days').format('YYYY-MM-DD HH:mm'),
+				config: 'votestake',
+				file: null
+			};
+			this.rules.setActive(false);
+			this.step = 1;
+			this.form.typeOfBallot = this.ballotTypes[0];
+			this.form.isOfficial = true;
+			this.form.onlyOneOption = true;
+			this.form.openForVoting = true;
+			this.badImage = false;
+			this.cid = null;
+			this.setOfficialDAO();
+		},
+		onCancel() {
+			localStorage.removeItem('ballot_creation');
+			this.$emit('close');
+		},
+		save() {
+			localStorage.setItem('ballot_creation', JSON.stringify(this.form));
+		},
+		load() {
+			try {
+				let str = localStorage.getItem('ballot_creation');
+				if (str) {
+					let object = JSON.parse(str);
+					this.form = object;
+					setTimeout(() => {
+						object = JSON.parse(str);
+						this.form = object;
+					}, 1000);
+				}
+				return true;
+			} catch (e) {
+				console.error('ERROR: ', e);
+			}
+			return false;
+		},
+		onWannaLeave() {
+			this.showSaveDialog = true;
+		},
+		async onSave() {
+			await this.save();
+			this.$emit('close');
+		},
+		addBallotOption(val, done) {
+			done(val.toLowerCase(), 'add-unique');
+		},
+		createBallotObject() {
+			return {
+				title: this.form.title,
+				category: this.form.category,
+				description:
                     this.form.IPFSString && this.form.IPFSString.trim() !== ''
-                        ? `${this.form.description} ${this.form.IPFSString}`
-                        : this.form.description,
-                content: this.createContentField(),
-                treasurySymbol: this.form.treasurySymbol,
-                votingMethod: this.form.votingMethod,
-                maxOptions: this.form.maxOptions,
-                minOptions: this.form.minOptions,
-                initialOptions: this.updateOptionValues(),
-                endTime: this.form.openForVoting ? this.form.endTime : new Date(),
-                config: this.form.config,
-                settings: this.isStakeable,
-            };
-        },
-        updateBallot() {
-            let zero_supply = this.treasury?.max_supply || '0.0000 VOTE';
-            zero_supply = `${parseFloat(0).toFixed(
-                supplyToDecimals(zero_supply)
-            )} ${supplyToSymbol(zero_supply)}`;
-            let ballot = {
-                treasury: this.treasury,
-                description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
-                    ? `${this.form.description} ${this.form.IPFSString}`
-                    : this.form.description,
-                content: this.createContentField(),
-                publisher: this.account,
-                title: this.form.title,
-                category: this.form.category,
-                status: this.form.openForVoting ? 'voting' : 'setup',
-                ballot_name: this.slugify(this.form.title),
-                total_voters: 0,
-                options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
+                    	? `${this.form.description} ${this.form.IPFSString}`
+                    	: this.form.description,
+				content: this.createContentField(),
+				treasurySymbol: this.form.treasurySymbol,
+				votingMethod: this.form.votingMethod,
+				maxOptions: this.form.maxOptions,
+				minOptions: this.form.minOptions,
+				initialOptions: this.updateOptionValues(),
+				endTime: this.form.openForVoting ? this.form.endTime : new Date(),
+				config: this.form.config,
+				settings: this.isStakeable,
+			};
+		},
+		updateBallot() {
+			let zero_supply = this.treasury?.max_supply || '0.0000 VOTE';
+			zero_supply = `${parseFloat(0).toFixed(
+				supplyToDecimals(zero_supply)
+			)} ${supplyToSymbol(zero_supply)}`;
+			let ballot = {
+				treasury: this.treasury,
+				description: this.form.IPFSString && this.form.IPFSString.trim() !== ''
+					? `${this.form.description} ${this.form.IPFSString}`
+					: this.form.description,
+				content: this.createContentField(),
+				publisher: this.account,
+				title: this.form.title,
+				category: this.form.category,
+				status: this.form.openForVoting ? 'voting' : 'setup',
+				ballot_name: this.slugify(this.form.title),
+				total_voters: 0,
+				options: //[{key: "yes", value:"0.0000 VOTE"},{key: "no", value:"0.0000 VOTE"}]
                     this.form.optionsLabels.map((key) => ({key, value:zero_supply})),
-                total_raw_weight: zero_supply
-            };
-            this.setBallot(ballot);
-        },
-        async convertToIPFS(file) {
-            try {
-                const ipfs = await IPFS.create();
-                this.cid = await ipfs.add(file);
-            } catch (e) {
-                if (e.code === 'ERR_LOCK_EXISTS') return;
-                console.error(e);
-            }
-        },
-        async updateUserBalance() {
-            if (!this.accountData) return;
-            this.userBalance = this.onlyNumbers(this.accountData.core_liquid_balance);
-        },
-    },
-    watch: {
-        'form.file': function () {
-            this.convertToIPFS(this.form.file);
-        },
-        'form.endTime'() {
-            try {
-                if (this.$refs.qDateProxy1) this.$refs.qDateProxy1.hide();
-                if (this.$refs.qDateProxy2) this.$refs.qDateProxy2.hide();
-            } catch(e) {
-                console.error(e);
-            }
-        },
-        'form.imageUrl'() {
-            if (this.form.imageUrl === '') {
-                this.badImage = false;
-            }
-        },
-        account: async function (account) {
-            this.fetchTreasuriesForUser(account);
-            this.updateUserBalance();
-        },
-        cid: function () {
-            if (this.cid) {
-                this.form.IPFSString = this.cid.path;
-            } else {
-                this.form.IPFSString = null;
-            }
-        },
-        'form.typeOfBallot'() {
-            switch(this.form.typeOfBallot) {
-            case (TYPE_OF_BALLOT_0):
-                this.setDefaultOptions(2);
-                break;
-            case (TYPE_OF_BALLOT_1):
-                this.setDefaultOptions(3);
-                break;
-            case (TYPE_OF_BALLOT_2):
-                break;
-            default: // ??
-                console.error('ERORR: check consistency! ', [this.form.typeOfBallot, this.ballotTypes]);
-                break;
-            }
-        },
-        'form.isOfficial'() {
-            if (this.form.isOfficial) {
-                this.setOfficialDAO();
-            } else {
-                this.form.treasurySymbol = null;
-            }
-        },
-        optionsAsText() {
-            this.rules.setActive(true);
-            this.validate({optionsLabels:1, minimun:1, maximun:1});
-        },
-        'form.onlyOneOption'() {
-            if (!this.form.onlyOneOption) {
-                this.form.minOptions = 1;
-                this.form.maxOptions = this.form.optionsLabels.length;
-            } else {
-                this.form.minOptions = 1;
-                this.form.maxOptions = 1;
-            }
-        },
-        'form.openForVoting'() {
-            this.rules.setActive(this.form.openForVoting);
-            if (this.$refs.endTime) this.$refs.endTime.validate();
-        },
-        show() {
-            if (this.show) {
-                this.rules.setActive(false);
-                this.fetchFees();
-                this.updateUserBalance();
-                this.fetchTreasuriesForUser(this.account);
-                this.showSaveDialog = false;
-                if (!this.load()) {
-                    this.setOfficialDAO();
-                }
-            } else {
-                this.resetBallot();
-            }
-        },
-        badImage() {
-            this.validateImage(this.badImage);
-        }
-    }
+				total_raw_weight: zero_supply
+			};
+			this.setBallot(ballot);
+		},
+		async convertToIPFS(file) {
+			try {
+				const ipfs = await IPFS.create();
+				this.cid = await ipfs.add(file);
+			} catch (e) {
+				if (e.code === 'ERR_LOCK_EXISTS') return;
+				console.error(e);
+			}
+		},
+		async updateUserBalance() {
+			if (!this.accountData) return;
+			this.userBalance = this.onlyNumbers(this.accountData.core_liquid_balance);
+		},
+	},
+	watch: {
+		'form.file': function () {
+			this.convertToIPFS(this.form.file);
+		},
+		'form.endTime'() {
+			try {
+				if (this.$refs.qDateProxy1) this.$refs.qDateProxy1.hide();
+				if (this.$refs.qDateProxy2) this.$refs.qDateProxy2.hide();
+			} catch(e) {
+				console.error(e);
+			}
+		},
+		'form.imageUrl'() {
+			if (this.form.imageUrl === '') {
+				this.badImage = false;
+			}
+		},
+		account: async function (account) {
+			this.fetchTreasuriesForUser(account);
+			this.updateUserBalance();
+		},
+		cid: function () {
+			if (this.cid) {
+				this.form.IPFSString = this.cid.path;
+			} else {
+				this.form.IPFSString = null;
+			}
+		},
+		'form.typeOfBallot'() {
+			switch(this.form.typeOfBallot) {
+			case (TYPE_OF_BALLOT_0):
+				this.setDefaultOptions(2);
+				break;
+			case (TYPE_OF_BALLOT_1):
+				this.setDefaultOptions(3);
+				break;
+			case (TYPE_OF_BALLOT_2):
+				break;
+			default: // ??
+				console.error('ERORR: check consistency! ', [this.form.typeOfBallot, this.ballotTypes]);
+				break;
+			}
+		},
+		'form.isOfficial'() {
+			if (this.form.isOfficial) {
+				this.setOfficialDAO();
+			} else {
+				this.form.treasurySymbol = null;
+			}
+		},
+		optionsAsText() {
+			this.rules.setActive(true);
+			this.validate({optionsLabels:1, minimun:1, maximun:1});
+		},
+		'form.onlyOneOption'() {
+			if (!this.form.onlyOneOption) {
+				this.form.minOptions = 1;
+				this.form.maxOptions = this.form.optionsLabels.length;
+			} else {
+				this.form.minOptions = 1;
+				this.form.maxOptions = 1;
+			}
+		},
+		'form.openForVoting'() {
+			this.rules.setActive(this.form.openForVoting);
+			if (this.$refs.endTime) this.$refs.endTime.validate();
+		},
+		show() {
+			if (this.show) {
+				this.rules.setActive(false);
+				this.fetchFees();
+				this.updateUserBalance();
+				this.fetchTreasuriesForUser(this.account);
+				this.showSaveDialog = false;
+				if (!this.load()) {
+					this.setOfficialDAO();
+				}
+			} else {
+				this.resetBallot();
+			}
+		},
+		badImage() {
+			this.validateImage(this.badImage);
+		}
+	}
 };
 </script>
 

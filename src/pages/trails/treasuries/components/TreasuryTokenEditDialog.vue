@@ -3,44 +3,44 @@ import { mapActions } from 'vuex';
 import TreasuryTokenSettingsEdit from './TreasuryTokenSettingsEdit';
 
 export default {
-    name: 'TreasuryTokenEditDialog',
-    components: {
-        TreasuryTokenSettingsEdit
-    },
-    props: {
-        show: { type: Boolean, required: true },
-        treasury: { type: Object, required: true },
-    },
-    data() {
-        return {
-            settings: [],
-            submitting: false,
-        };
-    },
-    watch: {
-        show() {
-            if (this.show) {
-                this.settings = this.treasury.settings.map(x => ({key:x.key, value:!!x.value}));
-            }
-        }
-    },
-    methods: {
-        ...mapActions('trails', ['editTreasurySettings']),
-        async onSaveSettings() {
-            this.submitting = true;
-            const success = await this.editTreasurySettings({
-                settings: this.settings.map(x => ({key:x.key, value:x.value?1:0})),
-                treasury: this.treasury
-            });
-            this.submitting = false;
-            if (success) {
-                this.showSuccessMsg('Token features updated successfully');
-                this.$emit('close');
-            } else {
-                this.showSuccessMsg('An error has ocurred');
-            }
-        },
-    },
+	name: 'TreasuryTokenEditDialog',
+	components: {
+		TreasuryTokenSettingsEdit
+	},
+	props: {
+		show: { type: Boolean, required: true },
+		treasury: { type: Object, required: true },
+	},
+	data() {
+		return {
+			settings: [],
+			submitting: false,
+		};
+	},
+	watch: {
+		show() {
+			if (this.show) {
+				this.settings = this.treasury.settings.map(x => ({key:x.key, value:!!x.value}));
+			}
+		}
+	},
+	methods: {
+		...mapActions('trails', ['editTreasurySettings']),
+		async onSaveSettings() {
+			this.submitting = true;
+			const success = await this.editTreasurySettings({
+				settings: this.settings.map(x => ({key:x.key, value:x.value?1:0})),
+				treasury: this.treasury
+			});
+			this.submitting = false;
+			if (success) {
+				this.showSuccessMsg('Token features updated successfully');
+				this.$emit('close');
+			} else {
+				this.showSuccessMsg('An error has ocurred');
+			}
+		},
+	},
 };
 </script>
 

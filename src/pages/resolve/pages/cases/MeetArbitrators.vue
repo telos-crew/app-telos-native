@@ -32,21 +32,21 @@ import ArbitratorStatusChip from '../../components/ArbitratorStatusChip.vue';
 import TelosProfileAvatar from 'src/components/common/TelosProfileAvatar.vue';
 import { getDstorLink } from '../../util';
 export default {
-    components: {
-        ArbitratorStatusChip,
-        TelosProfileAvatar
-    },
-    methods: {
-        getDstorLink(hash) {
-            return getDstorLink(hash);
-        }
-    },
-    computed: {
-        arbitrators() {
-            const arbitrators = [...this.$store.state.resolve.arbitrators];
-            return arbitrators || [];
-        }
-    }
+	components: {
+		ArbitratorStatusChip,
+		TelosProfileAvatar
+	},
+	methods: {
+		getDstorLink(hash) {
+			return getDstorLink(hash);
+		}
+	},
+	computed: {
+		arbitrators() {
+			const arbitrators = [...this.$store.state.resolve.arbitrators];
+			return arbitrators || [];
+		}
+	}
 };
 </script>
 

@@ -32,59 +32,59 @@ import FileUploadInput from '../../components/FileUploadInput.vue';
 
 // claimant, claim_link, respondant, claim_category
 export default {
-    props: ['close', 'caseId'],
-    components: {
-        FileUploadInput
-    },
-    data() {
-        const options = CLAIM_CATEGORY_LIST.map((item, index) => ({
-            label: this.$t(item),
-            value: index
-        }));
-        return {
-            category: null,
-            claimLink: '',
-            categories: options
-        };
-    },
-    computed: {
-        ...mapGetters({
-            account: 'accounts/account'
-        }),
-        isLinkValid() {
-            const isValid = validateIpfsHash(this.claimLink);
-            return isValid;
-        },
-        isSubmitReady() {
-            if (!this.category || !this.isLinkValid) return false;
-            return true;
-        },
-    },
-    methods: {
-        validateId,
-        setClaimLink(link) {
-            this.claimLink = link;
-        },
-        async submit() {
-            const addClaimActions = [
-                {
-                    account: process.env.ARB_CONTRACT,
-                    name: 'addclaim',
-                    data: {
-                        claimant: this.account,
-                        claim_link: this.claimLink,
-                        claim_category: this.category.value,
-                        case_id: this.caseId
-                    }
-                }
-            ];
-            try {
-                await this.$store.$api.signTransaction(addClaimActions);
-                this.close();
-            } catch (err) {
-                console.log('submit error: ', err);
-            }
-        }
-    }
+	props: ['close', 'caseId'],
+	components: {
+		FileUploadInput
+	},
+	data() {
+		const options = CLAIM_CATEGORY_LIST.map((item, index) => ({
+			label: this.$t(item),
+			value: index
+		}));
+		return {
+			category: null,
+			claimLink: '',
+			categories: options
+		};
+	},
+	computed: {
+		...mapGetters({
+			account: 'accounts/account'
+		}),
+		isLinkValid() {
+			const isValid = validateIpfsHash(this.claimLink);
+			return isValid;
+		},
+		isSubmitReady() {
+			if (!this.category || !this.isLinkValid) return false;
+			return true;
+		},
+	},
+	methods: {
+		validateId,
+		setClaimLink(link) {
+			this.claimLink = link;
+		},
+		async submit() {
+			const addClaimActions = [
+				{
+					account: process.env.ARB_CONTRACT,
+					name: 'addclaim',
+					data: {
+						claimant: this.account,
+						claim_link: this.claimLink,
+						claim_category: this.category.value,
+						case_id: this.caseId
+					}
+				}
+			];
+			try {
+				await this.$store.$api.signTransaction(addClaimActions);
+				this.close();
+			} catch (err) {
+				console.log('submit error: ', err);
+			}
+		}
+	}
 };
 </script>
