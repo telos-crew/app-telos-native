@@ -19,7 +19,7 @@
     </q-btn>
   </div>
   <q-dialog v-model="dialog">
-   <create-item-form />
+   <create-item-form :close="toggleDialog" />
   </q-dialog>
 </template>
 

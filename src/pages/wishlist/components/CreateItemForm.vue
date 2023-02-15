@@ -1,28 +1,72 @@
 <template>
-    <q-card class="dismiss-offer-form">
+    <q-card class="create-new-form">
         <q-card-section>
-            <div class="text-h6">{{$t('pages.resolve.dismiss_offer_heading')}}</div>
+            <div class="text-h6">{{$t('pages.wishlist.create_new_title')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
             <p>
-                {{$t('pages.resolve.dismiss_offer_text')}}
+                Hello
             </p>
         </q-card-section>
 
+        <q-card-section class="q-pt-none">
+            <q-input
+                v-model="title"
+                filled
+                :label="$t('pages.wishlist.title')"
+                bottom-slots
+                :hint="$t('pages.wishlist.create_new_title_hint')"
+            />
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+            <q-input
+                v-model="subtitle"
+                filled
+                :label="$t('pages.wishlist.subtitle')"
+                bottom-slots
+                :hint="$t('pages.wishlist.create_new_subtitle_hint')"
+            />
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+            <q-input
+                type="textarea"
+                v-model="description"
+                filled
+                :label="$t('pages.wishlist.description')"
+                bottom-slots
+                :hint="$t('pages.wishlist.create_new_description_hint')"
+            />
+        </q-card-section>
+
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat :label="$t('pages.resolve.dismiss_offer_dismiss_cta')" @click="submit" />
-            <q-btn flat :label="$t('pages.resolve.dismiss_offer_cancel_cta')" @click="close" />
+            <q-btn flat :label="$t('common.buttons.submit')" @click="submit" />
+            <q-btn flat :label="$t('common.buttons.cancel')" @click="close" />
         </q-card-actions>
     </q-card>
 </template>
 
 <script>
-  export default {
-
+// title, subtitle, description, images, ballot ID, content URL
+export default {
+  props: ['submit', 'close'],
+  data () {
+    return {
+      title: '',
+      subtitle: '',
+      description: '',
+      imageUrls: [],
+      contentUrls: []
+    }
   }
+}
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.create-new-form {
+  max-width: 450px;
+  width: 90%;
+}
 </style>

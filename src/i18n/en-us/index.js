@@ -4,6 +4,7 @@ export default {
         buttons: {
             reset: 'reset',
             ok: 'OK',
+            submit: 'Submit',
             cancel: 'Cancel',
             continue: 'Continue',
             create: 'Create',
@@ -732,5 +733,14 @@ export default {
             account_balance: 'Balance:',
             account_balance_withdraw: 'Withdraw'
         },
+        wishlist: {
+          title: 'Title',
+          subtitle: 'Subtitle',
+          description: 'Description',
+          create_new_title: 'Create New Item',
+          create_new_title_hint: 'Display name for your item',
+          create_new_subtitle_hint: 'Subtitle',
+          create_new_description_hint: 'Detailed explanation of your item'
+        }
     },
 };
