@@ -41,6 +41,10 @@
             />
         </q-card-section>
 
+        <q-card-section class="q-pt-none input-row">
+            <file-upload-grid accept="image/png, image/jpeg" />
+        </q-card-section>
+
         <q-card-actions align="right" class="text-primary">
             <q-btn flat :label="$t('common.buttons.submit')" @click="submit" />
             <q-btn flat :label="$t('common.buttons.cancel')" @click="close" />
@@ -50,7 +54,11 @@
 
 <script>
 // title, subtitle, description, images, ballot ID, content URL
+import FileUploadGrid from 'src/pages/resolve/components/FileUploadGrid.vue';
 export default {
+  components: {
+    FileUploadGrid
+  },
   props: ['submit', 'close'],
   data () {
     return {

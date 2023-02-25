@@ -53,11 +53,12 @@ export default {
             const formData = new FormData();
             formData.append('file', file);
             let accessToken;
+            const expiration = new Date().getTime() / 1000 + 3600 * 24
             try {
                 const headers = {
                     'api-key':
                         'OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg',
-                    'x-expiration': new Date().getTime() / 1000 + 3600 * 24
+                    'x-expiration': expiration
                 };
                 const {
                     data: { access_token }
