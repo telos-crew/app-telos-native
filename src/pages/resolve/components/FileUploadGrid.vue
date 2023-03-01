@@ -21,28 +21,12 @@ import { mapGetters } from 'vuex';
 import { generateRandomId } from '../util';
 import FileUploadGridButton from './FileUploadGridButton.vue';
   export default {
-    props: ['accept'],
+    props: ['accept', 'onUpdate', 'scope', 'files'],
     components: {
       FileUploadGridButton
     },
-    data () {
-      return {
-        files: []
-      }
-    },
     methods: {
-      updateFile (newFile) {
-        // file either already exists or does not
-        const foundFileIndex = this.files.findIndex((file) => file.key === newFile.key)
-        if (foundFileIndex === -1) {
-          this.files.push(newFile)
-        } else {
-          this.files[foundFileIndex] = {
-            ...this.files[foundFileIndex],
-            ...newFile
-          }
-        }
-      },
+      updateFile: (newFile) => this.onUpdate(newFile, this.scope),
       async onFileSelect(key) {
           const usableKey = key || generateRandomId()
           this.updateFile({
@@ -214,7 +198,7 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
       ...mapGetters({
         account: 'accounts/account'
       })
-    }
+    },
   }
 </script>
 

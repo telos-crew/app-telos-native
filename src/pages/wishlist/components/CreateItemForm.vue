@@ -41,8 +41,24 @@
             />
         </q-card-section>
 
-        <q-card-section class="q-pt-none input-row">
-            <file-upload-grid accept="image/png, image/jpeg" />
+        <q-card-section class="input-row">
+          <p><strong>Attach Documents:</strong></p>
+          <file-upload-grid
+            scope="imageItems"
+            :onUpdate="(files) => onUpdateFiles(files, 'contentUrls')"
+            accept="*/*"
+            :files="contentItems"
+          />
+        </q-card-section>
+
+        <q-card-section class="input-row">
+          <p><strong>Attach Images:</strong></p>
+          <file-upload-grid
+            scope="contentItems"
+            :onUpdate="(files) => onUpdateFiles(files, 'imageUrls')"
+            accept="image/png, image/jpeg"
+            :files="imageItems"
+          />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
@@ -65,9 +81,26 @@ export default {
       title: '',
       subtitle: '',
       description: '',
-      imageUrls: [],
-      contentUrls: []
+      imageItems: [],
+      contentItems: []
     }
+  },
+  methods: {
+    updateFile (newFile, type) {
+        // file either already exists or does not
+        const foundFileIndex = this[type].findIndex((file) => file.key === newFile.key)
+        if (foundFileIndex === -1) {
+          this[type].push(newFile)
+        } else {
+          this[type][foundFileIndex] = {
+            ...this[type][foundFileIndex],
+            ...newFile
+          }
+        }
+      },
+  },
+  updated () {
+    console.log(JSON.stringify(this))
   }
 }
 </script>
