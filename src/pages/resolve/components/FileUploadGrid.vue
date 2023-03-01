@@ -45,13 +45,13 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
       },
       async onFileSelect(key) {
           const usableKey = key || generateRandomId()
+          console.log('onFileSelect1 key: ', usableKey)
           this.updateFile({
             key: usableKey,
             progress: 0,
             isUploading: true
           })
           const file = document.getElementById('new-upload')?.files[0];
-          console.log("document.getElementById('new-upload')", document.getElementById('new-upload'))
           const formData = new FormData();
           formData.append('file', file);
           let accessToken;
@@ -71,6 +71,7 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
                   headers
               });
               this.progress = 10;
+              console.log('onFileSelect2 key: ', usableKey)
               this.updateFile({
                 key: usableKey,
                 progress: 10
@@ -104,7 +105,7 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
               console.log('upload token error: ', err);
           }
 
-          const updateProgress = event => {
+          const onUploadProgress = event => {
               const prog = Math.round((event.loaded * 100) / event.total) * 0.4 + 30;
               this.updateFile({
                 key: usableKey,
@@ -122,8 +123,9 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
                       'x-dstor-comment': `Upload from Resolve by ${this.account}`,
                       'x-dstor-upload-token': uploadToken
                   },
-                  onUploadProgress: updateProgress
+                  onUploadProgress
               };
+              console.log('formData: ', formData)
               await axios.post(
                   'https://api.dstor.cloud/v1/upload/',
                   formData,
@@ -183,7 +185,6 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
                             ...newFile
                           })
                       }, 1000);
-                      return;
                   }
               } catch (err) {
                   this.updateFile({
@@ -200,8 +201,18 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
           checkStatus();
       },
       chooseFile (key) {
+        console.log('chooseFile  key: ', key)
+        console.log("choose file const fileElem = document.getElementById('new-upload')", document.getElementById('new-upload'))
         const fileElem = document.getElementById('new-upload');
-        fileElem.addEventListener('change', () => this.onFileSelect(key));
+
+        const something = () => {
+          console.log(1)
+          this.onFileSelect(key)
+          console.log(2)
+          fileElem.removeEventListener('change', something)
+        }
+
+        fileElem.addEventListener('change', something);
         if (fileElem) {
           fileElem.click();
         }
@@ -209,7 +220,7 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
     },
     computed: {
       ...mapGetters({
-        account: 'account/account'
+        account: 'accounts/account'
       })
     }
   }
