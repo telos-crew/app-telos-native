@@ -28,24 +28,18 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
     methods: {
       updateFile (newFile) {
         // file either already exists or does not
-        console.log('updateFile1: ', newFile)
         const foundFileIndex = this.files.findIndex((file) => file.key === newFile.key)
-        console.log('foundFileIndex: ', foundFileIndex)
         if (foundFileIndex === -1) {
           this.files.push(newFile)
-          console.log('case 1')
         } else {
           this.files[foundFileIndex] = {
             ...this.files[foundFileIndex],
             ...newFile
           }
-          console.log('case 2')
         }
-        console.log('updateFile2 this.files: ', JSON.stringify(this.files))
       },
       async onFileSelect(key) {
           const usableKey = key || generateRandomId()
-          console.log('onFileSelect1 key: ', usableKey)
           this.updateFile({
             key: usableKey,
             progress: 0,
@@ -56,7 +50,6 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
           formData.append('file', file);
           let accessToken;
           const expiration = new Date().getTime() / 1000 + 3600 * 24
-          console.log('temp-token expiration: ', expiration)
           try {
               const headers = {
                   'api-key':
@@ -65,18 +58,15 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
               };
               const {
                   data: { access_token },
-                  data
               } = await axios({
                   url: 'https://api.dstor.cloud/v1/dev/temp-token',
                   headers
               });
               this.progress = 10;
-              console.log('onFileSelect2 key: ', usableKey)
               this.updateFile({
                 key: usableKey,
                 progress: 10
               })
-              console.log('temp-token data: ', data)
               accessToken = access_token;
           } catch (err) {
               console.log('access_token error: ', err);
@@ -125,7 +115,6 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
                   },
                   onUploadProgress
               };
-              console.log('formData: ', formData)
               await axios.post(
                   'https://api.dstor.cloud/v1/upload/',
                   formData,
@@ -201,15 +190,13 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
           checkStatus();
       },
       chooseFile (key) {
-        console.log('chooseFile  key: ', key)
-        console.log("choose file const fileElem = document.getElementById('new-upload')", document.getElementById('new-upload'))
         const fileElem = document.getElementById('new-upload');
-
-        const something = () => {
-          console.log(1)
-          this.onFileSelect(key)
-          console.log(2)
+        const something = (event) => {
           fileElem.removeEventListener('change', something)
+          if (!event.target.value) {
+            return
+          }
+          this.onFileSelect(key)
         }
 
         fileElem.addEventListener('change', something);

@@ -18,7 +18,7 @@
       </template>
     </q-input> -->
     <div class="file-upload-grid-button">
-      <div v-if="!file?.hash" class="center">
+      <div v-if="!file?.hash" class="center" :onClick="() => chooseFile(file?.key)">
         <q-circular-progress
           v-if="file?.isUploading"
           :value="file?.progress"
@@ -26,11 +26,16 @@
           color="primary"
           class="q-ma-md"
         />
-        <span v-else class="text" :onClick="() => chooseFile(file?.key)">
+        <span v-else class="text">
           +
         </span>
       </div>
-      <div v-else-if="isImage" :style="{ backgroundImage: `url(${ipfsLink})`}" class="image-cover">
+      <div
+        v-else-if="isImage"
+        :style="{ backgroundImage: `url(${ipfsLink})`}"
+        class="image-cover"
+        :onClick="() => chooseFile(file?.key)"
+        >
 
       </div>
     </div>
