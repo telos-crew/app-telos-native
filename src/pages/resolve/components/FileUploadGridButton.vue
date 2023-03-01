@@ -1,22 +1,4 @@
 <template>
-  <!-- <q-input
-      filled
-      v-model="hash"
-      :label="$t('pages.resolve.file_upload_label')"
-      bottom-slots
-      :hint="$t('pages.resolve.file_upload_hint')"
-      :error-message="$t('pages.resolve.file_upload_error')"
-      dense
-      autofocus
-      :loading="isUploading"
-      :error="!isUploading && !isHashValid"
-      @update:model-value="onFileChange"
-      class="file-upload-input"
-  >
-      <template v-slot:prepend>
-          <q-icon name="attach_file" />
-      </template>
-    </q-input> -->
     <div class="file-upload-grid-button">
       <div v-if="!file?.hash" class="center" :onClick="() => chooseFile(file?.key)">
         <q-circular-progress
@@ -93,7 +75,7 @@ export default {
     }
   }
   #file-input {
-      display: none;
+    display: none;
   }
 
   .image-cover {

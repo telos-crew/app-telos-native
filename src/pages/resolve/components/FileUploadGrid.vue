@@ -215,12 +215,13 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
 
 <style lang="scss">
 .file-upload-grid {
-  display: flex;
   flex: 1;
 
   .item {
     display: inline-block;
     margin-right: 12px;
+    margin-bottom: 12px;
+    vertical-align: top;
   }
 }
 </style>
