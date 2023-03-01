@@ -1,7 +1,12 @@
 <template>
   <div class="file-upload-grid">
     <div v-for="(file) of files" class="item" v-bind:key="file.key">
-      <file-upload-grid-button :file="file" :accept="accept" :chooseFile="chooseFile" />
+      <file-upload-grid-button
+        :file="file"
+        :accept="accept"
+        :chooseFile="chooseFile"
+        @delete-file="files = files.filter((f) => f.key !== file.key)"
+      />
     </div>
     <div class="item">
       <file-upload-grid-button :accept="accept" :chooseFile="chooseFile" />
