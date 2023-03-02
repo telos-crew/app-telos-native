@@ -47,7 +47,6 @@
             scope="imageItems"
             :onUpdate="(files) => onUpdateFiles(files, 'contentUrls')"
             accept="*/*"
-            :files="contentItems"
           />
         </q-card-section>
 
@@ -57,7 +56,6 @@
             scope="contentItems"
             :onUpdate="(files) => onUpdateFiles(files, 'imageUrls')"
             accept="image/png, image/jpeg"
-            :files="imageItems"
           />
         </q-card-section>
 
@@ -81,27 +79,18 @@ export default {
       title: '',
       subtitle: '',
       description: '',
-      imageItems: [],
-      contentItems: []
+      imageUrls: [],
+      contentUrls: []
     }
   },
   methods: {
-    updateFile (newFile, type) {
-        // file either already exists or does not
-        const foundFileIndex = this[type].findIndex((file) => file.key === newFile.key)
-        if (foundFileIndex === -1) {
-          this[type].push(newFile)
-        } else {
-          this[type][foundFileIndex] = {
-            ...this[type][foundFileIndex],
-            ...newFile
-          }
-        }
-      },
+    onUpdateFiles (newFiles, scope) {
+      const formattedFiles = newFiles.map(file => {
+        return `https://api.dstor.cloud/ipfs/${file.hash}`
+      })
+      this[scope] = formattedFiles
+    },
   },
-  updated () {
-    console.log(JSON.stringify(this))
-  }
 }
 </script>
 
