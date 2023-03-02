@@ -5,18 +5,16 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-            <p>
-                Hello
-            </p>
+            <p>Please fill out the following info for your requested wishlist item:</p>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
             <q-input
-                v-model="title"
-                filled
-                :label="$t('pages.wishlist.title')"
-                bottom-slots
-                :hint="$t('pages.wishlist.create_new_title_hint')"
+              v-model="title"
+              filled
+              :label="$t('pages.wishlist.title')"
+              bottom-slots
+              :hint="$t('pages.wishlist.create_new_title_hint')"
             />
         </q-card-section>
 
@@ -45,7 +43,7 @@
           <p><strong>Attach Documents:</strong></p>
           <file-upload-grid
             scope="imageItems"
-            :onUpdate="(files) => onUpdateFiles(files, 'contentUrls')"
+            @update-files="(files) => onUpdateFiles(files, 'contentUrls')"
             accept="*/*"
           />
         </q-card-section>
@@ -54,7 +52,7 @@
           <p><strong>Attach Images:</strong></p>
           <file-upload-grid
             scope="contentItems"
-            :onUpdate="(files) => onUpdateFiles(files, 'imageUrls')"
+            @update-files="(files) => onUpdateFiles(files, 'imageUrls')"
             accept="image/png, image/jpeg"
           />
         </q-card-section>

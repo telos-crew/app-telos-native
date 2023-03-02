@@ -5,7 +5,7 @@
         :file="file"
         :accept="accept"
         :chooseFile="chooseFile"
-        @delete-file="deleteFile(key)"
+        @delete-file="deleteFile(file.key)"
       />
     </div>
     <div class="item">
@@ -42,12 +42,12 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
             ...newFile
           }
         }
-        this.onUpdate(this.files)
+        this.$emit('update-files', this.files)
       },
       deleteFile (key) {
         const newFiles = this.files.filter((f) => f.key !== key)
         this.files = newFiles
-        this.onUpdate(newFiles)
+        this.$emit('update-files', newFiles)
       },
       async onFileSelect(key) {
           const usableKey = key || generateRandomId()
@@ -221,12 +221,6 @@ import FileUploadGridButton from './FileUploadGridButton.vue';
         account: 'accounts/account'
       })
     },
-    watch: {
-      files () {
-        console.log('files has changed')
-        this.onUpdate(this.files)
-      }
-    }
   }
 </script>
 

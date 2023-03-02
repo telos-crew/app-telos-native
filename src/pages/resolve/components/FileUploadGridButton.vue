@@ -21,22 +21,34 @@
         <div class="delete-icon" @click="$event.stopPropagation(); alert = true">
           -
         </div>
-        <q-dialog v-model="alert">
-          <q-card>
-            <q-card-section>
-              <div class="text-h6">Delete File?</div>
-            </q-card-section>
-            <q-card-section class="q-pt-none">
-              Are you sure that you would like to delete this file?
-            </q-card-section>
-            <q-card-actions align="right">
-              <q-btn @click="$emit('deleteFile', file?.key)" flat label="Delete" color="primary" v-close-popup />
-              <q-btn flat label="Cancel" color="primary" v-close-popup />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
+      </div>
+      <div v-else class="generic">
+        {{ file?.filename }}
+        <div class="delete-icon" @click="$event.stopPropagation(); alert = true">
+          -
+        </div>
       </div>
     </div>
+    <q-dialog v-model="alert">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Delete File?</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Are you sure that you would like to delete this file?
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn
+            @click="$emit('deleteFile', file?.key)"
+            flat
+            label="Delete"
+            color="primary"
+            v-close-popup
+          />
+          <q-btn flat label="Cancel" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script>
@@ -105,19 +117,23 @@ export default {
     background-size: cover;
     position: relative;
 
+    &:hover {
+      .delete-icon {
+        display: flex;
+      }
+    }
+  }
+
+  .generic {
+    position: relative;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
     .delete-icon {
-      display: none;
-      height: 26px;
-      width: 26px;
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background-color: red;
-      font-size: 36px;
-      border-radius: 50%;
-      justify-content: center;
-      align-items: center;
-      color: white;
 
     }
 
@@ -127,6 +143,21 @@ export default {
       }
     }
   }
+}
+
+.delete-icon {
+  display: none;
+  height: 26px;
+  width: 26px;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: red;
+  font-size: 36px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
 .file-upload-input {
