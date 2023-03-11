@@ -143,7 +143,13 @@ const routes = [
         path: '/wishlist',
         component: () => import('pages/wishlist/Wishlist.vue'),
         name: 'wishlist',
-    },
+    },{
+      path: '/wishlist/item/:ballot_name',
+      component: () => import('src/pages/wishlist/WishlistBallot.vue'),
+      name: 'wishlistItem',
+      params: { dynamicName: true },
+      props: true
+    }
 ];
 
 // Always leave this as last one

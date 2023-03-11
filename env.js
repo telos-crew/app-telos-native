@@ -19,11 +19,11 @@ const sharedEnv = {
 const TESTNET = {
   ...sharedEnv,
   APP_NAME: "Telos App (test net)",
-  NETWORK_HOST: "testnet.telos.net",
+  NETWORK_HOST: "testnet.telos.caleos.io",
   NETWORK_CHAIN_ID:
     "1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f",
   WEBSERVICES_URL: "https://api-dev.telos.net",
-  HYPERION_URL: "https://testnet.telos.net",
+  HYPERION_URL: "https://testnet.telos.caleos.io",
   BLOCKCHAIN_EXPLORER: "https://explorer-test.telos.net",
   NETWORK_ENV: 'testnet'
 };

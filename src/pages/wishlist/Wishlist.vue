@@ -1,7 +1,7 @@
 <template>
   <div v-if="ballots" id="wishlist">
-    <ballot-filters @onSortChange="onSortChange" />
-    <wishlist-ballot
+    <ballot-filters @onCreateItemFormSuccess="setTimeout(fetchEverything, 2000)" @onSortChange="onSortChange" />
+    <wishlist-item
       v-for="ballot in sortedBallots"
       :ballot="ballot"
       :fetchBallots="fetchBallots"
@@ -44,13 +44,13 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import WishlistBallot from "./WishlistBallot.vue";
+import WishlistItem from "./WishlistItem.vue";
 import BallotFilters from "./BallotFilters.vue";
 import { BALLOT_SORT_MAP } from './constants/sort';
 
 export default {
   components: {
-    WishlistBallot,
+    WishlistItem,
     BallotFilters,
   },
   data() {
@@ -125,7 +125,7 @@ export default {
           },
         },
       ];
-      this.$store.$api.signTransaction(action);
+      await this.$store.$api.signTransaction(action);
       this.castVoteData = { ballot_name: null, option: null };
     },
     async joinGroup() {
@@ -139,7 +139,7 @@ export default {
           },
         },
       ];
-      this.$store.$api.signTransaction(action);
+      await this.$store.$api.signTransaction(action);
       setTimeout(() => {
         this.fetchEverything();
       }, 2000);
@@ -181,7 +181,7 @@ export default {
         },
       } = await axios({
         method: "GET",
-        url: `http://localhost:38883/votes/${this.account}/4,WISH`,
+        url: `http://localhost:3888/votes/${this.account}/4,WISH`,
       });
       this.voterVotes = data;
     },

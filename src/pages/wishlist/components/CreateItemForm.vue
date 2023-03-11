@@ -136,7 +136,8 @@ export default {
       console.log('actions: ', actions)
       try {
         await this.$store.$api.signTransaction(actions);
-        this.close();
+        console.log('emitting')
+        this.$emit('create-item-form-success')
         setTimeout(this.close, 5000);
       } catch (err) {
           console.log('create ballot error: ', err);
