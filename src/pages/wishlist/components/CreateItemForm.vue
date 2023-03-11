@@ -18,7 +18,7 @@
             />
         </q-card-section>
 
-        <q-card-section class="q-pt-none">
+        <!-- <q-card-section class="q-pt-none">
             <q-input
                 v-model="subtitle"
                 filled
@@ -26,7 +26,7 @@
                 bottom-slots
                 :hint="$t('pages.wishlist.create_new_subtitle_hint')"
             />
-        </q-card-section>
+        </q-card-section> -->
 
         <q-card-section class="q-pt-none">
             <q-input
@@ -58,7 +58,7 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
-            <q-btn flat :label="$t('common.buttons.submit')" @click="submit" />
+            <q-btn flat :label="$t('common.buttons.submit')" @click="submitForm" />
             <q-btn flat :label="$t('common.buttons.cancel')" @click="close" />
         </q-card-actions>
     </q-card>
@@ -67,6 +67,8 @@
 <script>
 // title, subtitle, description, images, ballot ID, content URL
 import FileUploadGrid from 'src/pages/resolve/components/FileUploadGrid.vue';
+import { generateRandomId } from 'src/pages/resolve/util';
+import { mapGetters } from 'vuex';
 export default {
   components: {
     FileUploadGrid
@@ -74,14 +76,72 @@ export default {
   props: ['submit', 'close'],
   data () {
     return {
-      title: '',
-      subtitle: '',
-      description: '',
+      title: '2023-03-10_',
+      // subtitle: '',
+      description: 'This is just a test',
       imageUrls: [],
       contentUrls: []
     }
   },
   methods: {
+    async submitForm () {
+      const currentTime = new Date()
+      const currentUnixTimestamp = currentTime.getTime()
+      const endTimestamp = currentUnixTimestamp + 86400 * 3 * 365
+      const utcDate = new Date(endTimestamp)
+      const [utcIsoString] = utcDate.toISOString().split('Z')
+      const ballot_name = `wish.gen.${generateRandomId().slice(0, 3)}`
+      const content = {
+        imageUrls: this.imageUrls,
+        contentUrls: this.contentUrls
+      }
+      const actions = [{
+        account: 'telos.decide',
+        name: 'newballot',
+        data: {
+          ballot_name,
+          category: 'proposal',
+          publisher: this.account,
+          treasury_symbol: '4,VOTE',
+          voting_method: '1token1vote',
+          initial_options: ['yes', 'no', 'abstain']
+        }
+      },
+      {
+        account: 'telos.decide',
+        name: 'togglebal',
+        data: {
+          ballot_name,
+          setting_name: 'votestake'
+        },
+      },
+      {
+        account: 'telos.decide',
+        name: 'editdetails',
+        data: {
+          ballot_name,
+          title: this.title,
+          description: this.description,
+          content: JSON.stringify(content)
+        }
+      }, {
+        account: 'telos.decide',
+        name: 'openvoting',
+        data: {
+          ballot_name,
+          end_time: utcIsoString
+        }
+      }
+    ]
+      console.log('actions: ', actions)
+      try {
+        await this.$store.$api.signTransaction(actions);
+        this.close();
+        setTimeout(this.close, 5000);
+      } catch (err) {
+          console.log('create ballot error: ', err);
+      }
+    },
     onUpdateFiles (newFiles, scope) {
       const formattedFiles = newFiles.map(file => {
         return `https://api.dstor.cloud/ipfs/${file.hash}`
@@ -89,6 +149,15 @@ export default {
       this[scope] = formattedFiles
     },
   },
+  computed: {
+    ...mapGetters({
+      account: 'accounts/account'
+    }),
+    isFormReady () {
+      if (!this.title && !this.description) return false
+      return true
+    }
+  }
 }
 </script>
 

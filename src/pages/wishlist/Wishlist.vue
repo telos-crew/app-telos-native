@@ -85,8 +85,15 @@ export default {
         return;
       }
       const action = [
+      {
+          account: "telos.decide",
+          name: "refresh",
+          data: {
+            voter: this.account,
+          },
+        },
         {
-          account: "telos-decide",
+          account: "telos.decide",
           name: "castvote",
           data: {
             voter: this.account,
@@ -141,15 +148,19 @@ export default {
       }, 4000);
     },
     async fetchBallots() {
-      const { rows: ballotData } = await this.$store.$api.getTableRows({
-        code: "telos.decide",
-        scope: "telos.decide",
-        table: "ballots",
-        index_position: "4",
-        key_type: "i64",
-        upper_bound: "WISH",
-        lower_bound: "WISH",
-      });
+      // const { rows: ballotData } = await this.$store.$api.getTableRows({
+      //   code: "telos.decide",
+      //   scope: "telos.decide",
+      //   table: "ballots",
+      //   index_position: "4",
+      //   key_type: "i64",
+      //   upper_bound: "VOTE",
+      //   lower_bound: "VOTE",
+      // });
+      const { data: { data: ballotData } } = await axios({
+        method: "GET",
+        url: `http://localhost:3888/ballots/search/wish.gen.`
+      })
       console.log("ballots: ", ballotData);
       this.ballots = ballotData;
     },
@@ -158,8 +169,8 @@ export default {
         code: "telos.decide",
         scope: this.account,
         table: "voters",
-        upper_bound: "WISH",
-        lower_bound: "WISH",
+        upper_bound: "VOTE",
+        lower_bound: "VOTE",
       });
       this.voter = voters[0];
     },
@@ -170,7 +181,7 @@ export default {
         },
       } = await axios({
         method: "GET",
-        url: `http://127.0.0.1:3333/votes/${this.account}/4,WISH`,
+        url: `http://localhost:38883/votes/${this.account}/4,WISH`,
       });
       this.voterVotes = data;
     },
