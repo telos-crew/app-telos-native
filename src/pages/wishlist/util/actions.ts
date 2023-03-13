@@ -1,4 +1,4 @@
-export const getCastVoteActions = async (
+export const getCastVoteActions = (
 	account_name: string,
 	ballot_name: string,
 	options: string[]
@@ -17,7 +17,7 @@ export const getCastVoteActions = async (
 			data: {
 				voter: account_name,
 				ballot_name,
-				options
+				options: [options]
 			}
 		}
 	]

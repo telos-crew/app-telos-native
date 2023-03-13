@@ -136,7 +136,7 @@ export default {
 		},
 		async fetchVoter() {
 			if (!this.account) return
-			this.voter = await fetchVoter(this.account, '4,VOTE')
+			this.voter = await fetchVoter(this.account, 'VOTE')
 		},
 		async fetchVoterVotes() {
 			if (!this.account) return
