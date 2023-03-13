@@ -50,8 +50,8 @@
 								color="primary"
 								:label="$t('pages.resolve.case_summary_add_claim')"
 								@click="
-									form = true
-									formType = 'addclaim'
+									form = true;
+									formType = 'addclaim';
 								"
 							/>&nbsp;
 							<q-btn
@@ -59,8 +59,8 @@
 								color="red"
 								:label="$t('pages.resolve.case_summary_delete')"
 								@click="
-									form = true
-									formType = 'shredcase'
+									form = true;
+									formType = 'shredcase';
 								"
 							/>
 						</div>

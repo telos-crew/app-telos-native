@@ -120,8 +120,8 @@
 							v-close-popup
 							@click="
 								form = true
-								formType = 'updateclaim'
-								claimId = props.row.claim_id
+								formType = 'updateclaim';
+								claimId = props.row.claim_id;
 							"
 						>
 							<q-item-section>
@@ -140,8 +140,8 @@
 							v-close-popup
 							@click="
 								form = true
-								formType = 'reviewclaim'
-								claimId = props.row.claim_id
+								formType = 'reviewclaim';
+								claimId = props.row.claim_id;
 							"
 						>
 							<q-item-section>
@@ -160,8 +160,8 @@
 							v-close-popup
 							@click="
 								form = true
-								formType = 'settleclaim'
-								claimId = props.row.claim_id
+								formType = 'settleclaim';
+								claimId = props.row.claim_id;
 							"
 						>
 							<q-item-section>

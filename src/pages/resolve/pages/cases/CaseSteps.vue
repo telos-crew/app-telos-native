@@ -17,8 +17,8 @@
 					<q-btn
 						v-if="isClaimant"
 						@click="
-							form = true
-							formType = 'readycase'
+							form = true;
+							formType = 'readycase';
 						"
 						color="primary"
 						:label="$t('pages.resolve.case_steps_ready')"
@@ -38,8 +38,8 @@
 							(!existingArbOffer || existingArbOffer.status === 1)
 						"
 						@click="
-							form = true
-							formType = 'makeoffer'
+							form = true;
+							formType = 'makeoffer';
 						"
 						color="primary"
 						:label="
@@ -51,8 +51,8 @@
 					<q-btn
 						v-if="existingArbOffer && existingArbOffer.status === 1"
 						@click="
-							form = true
-							formType = 'dismissoffer'
+							form = true;
+							formType = 'dismissoffer';
 						"
 						color="red"
 						:label="$t('pages.resolve.case_steps_dismiss_offer')"
@@ -74,8 +74,8 @@
 					<q-btn
 						v-if="isCaseArbitrator()"
 						@click="
-							form = true
-							formType = 'startcase'
+							form = true;
+							formType = 'startcase';
 						"
 						color="primary"
 						:label="$t('pages.resolve.case_steps_start')"
@@ -96,8 +96,8 @@
 							areAllClaimsSettled
 						"
 						@click="
-							form = true
-							formType = 'setruling'
+							form = true;
+							formType = 'setruling';
 						"
 						color="primary"
 						:label="$t('pages.resolve.case_steps_finalize_title')"

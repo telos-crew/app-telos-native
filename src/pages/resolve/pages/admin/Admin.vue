@@ -27,8 +27,8 @@
 					<q-btn
 						v-if="arbSeatsAvailable"
 						@click="
-							form = true
-							formType = 'initelection'
+							form = true;
+							formType = 'initelection';
 						"
 						color="primary"
 						label="Prepare Election"
@@ -52,8 +52,8 @@
 					<br /><br />
 					<q-btn
 						@click="
-							form = true
-							formType = 'beginvoting'
+							form = true;
+							formType = 'beginvoting';
 						"
 						color="primary"
 						:label="$t('pages.resolve.admin_step_election_ready_cta')"

@@ -31,9 +31,9 @@
 					color="primary"
 					v-if="canAccountAcceptOffer(props.row.status)"
 					@click="
-						offer = props.row
-						formType = 'respondoffer'
-						form = true
+						offer = props.row;
+						formType = 'respondoffer';
+						form = true;
 					"
 				>
 					{{ $t('pages.resolve.offers_table_respond') }}</q-btn

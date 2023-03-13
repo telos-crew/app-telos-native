@@ -28,8 +28,8 @@
 			<div
 				class="delete-icon"
 				@click="
-					$event.stopPropagation()
-					alert = true
+					$event.stopPropagation();
+					alert = true;
 				"
 			>
 				-
@@ -43,8 +43,8 @@
 			<div
 				class="delete-icon"
 				@click="
-					$event.stopPropagation()
-					alert = true
+					$event.stopPropagation();
+					alert = true;
 				"
 			>
 				-
