@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BALLOTS_SEARCH_ENDPOINT } from "src/const/endpoints";
 
 export const fetchBallots = async () => {
   // const { rows: ballotData } = await this.$store.$api.getTableRows({
@@ -12,16 +13,17 @@ export const fetchBallots = async () => {
   // });
   const { data: { data: ballotData } } = await axios({
     method: "GET",
-    url: `http://localhost:3888/ballots/search/wish.gen.`
+    url: `${process.env.GOODBLOCK_HOSTNAME}/${BALLOTS_SEARCH_ENDPOINT}/wish.gen.`
   })
   console.log("ballots: ", ballotData);
   return ballotData;
 }
 
-export const fetchBallot = async (ballotId: string) => {
-  const { data: { data: ballotData } } = await axios({
+export const fetchBallot = async (ballot_name: string) => {
+  console.log('fetchBallot ballot_name: ', ballot_name)
+  const { data: ballotData } = await axios({
     method: "GET",
-    url: `http://localhost:3888/ballots/${ballotId}`
+    url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/${ballot_name}`
   })
   console.log("fetchBallot ballot: ", ballotData);
   return ballotData;

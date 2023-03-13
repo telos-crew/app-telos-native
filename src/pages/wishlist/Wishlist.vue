@@ -47,6 +47,7 @@ import { mapGetters } from "vuex";
 import WishlistItem from "./WishlistItem.vue";
 import BallotFilters from "./BallotFilters.vue";
 import { BALLOT_SORT_MAP } from './constants/sort';
+import { BALLOTS_SEARCH_ENDPOINT } from "src/const/endpoints";
 
 export default {
   components: {
@@ -159,7 +160,7 @@ export default {
       // });
       const { data: { data: ballotData } } = await axios({
         method: "GET",
-        url: `http://localhost:3888/ballots/search/wish.gen.`
+        url: `${process.env.GOODBLOCK_HOSTNAME}/${BALLOTS_SEARCH_ENDPOINT}/wish.gen.`
       })
       console.log("ballots: ", ballotData);
       this.ballots = ballotData;
@@ -181,7 +182,7 @@ export default {
         },
       } = await axios({
         method: "GET",
-        url: `http://localhost:3888/votes/${this.account}/4,WISH`,
+        url: `${process.env.GOODBLOCK_HOSTNAME}/votes/${this.account}/4,WISH`,
       });
       this.voterVotes = data;
     },
