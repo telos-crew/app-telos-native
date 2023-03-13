@@ -15,6 +15,7 @@
 			</q-select>
 		</div>
 		<q-btn
+			v-if="account"
 			@click="toggleDialog"
 			color="primary"
 			size="lg"
@@ -28,12 +29,13 @@
 </template>
 
 <script>
-import CreateItemForm from './components/CreateItemForm.vue'
+import { mapGetters } from 'vuex';
+import CreateItemForm from './components/CreateItemForm.vue';
 
 const options = [
 	{ label: 'Highest Approval', value: 'highest-approval' },
 	{ label: 'Lowest Approval', value: 'lowest-approval' }
-]
+];
 export default {
 	components: {
 		CreateItemForm
@@ -43,19 +45,22 @@ export default {
 			options,
 			sort: null,
 			dialog: false
-		}
+		};
 	},
 	methods: {
 		toggleDialog() {
-			this.dialog = !this.dialog
+			this.dialog = !this.dialog;
 		}
+	},
+	computed: {
+		...mapGetters(['accounts/account'])
 	},
 	watch: {
 		sort(newValue) {
-			this.$emit('onSortChange', newValue)
+			this.$emit('onSortChange', newValue);
 		}
 	}
-}
+};
 </script>
 
 <style lang="scss" scoped>
