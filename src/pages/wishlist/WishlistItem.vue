@@ -38,19 +38,19 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { getBallotResults, getSymbolInfo } from '../resolve/util';
+import { mapGetters } from 'vuex'
+import { getBallotResults, getSymbolInfo } from '../resolve/util'
 
 export default {
 	props: ['ballot', 'voterVotes'],
 	data() {
 		return {
 			// voterVote: null,
-		};
+		}
 	},
 	methods: {
 		castVote(type) {
-			this.$emit('castVote', type, this.ballot);
+			this.$emit('castVote', type, this.ballot)
 		}
 	},
 	computed: {
@@ -59,26 +59,26 @@ export default {
 		}),
 		content() {
 			try {
-				const cont = JSON.parse(this.ballot.content);
-				return cont;
+				const cont = JSON.parse(this.ballot.content)
+				return cont
 			} catch (err) {
-				console.log('unable to parse content', err);
+				console.log('unable to parse content', err)
 			}
 		},
 		aggregateVotes() {
-			const { netYes } = getBallotResults(this.ballot);
-			return parseInt(netYes, 10);
+			const { netYes } = getBallotResults(this.ballot)
+			return parseInt(netYes, 10)
 		},
 		voterVoteKey() {
-			if (!this.voterVotes) return null;
+			if (!this.voterVotes) return null
 			const voterVote = this.voterVotes.find(
 				(vote) => vote.ballot === this.ballot.ballot_name
-			);
-			if (!voterVote) return null;
-			return voterVote.weighted_votes[0].key;
+			)
+			if (!voterVote) return null
+			return voterVote.weighted_votes[0].key
 		}
 	}
-};
+}
 </script>
 
 <style lang="scss">
