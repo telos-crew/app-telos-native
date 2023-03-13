@@ -1,47 +1,47 @@
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue';
+import { mapActions, mapGetters } from 'vuex'
+import ProfileAvatar from 'src/pages/profiles/ProfileAvatar.vue'
 
 export default {
-    name: 'RightMenuAuthenticated',
-    components: {
-        ProfileAvatar,
-    },
-    props: {
-        landingPage: Boolean,
-    },
-    data() {
-        return {
-            isProfileMenuOpen: false,
-            isDialogOpen: false,
-            avatar: '',
-        };
-    },
-    computed: {
-        ...mapGetters('accounts', ['account']),
-        myProfile() {
-            return this.$store.state.profiles.myProfile;
-        },
-    },
-    beforeMount: async function () {
-        this.showIsLoading(true);
-        const response = await this.getProfile();
-        if (response !== undefined) {
-            this.avatar = response.avatar;
-        }
-        this.showIsLoading(false);
-    },
-    methods: {
-        ...mapActions('accounts', ['logout']),
-        ...mapActions('profiles', ['getProfile']),
-        toggleProfileMenu() {
-            this.isProfileMenuOpen = !this.isProfileMenuOpen;
-        },
-        showProfileMenuDialog() {
-            this.isDialogOpen = true;
-        },
-    }
-};
+	name: 'RightMenuAuthenticated',
+	components: {
+		ProfileAvatar
+	},
+	props: {
+		landingPage: Boolean
+	},
+	data() {
+		return {
+			isProfileMenuOpen: false,
+			isDialogOpen: false,
+			avatar: ''
+		}
+	},
+	computed: {
+		...mapGetters('accounts', ['account']),
+		myProfile() {
+			return this.$store.state.profiles.myProfile
+		}
+	},
+	beforeMount: async function () {
+		this.showIsLoading(true)
+		const response = await this.getProfile()
+		if (response !== undefined) {
+			this.avatar = response.avatar
+		}
+		this.showIsLoading(false)
+	},
+	methods: {
+		...mapActions('accounts', ['logout']),
+		...mapActions('profiles', ['getProfile']),
+		toggleProfileMenu() {
+			this.isProfileMenuOpen = !this.isProfileMenuOpen
+		},
+		showProfileMenuDialog() {
+			this.isDialogOpen = true
+		}
+	}
+}
 </script>
 
 <template lang="pug">

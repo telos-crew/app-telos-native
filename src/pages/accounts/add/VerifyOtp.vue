@@ -1,45 +1,45 @@
 <script>
-import { mapActions, mapMutations } from 'vuex';
-import { validation } from '~/mixins/validation';
-import { utils } from '~/mixins/utils';
-import { generateKeys } from '~/utils/eosio';
+import { mapActions, mapMutations } from 'vuex'
+import { validation } from '~/mixins/validation'
+import { utils } from '~/mixins/utils'
+import { generateKeys } from '~/utils/eosio'
 
 export default {
-    name: 'VerifyOtp',
-    mixins: [validation, utils],
-    data() {
-        return {
-            form: {
-                password: null,
-                publicKey: null,
-                privateKey: null,
-            },
-            copy: false,
-            generating: false,
-            submitting: false,
-            error: null,
-        };
-    },
-    methods: {
-        ...mapActions('accounts', ['verifyOTP']),
-        ...mapMutations('general', ['setSuccessMsg']),
-        async onVerifyOTP() {
-            this.resetValidation(this.form);
-            this.error = null;
-            if (!(await this.validate(this.form))) return;
-            this.submitting = true;
-            this.$router.push({ path: '/accounts/add/congratulations' });
-            this.submitting = false;
-        },
-    },
-    async mounted() {
-        this.generating = true;
-        const keyPairs = await generateKeys();
-        this.form.privateKey = keyPairs.privateKey;
-        this.form.publicKey = keyPairs.publicKey;
-        this.generating = false;
-    },
-};
+	name: 'VerifyOtp',
+	mixins: [validation, utils],
+	data() {
+		return {
+			form: {
+				password: null,
+				publicKey: null,
+				privateKey: null
+			},
+			copy: false,
+			generating: false,
+			submitting: false,
+			error: null
+		}
+	},
+	methods: {
+		...mapActions('accounts', ['verifyOTP']),
+		...mapMutations('general', ['setSuccessMsg']),
+		async onVerifyOTP() {
+			this.resetValidation(this.form)
+			this.error = null
+			if (!(await this.validate(this.form))) return
+			this.submitting = true
+			this.$router.push({ path: '/accounts/add/congratulations' })
+			this.submitting = false
+		}
+	},
+	async mounted() {
+		this.generating = true
+		const keyPairs = await generateKeys()
+		this.form.privateKey = keyPairs.privateKey
+		this.form.publicKey = keyPairs.publicKey
+		this.generating = false
+	}
+}
 </script>
 
 <template lang="pug">

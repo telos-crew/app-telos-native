@@ -1,45 +1,45 @@
 <script>
-import { mapGetters } from "vuex";
-import ResolveMenu from "./ResolveMenu.vue";
+import { mapGetters } from 'vuex'
+import ResolveMenu from './ResolveMenu.vue'
 
-const NETWORK_ENV = process.env.NETWORK_ENV;
+const NETWORK_ENV = process.env.NETWORK_ENV
 
 export default {
-  name: "HeaderMenu",
-  computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-    isTestnet() {
-      return NETWORK_ENV === "testnet";
-    },
-  },
-  props: {
-    activeFilter: {},
-  },
-  components: {
-    ResolveMenu,
-  },
-  data() {
-    return {
-      menuItems: [
-        {
-          label: this.$t("menu.wishlist"),
-          route: "/wishlist",
-        },
-      ],
-      localFileter: this.activeFilter,
-    };
-  },
-  watch: {
-    activeFilter: function () {
-      this.localFileter = this.activeFilter;
-    },
-    $route(to) {
-      if (!to.path.includes("/trails/ballots")) {
-        this.localFileter = "";
-      }
-    },
-  },
-};
+	name: 'HeaderMenu',
+	computed: {
+		...mapGetters('accounts', ['isAuthenticated']),
+		isTestnet() {
+			return NETWORK_ENV === 'testnet'
+		}
+	},
+	props: {
+		activeFilter: {}
+	},
+	components: {
+		ResolveMenu
+	},
+	data() {
+		return {
+			menuItems: [
+				{
+					label: this.$t('menu.wishlist'),
+					route: '/wishlist'
+				}
+			],
+			localFileter: this.activeFilter
+		}
+	},
+	watch: {
+		activeFilter: function () {
+			this.localFileter = this.activeFilter
+		},
+		$route(to) {
+			if (!to.path.includes('/trails/ballots')) {
+				this.localFileter = ''
+			}
+		}
+	}
+}
 </script>
 
 <template lang="pug">

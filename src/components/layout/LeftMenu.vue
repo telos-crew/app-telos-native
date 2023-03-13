@@ -1,51 +1,51 @@
 <script>
-import ResolveSidebarItem from './ResolveSidebarItem.vue';
+import ResolveSidebarItem from './ResolveSidebarItem.vue'
 
-const NETWORK_ENV = process.env.NETWORK_ENV;
+const NETWORK_ENV = process.env.NETWORK_ENV
 
 export default {
-    name: 'LeftMenu',
-    components: {
-        ResolveSidebarItem,
-    },
-    data() {
-        return {
-            menuItems: [
-                { label: this.$t('menu.proposals'), route: '/trails/ballots' },
-            ],
-            clientWidth: 0,
-        };
-    },
-    watch: {
-        clientWidth: function () {
-            if (this.clientWidth > 760) {
-                this.closeMenu();
-            }
-        },
-    },
-    created() {
-        window.addEventListener('resize', this.updateWidth);
-    },
-    beforeUnmount() {
-        window.removeEventListener('resize', this.updateWidth);
-    },
-    methods: {
-        closeMenu: function () {
-            this.$emit('close');
-        },
-        goToHomePage: function () {
-            this.$emit('goToHomePage');
-        },
-        updateWidth() {
-            this.clientWidth = window.innerWidth;
-        },
-    },
-    computed : {
-        isTestnet () {
-            return NETWORK_ENV === 'testnet';
-        }
-    }
-};
+	name: 'LeftMenu',
+	components: {
+		ResolveSidebarItem
+	},
+	data() {
+		return {
+			menuItems: [
+				{ label: this.$t('menu.proposals'), route: '/trails/ballots' }
+			],
+			clientWidth: 0
+		}
+	},
+	watch: {
+		clientWidth: function () {
+			if (this.clientWidth > 760) {
+				this.closeMenu()
+			}
+		}
+	},
+	created() {
+		window.addEventListener('resize', this.updateWidth)
+	},
+	beforeUnmount() {
+		window.removeEventListener('resize', this.updateWidth)
+	},
+	methods: {
+		closeMenu: function () {
+			this.$emit('close')
+		},
+		goToHomePage: function () {
+			this.$emit('goToHomePage')
+		},
+		updateWidth() {
+			this.clientWidth = window.innerWidth
+		}
+	},
+	computed: {
+		isTestnet() {
+			return NETWORK_ENV === 'testnet'
+		}
+	}
+}
 </script>
 
 <template lang="pug">

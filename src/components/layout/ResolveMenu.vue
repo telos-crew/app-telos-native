@@ -1,5 +1,13 @@
 <template>
-	<q-btn-dropdown id="resolve-menu-dropdown" class="header-submenu-tab" :class="{'resolve-dropdown-active': isResolveRoute}" auto-close stretch flat label="Resolve">
+	<q-btn-dropdown
+		id="resolve-menu-dropdown"
+		class="header-submenu-tab"
+		:class="{ 'resolve-dropdown-active': isResolveRoute }"
+		auto-close
+		stretch
+		flat
+		label="Resolve"
+	>
 		<q-list>
 			<q-item
 				clickable
@@ -7,7 +15,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						{{$t('pages.resolve.menu_welcome')}}
+						{{ $t('pages.resolve.menu_welcome') }}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -17,7 +25,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						{{$t('pages.resolve.menu_elections')}}
+						{{ $t('pages.resolve.menu_elections') }}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -28,7 +36,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						{{$t('pages.resolve.menu_arbitrator')}}
+						{{ $t('pages.resolve.menu_arbitrator') }}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -38,7 +46,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						{{$t('pages.resolve.menu_cases')}}
+						{{ $t('pages.resolve.menu_cases') }}
 					</q-item-label>
 				</q-item-section>
 			</q-item>
@@ -49,7 +57,7 @@
 			>
 				<q-item-section>
 					<q-item-label>
-						{{$t('pages.resolve.menu_account')}}
+						{{ $t('pages.resolve.menu_account') }}
 					</q-item-label>
 				</q-item-section>
 			</q-item>

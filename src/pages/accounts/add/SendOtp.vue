@@ -1,58 +1,58 @@
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'vuex'
 
-import { validation } from '~/mixins/validation';
-import { countriesPhoneCode } from '~/mixins/countries-phone-code';
-import VueRecaptcha from 'vue-recaptcha';
+import { validation } from '~/mixins/validation'
+import { countriesPhoneCode } from '~/mixins/countries-phone-code'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
-    name: 'SendOtp',
-    mixins: [validation, countriesPhoneCode],
-    data() {
-        return {
-            form: {
-                account: null,
-                smsNumber: null,
-                countryCode: null,
-                internationalPhone: null,
-            },
-            recaptcha: false,
-            phoneOptions: [],
-            error: null,
-            submitting: false,
-        };
-    },
-    mounted() {
-        this.phoneOptions = this.countriesPhoneCode;
-        let recaptchaScript = document.createElement('script');
-        recaptchaScript.setAttribute(
-            'src',
-            'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
-        );
-        document.head.appendChild(recaptchaScript);
-    },
-    methods: {
-        ...mapActions('accounts', ['sendOTP']),
-        async onSendOTP() {
-            this.resetValidation(this.form);
-            this.error = null;
-            if (!(await this.validate(this.form))) return;
+	name: 'SendOtp',
+	mixins: [validation, countriesPhoneCode],
+	data() {
+		return {
+			form: {
+				account: null,
+				smsNumber: null,
+				countryCode: null,
+				internationalPhone: null
+			},
+			recaptcha: false,
+			phoneOptions: [],
+			error: null,
+			submitting: false
+		}
+	},
+	mounted() {
+		this.phoneOptions = this.countriesPhoneCode
+		let recaptchaScript = document.createElement('script')
+		recaptchaScript.setAttribute(
+			'src',
+			'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit'
+		)
+		document.head.appendChild(recaptchaScript)
+	},
+	methods: {
+		...mapActions('accounts', ['sendOTP']),
+		async onSendOTP() {
+			this.resetValidation(this.form)
+			this.error = null
+			if (!(await this.validate(this.form))) return
 
-            if (this.recaptcha) {
-                this.$router.push({ path: '/accounts/add/verifyOTP' });
-            } else {
-                this.error = 'Please complete reCaptcha';
-            }
-            this.submitting = false;
-        },
-        onVerify: function (response) {
-            if (response) this.recaptcha = true;
-        },
-    },
-    components: {
-        'vue-recaptcha': VueRecaptcha,
-    },
-};
+			if (this.recaptcha) {
+				this.$router.push({ path: '/accounts/add/verifyOTP' })
+			} else {
+				this.error = 'Please complete reCaptcha'
+			}
+			this.submitting = false
+		},
+		onVerify: function (response) {
+			if (response) this.recaptcha = true
+		}
+	},
+	components: {
+		'vue-recaptcha': VueRecaptcha
+	}
+}
 </script>
 
 <template lang="pug">
