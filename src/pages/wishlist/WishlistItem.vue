@@ -20,7 +20,7 @@
       <img :src="content.imageUrls[0]" class="ballot-image" />
       <div class="content">
         <h3 class="title">
-          <router-link :to="`wishlist/item/${ballot.ballot_name}`">{{ ballot.title }}</router-link>
+          <router-link :to="`/wishlist/item/${ballot.ballot_name}`">{{ ballot.title }}</router-link>
         </h3>
         <p>{{ ballot.description }}</p>
         <p>Proposed by {{ ballot.publisher }}</p>
