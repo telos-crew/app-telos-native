@@ -40,6 +40,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getBallotResults, getSymbolInfo } from '../resolve/util'
+import { formatVoteCount } from './util/'
 
 export default {
 	props: ['ballot', 'voterVotes'],
@@ -67,7 +68,7 @@ export default {
 		},
 		aggregateVotes() {
 			const { netYes } = getBallotResults(this.ballot)
-			return parseInt(netYes, 10)
+			return formatVoteCount(parseInt(netYes, 10))
 		},
 		voterVoteKey() {
 			if (!this.voterVotes) return null
