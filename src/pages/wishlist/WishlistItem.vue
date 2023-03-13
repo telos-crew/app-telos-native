@@ -141,13 +141,14 @@ export default {
 			.description {
 				height: Calc(4 * 1.2em);
 				overflow: hidden;
+				margin-right: 1rem;
 			}
 		}
 	}
 
 	.score {
 		display: flex;
-		font-size: 48px;
+		font-size: 32px;
 		border: 1px solid #ccc;
 		border-radius: 20px;
 		padding: 12px;
