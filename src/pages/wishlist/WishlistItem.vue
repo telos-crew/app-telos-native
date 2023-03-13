@@ -27,7 +27,7 @@
 						ballot.title
 					}}</router-link>
 				</h3>
-				<p>{{ ballot.description }}</p>
+				<p class="description">{{ ballot.description }}</p>
 				<p>Proposed by {{ ballot.publisher }}</p>
 			</div>
 		</div>
@@ -38,19 +38,19 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { getBallotResults, getSymbolInfo } from '../resolve/util'
+import { mapGetters } from 'vuex';
+import { getBallotResults, getSymbolInfo } from '../resolve/util';
 
 export default {
 	props: ['ballot', 'voterVotes'],
 	data() {
 		return {
 			// voterVote: null,
-		}
+		};
 	},
 	methods: {
 		castVote(type) {
-			this.$emit('castVote', type, this.ballot)
+			this.$emit('castVote', type, this.ballot);
 		}
 	},
 	computed: {
@@ -59,26 +59,26 @@ export default {
 		}),
 		content() {
 			try {
-				const cont = JSON.parse(this.ballot.content)
-				return cont
+				const cont = JSON.parse(this.ballot.content);
+				return cont;
 			} catch (err) {
-				console.log('unable to parse content', err)
+				console.log('unable to parse content', err);
 			}
 		},
 		aggregateVotes() {
-			const { netYes } = getBallotResults(this.ballot)
-			return parseInt(netYes, 10)
+			const { netYes } = getBallotResults(this.ballot);
+			return parseInt(netYes, 10);
 		},
 		voterVoteKey() {
-			if (!this.voterVotes) return null
+			if (!this.voterVotes) return null;
 			const voterVote = this.voterVotes.find(
 				(vote) => vote.ballot === this.ballot.ballot_name
-			)
-			if (!voterVote) return null
-			return voterVote.weighted_votes[0].key
+			);
+			if (!voterVote) return null;
+			return voterVote.weighted_votes[0].key;
 		}
 	}
-}
+};
 </script>
 
 <style lang="scss">
@@ -124,9 +124,22 @@ export default {
 				font-family: 'silkalight';
 				font-weight: bold;
 
+				a {
+					text-decoration: none;
+
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+
 				&:hover {
 					cursor: pointer;
 				}
+			}
+
+			.description {
+				height: Calc(4 * 1.2em);
+				overflow: hidden;
 			}
 		}
 	}
