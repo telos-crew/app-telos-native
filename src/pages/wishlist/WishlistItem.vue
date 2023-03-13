@@ -49,12 +49,11 @@
 				{{ aggregateVotes }}
 			</div>
 		</div>
-		<div
+		<Slideshow
+			:imageUrls="content.imageUrls"
 			v-if="isImagesExpanded"
 			class="slideShow"
-		>
-			<slideshow :imageUrls="content.imageUrls" />
-		</div>
+		/>
 	</div>
 </template>
 
@@ -62,11 +61,12 @@
 import { mapGetters } from 'vuex'
 import { getBallotResults } from '../resolve/util'
 import { formatVoteCount, parseContent } from './util/'
+import Slideshow from './components/Slideshow.vue'
 
 export default {
 	props: ['ballot', 'voterVotes'],
 	compontents: {
-		Slideshow: () => import('./components/Slideshow.vue')
+		Slideshow
 	},
 	data() {
 		return {
