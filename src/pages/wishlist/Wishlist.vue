@@ -111,6 +111,8 @@ export default {
 			)
 			this.$store.$api.signTransaction(castVoteActions)
 			this.castVoteData = { ballot_name: null, option: null }
+			setTimeout(this.fetchEverything, 1000)
+			setTimeout(this.fetchEverything, 3000)
 		},
 		async joinAndVote() {
 			const joinAndVoteActions = getJoinAndVoteActions(
@@ -124,12 +126,8 @@ export default {
 		async joinGroup() {
 			const joinGroupAction = joinGroupAction(this.account)
 			await this.$store.$api.signTransaction(joinGroupAction)
-			setTimeout(() => {
-				this.fetchEverything()
-			}, 2000)
-			setTimeout(() => {
-				this.fetchEverything()
-			}, 4000)
+			setTimeout(this.fetchEverything, 1000)
+			setTimeout(this.fetchEverything, 3000)
 		},
 		async fetchBallots() {
 			this.ballots = await fetchBallots()
