@@ -16,9 +16,23 @@ const sharedEnv = {
   NETWORK_ENV: 'shared'
 };
 
+const LOCAL = {
+  ...sharedEnv,
+  APP_NAME: "Telos Wishlist (local)",
+  NETWORK_HOST: "testnet.telos.caleos.io",
+  NETWORK_CHAIN_ID:
+    "1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f",
+  WEBSERVICES_URL: "https://api-dev.telos.net",
+  HYPERION_URL: "https://testnet.telos.caleos.io",
+  BLOCKCHAIN_EXPLORER: "https://explorer-test.telos.net",
+  // NETWORK_ENV: 'testnet'
+  NETWORK_ENV: 'local',
+  GOODBLOCK_HOSTNAME: 'http://localhost:3888',
+}
+
 const TESTNET = {
   ...sharedEnv,
-  APP_NAME: "Telos App (test net)",
+  APP_NAME: "Telos Wishlist (testnet)",
   NETWORK_HOST: "testnet.telos.caleos.io",
   NETWORK_CHAIN_ID:
     "1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f",
@@ -30,7 +44,7 @@ const TESTNET = {
 
 const MAINNET = {
   ...sharedEnv,
-  APP_NAME: "Telos App",
+  APP_NAME: "Telos Wishlist",
   NETWORK_HOST: "mainnet.telos.net",
   NETWORK_CHAIN_ID:
     "4667b205c6838ef70ff7988f6e8257e8be0e1284a2f59699054a018f743b1d11",
@@ -40,6 +54,6 @@ const MAINNET = {
   NETWORK_ENV: 'mainnet'
 };
 
-const env = process.env.NETWORK === "mainnet" ? MAINNET : TESTNET;
+const env = process.env.NETWORK === "mainnet" ? MAINNET : ( process.env.NETWORK === 'testnet' ? TESTNET : LOCAL);
 
 module.exports = env;
