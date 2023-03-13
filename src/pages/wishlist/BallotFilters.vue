@@ -53,7 +53,9 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['accounts/account'])
+		...mapGetters({
+			account: 'accounts/account'
+		})
 	},
 	watch: {
 		sort(newValue) {
