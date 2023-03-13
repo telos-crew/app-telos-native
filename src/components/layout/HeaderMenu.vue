@@ -22,18 +22,6 @@ export default {
     return {
       menuItems: [
         {
-          label: this.$t("menu.daos"),
-          route: "/trails/treasuries",
-        },
-        {
-          label: this.$t("menu.elections"),
-          route: "/trails/elections",
-        },
-        {
-          label: this.$t("menu.proposals"),
-          route: "/trails/ballots",
-        },
-        {
           label: this.$t("menu.wishlist"),
           route: "/wishlist",
         },
