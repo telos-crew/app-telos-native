@@ -42,12 +42,11 @@
 </template>
 
 <script>
-import axios from "axios";
 import { mapGetters } from "vuex";
 import WishlistItem from "./WishlistItem.vue";
 import BallotFilters from "./BallotFilters.vue";
 import { BALLOT_SORT_MAP } from './constants/sort';
-import { BALLOTS_SEARCH_ENDPOINT } from "src/const/endpoints";
+import { fetchBallots, fetchVoter, fetchVoterVotes, getCastVoteActions, getJoinAndVoteActions } from "./util";
 
 export default {
   components: {
@@ -85,62 +84,18 @@ export default {
         this.toggleJoinModal();
         return;
       }
-      const action = [
-      {
-          account: "telos.decide",
-          name: "refresh",
-          data: {
-            voter: this.account,
-          },
-        },
-        {
-          account: "telos.decide",
-          name: "castvote",
-          data: {
-            voter: this.account,
-            ballot_name: ballot.ballot_name,
-            options: [type],
-          },
-        },
-      ];
-      this.$store.$api.signTransaction(action);
+      const castVoteActions = getCastVoteActions(this.account, ballot.ballot_name, type)
+      this.$store.$api.signTransaction(castVoteActions);
       this.castVoteData = { ballot_name: null, option: null };
     },
     async joinAndVote() {
-      const action = [
-        {
-          account: "telos-decide",
-          name: "regvoter",
-          data: {
-            voter: this.account,
-            treasury_symbol: "4,WISH",
-          },
-        },
-        {
-          account: "telos-decide",
-          name: "castvote",
-          data: {
-            voter: this.account,
-            ballot_name: this.castVoteData.ballot_name,
-            options: [this.castVoteDatatype],
-          },
-        },
-      ];
-      await this.$store.$api.signTransaction(action);
+      const joinAndVoteActions = getJoinAndVoteActions(this.account, this.castVoteData.ballot_name, this.castVoteData.option)
+      await this.$store.$api.signTransaction(joinAndVoteActions);
       this.castVoteData = { ballot_name: null, option: null };
     },
     async joinGroup() {
-      const action = [
-        {
-          account: "telos-decide",
-          name: "regvoter",
-          data: {
-            voter: this.account,
-            treasury_symbol: "4,WISH",
-          },
-        },
-      ];
-      await this.$store.$api.signTransaction(action);
+      const joinGroupAction = joinGroupAction(this.account)
+      await this.$store.$api.signTransaction(joinGroupAction);
       setTimeout(() => {
         this.fetchEverything();
       }, 2000);
@@ -149,42 +104,15 @@ export default {
       }, 4000);
     },
     async fetchBallots() {
-      // const { rows: ballotData } = await this.$store.$api.getTableRows({
-      //   code: "telos.decide",
-      //   scope: "telos.decide",
-      //   table: "ballots",
-      //   index_position: "4",
-      //   key_type: "i64",
-      //   upper_bound: "VOTE",
-      //   lower_bound: "VOTE",
-      // });
-      const { data: { data: ballotData } } = await axios({
-        method: "GET",
-        url: `${process.env.GOODBLOCK_HOSTNAME}/${BALLOTS_SEARCH_ENDPOINT}/wish.gen.`
-      })
-      console.log("ballots: ", ballotData);
-      this.ballots = ballotData;
+      this.ballots = await fetchBallots()
     },
-    async fetchVoter() {
-      const { rows: voters } = await this.$store.$api.getTableRows({
-        code: "telos.decide",
-        scope: this.account,
-        table: "voters",
-        upper_bound: "VOTE",
-        lower_bound: "VOTE",
-      });
-      this.voter = voters[0];
+    async fetchVoter () {
+      if (!this.account) return
+      this.voter = await fetchVoter(this.account, '4,VOTE')
     },
     async fetchVoterVotes() {
-      const {
-        data: {
-          votes: { data },
-        },
-      } = await axios({
-        method: "GET",
-        url: `${process.env.GOODBLOCK_HOSTNAME}/votes/${this.account}/4,WISH`,
-      });
-      this.voterVotes = data;
+      if (!this.account) return
+      this.voterVotes = await fetchVoterVotes(this.account);
     },
     async fetchEverything() {
       this.fetchBallots();
