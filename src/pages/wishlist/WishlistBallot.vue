@@ -1,5 +1,20 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router';
+import { fetchBallot } from './util';
+import WishlistItem from './WishlistItem.vue'
+
+const { params } = useRoute()
+const { ballot_name } = params
+const ballot = ref(null)
+onMounted(async () => {
+  ballot.value = await fetchBallot(ballot_name)
+})
+
+</script>
+
 <template>
-  <div>
+  <div class="wishlistBallot">
     <wishlist-item
       v-if="ballot"
       :ballot="ballot"
@@ -10,28 +25,12 @@
       :voterVotes="voterVotes"
       :key="ballot.ballot_name"
     />
-    Hello there
-    {{ $route.params.ballot_name }}
     {{ ballot }}
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router';
-import { fetchBallot } from './util';
-
-const { params } = useRoute()
-const { ballot_name } = params
-const ballot = ref(null)
-console.log('1 ballot_name', ballot_name)
-onMounted(async () => {
-  console.log('2 ballot_name', ballot_name)
-  ballot.value = await fetchBallot(ballot_name)
-})
-
-</script>
-
 <style lang="scss">
-
+.wishlistBallot {
+  margin-top: 24px;
+}
 </style>
