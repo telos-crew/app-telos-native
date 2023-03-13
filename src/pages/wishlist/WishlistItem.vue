@@ -1,6 +1,6 @@
 <template>
 	<div class="wishlist-ballot">
-		<div class="left">
+		<div class="critical">
 			<div class="vote-box">
 				<q-icon
 					name="fas fa-arrow-up"
@@ -17,36 +17,60 @@
 					@click="castVote('no')"
 				/>
 			</div>
-			<img
-				:src="content.imageUrls[0]"
-				class="ballot-image"
-			/>
-			<div class="content">
-				<h3 class="title">
-					<router-link :to="`/wishlist/item/${ballot.ballot_name}`">{{
-						ballot.title
-					}}</router-link>
-				</h3>
-				<p class="description">{{ ballot.description }}</p>
-				<p>Proposed by {{ ballot.publisher }}</p>
+			<div class="info">
+				<img
+					:src="content.imageUrls[0]"
+					class="ballot-image"
+				/>
+				<div class="content">
+					<h3 class="title">
+						<router-link :to="`/wishlist/item/${ballot.ballot_name}`">{{
+							ballot.title
+						}}</router-link>
+					</h3>
+					<div class="infoArea">
+						<p class="description">{{ ballot.description }}</p>
+						<div class="metaInfo">
+							<div class="iconWrap">
+								<q-icon
+									v-if="content.imageUrls.length"
+									@click="isImagesExpanded = !isImagesExpanded"
+									class="icon"
+									name="image"
+									size="2rem"
+								/>
+							</div>
+							<p>Proposed by {{ ballot.publisher }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="score">
+				{{ aggregateVotes }}
 			</div>
 		</div>
-		<div class="score">
-			{{ aggregateVotes }}
+		<div
+			v-if="isImagesExpanded"
+			class="slideShow"
+		>
+			<slideshow :imageUrls="content.imageUrls" />
 		</div>
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { getBallotResults, getSymbolInfo } from '../resolve/util'
-import { formatVoteCount } from './util/'
+import { getBallotResults } from '../resolve/util'
+import { formatVoteCount, parseContent } from './util/'
 
 export default {
 	props: ['ballot', 'voterVotes'],
+	compontents: {
+		Slideshow: () => import('./components/Slideshow.vue')
+	},
 	data() {
 		return {
-			// voterVote: null,
+			isImagesExpanded: false
 		}
 	},
 	methods: {
@@ -59,12 +83,7 @@ export default {
 			account: 'accounts/account'
 		}),
 		content() {
-			try {
-				const cont = JSON.parse(this.ballot.content)
-				return cont
-			} catch (err) {
-				console.log('unable to parse content', err)
-			}
+			return parseContent(this.ballot.content)
 		},
 		aggregateVotes() {
 			const { netYes } = getBallotResults(this.ballot)
@@ -85,76 +104,104 @@ export default {
 <style lang="scss">
 .wishlist-ballot {
 	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
+	flex-direction: column;
 	border: 1px solid #ddd;
 	border-radius: 15px;
 	padding: 12px;
 	margin-bottom: 20px;
 
-	.left {
+	.critical {
 		display: flex;
 		flex-direction: row;
-		.vote-box {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			margin-right: 20px;
+		justify-content: space-between;
+		align-items: center;
 
-			.icon {
-				&:hover {
-					cursor: pointer;
+		.info {
+			display: flex;
+			flex-direction: row;
+			.vote-box {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				margin-right: 20px;
+
+				.icon {
+					&:hover {
+						cursor: pointer;
+					}
 				}
 			}
-		}
-		.ballot-image {
-			width: 100px;
-			min-width: 100px;
-			height: 100px;
-			min-height: 100px;
-			margin-right: 20px;
-		}
+			.ballot-image {
+				width: 100px;
+				min-width: 100px;
+				height: 100px;
+				min-height: 100px;
+				margin-right: 20px;
+			}
 
-		.content {
-			h3.title {
-				font-size: 22px;
-				line-height: 24px;
-				margin-top: 0px;
-				margin-bottom: 8px;
-				font-family: 'silkalight';
-				font-weight: bold;
+			.content {
+				h3.title {
+					font-size: 22px;
+					line-height: 24px;
+					margin-top: 0px;
+					margin-bottom: 8px;
+					font-family: 'silkalight';
+					font-weight: bold;
 
-				a {
-					text-decoration: none;
+					a {
+						text-decoration: none;
+
+						&:hover {
+							text-decoration: underline;
+						}
+					}
 
 					&:hover {
-						text-decoration: underline;
+						cursor: pointer;
 					}
 				}
 
-				&:hover {
-					cursor: pointer;
+				.description {
+					height: Calc(3 * 1em);
+					overflow: hidden;
+					margin-right: 1rem;
+				}
+
+				.infoArea {
+					.metaInfo {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+						margin-top: 8px;
+						font-size: 14px;
+						color: #666;
+
+						&:hover {
+							cursor: pointer;
+						}
+
+						p {
+							margin-left: 4px;
+						}
+
+						.iconWrap {
+						}
+					}
 				}
 			}
-
-			.description {
-				height: Calc(4 * 1.2em);
-				overflow: hidden;
-				margin-right: 1rem;
-			}
 		}
-	}
 
-	.score {
-		display: flex;
-		font-size: 32px;
-		border: 1px solid #ccc;
-		border-radius: 20px;
-		padding: 12px;
-		min-width: 120px;
-		justify-content: center;
-		align-items: center;
+		.score {
+			display: flex;
+			font-size: 32px;
+			border: 1px solid #ccc;
+			border-radius: 20px;
+			padding: 12px;
+			min-width: 120px;
+			justify-content: center;
+			align-items: center;
+		}
 	}
 }
 </style>
