@@ -5,7 +5,7 @@
 			swipeable
 			animated
 			control-type="flat"
-			control-color="purple"
+			control-color="primary"
 			navigation
 			padding
 			arrows
@@ -18,8 +18,9 @@
 				:name="imageUrl"
 				class="column no-wrap flex-center slide"
 			>
-				<img
+				<q-img
 					:src="imageUrl"
+					spinner-color="grey"
 					class="image"
 				/>
 			</q-carousel-slide>
@@ -43,8 +44,6 @@ const slide = ref(props.imageUrls[0]);
 		align-items: center;
 
 		.image {
-			max-width: 100%;
-			aspect-ratio: inherit;
 		}
 	}
 
