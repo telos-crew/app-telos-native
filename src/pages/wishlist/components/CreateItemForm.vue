@@ -100,7 +100,7 @@ export default {
 		async submitForm() {
 			const currentTime = new Date()
 			const currentUnixTimestamp = currentTime.getTime()
-			const endTimestamp = currentUnixTimestamp + 86400 * 3 * 365
+			const endTimestamp = currentUnixTimestamp + 86400 * 3 * 365 * 1000
 			const utcDate = new Date(endTimestamp)
 			const [utcIsoString] = utcDate.toISOString().split('Z')
 			const ballot_name = `wish.gen.${generateRandomId().slice(0, 3)}`
