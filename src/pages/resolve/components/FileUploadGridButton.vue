@@ -25,6 +25,9 @@
 			class="image-cover"
 			:onClick="() => chooseFile(file?.key)"
 		>
+			<q-tooltip :delay="1000">
+				{{ file?.filename }}
+			</q-tooltip>
 			<div
 				class="delete-icon"
 				@click="
@@ -39,7 +42,12 @@
 			v-else
 			class="generic"
 		>
-			{{ file?.filename }}
+			<span class="filename">
+				{{ shortenedFilename }}
+				<q-tooltip :delay="1000">
+					{{ file?.filename }}
+				</q-tooltip>
+			</span>
 			<div
 				class="delete-icon"
 				@click="
@@ -79,31 +87,34 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { validateIpfsHash } from '../util'
+import { mapGetters } from 'vuex';
+import { validateIpfsHash } from '../util';
 
 export default {
 	props: ['file', 'chooseFile'],
 	data() {
 		return {
 			alert: false
-		}
+		};
 	},
 	computed: {
 		...mapGetters({
 			account: 'accounts/account'
 		}),
 		isHashValid() {
-			return validateIpfsHash(this.hash)
+			return validateIpfsHash(this.hash);
 		},
 		isImage() {
-			return this.file?.filename?.match(/.(jpg|jpeg|png|gif)$/i)
+			return this.file?.filename?.match(/.(jpg|jpeg|png|gif)$/i);
 		},
 		ipfsLink() {
-			return `https://api.dstor.cloud/ipfs/${this.file?.hash}`
+			return `https://api.dstor.cloud/ipfs/${this.file?.hash}`;
+		},
+		shortenedFilename() {
+			return this.file?.filename;
 		}
 	}
-}
+};
 </script>
 
 <style lang="scss">
@@ -116,6 +127,7 @@ export default {
 	border: 0.5px solid #ccc;
 	background-color: #ccc;
 	border-radius: 5px;
+	padding: 3px;
 
 	&:hover {
 		cursor: pointer;
@@ -159,6 +171,14 @@ export default {
 		align-items: center;
 		width: 100%;
 		height: 100%;
+
+		.filename {
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			font-size: 0.8rem;
+		}
 
 		.delete-icon {
 		}
