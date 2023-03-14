@@ -34,10 +34,10 @@ import { mapGetters } from 'vuex'
 export default {
 	methods: {
 		navigateToAdmin(): void {
-			;(this as any).$router.push('/resolve/admin')
+			(this as any).$router.push('/resolve/admin')
 		},
 		navigateToArbitrator(): void {
-			;(this as any).$router.push('/resolve/arbitrator')
+			(this as any).$router.push('/resolve/arbitrator')
 		}
 	},
 	computed: {
