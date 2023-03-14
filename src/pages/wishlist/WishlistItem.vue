@@ -17,45 +17,47 @@
 					@click="castVote('no')"
 				/>
 			</div>
-			<div class="main-content">
-				<div class="info">
-					<img
-						:src="content.imageUrls[0]"
-						class="ballot-image"
-					/>
-					<div class="content">
-						<h3 class="title">
-							<router-link :to="`/wishlist/item/${ballot.ballot_name}`">{{
-								ballot.title
-							}}</router-link>
-						</h3>
-						<div class="infoArea">
-							<p class="description">{{ ballot.description }}</p>
-							<div class="metaInfo">
-								<div class="iconWrap">
-									<q-icon
-										v-if="content.imageUrls.length"
-										@click="isImagesExpanded = !isImagesExpanded"
-										class="icon"
-										name="image"
-										size="2rem"
-									/>
+			<img
+				:src="content.imageUrls[0]"
+				class="ballot-image"
+			/>
+			<div class="item-content">
+				<div class="main-content">
+					<div class="info">
+						<div class="content">
+							<h3 class="title">
+								<router-link :to="`/wishlist/item/${ballot.ballot_name}`">{{
+									ballot.title
+								}}</router-link>
+							</h3>
+							<div class="infoArea">
+								<p class="description">{{ ballot.description }}</p>
+								<div class="metaInfo">
+									<div class="iconWrap">
+										<q-icon
+											v-if="content.imageUrls.length"
+											@click="isImagesExpanded = !isImagesExpanded"
+											class="icon"
+											name="image"
+											size="2rem"
+										/>
+									</div>
+									<p>Proposed by {{ ballot.publisher }}</p>
 								</div>
-								<p>Proposed by {{ ballot.publisher }}</p>
 							</div>
 						</div>
 					</div>
+					<div class="score">
+						{{ aggregateVotes }}
+					</div>
 				</div>
-				<div class="score">
-					{{ aggregateVotes }}
-				</div>
+				<slideshow
+					:imageUrls="content.imageUrls"
+					v-if="isImagesExpanded"
+					class="slideShow"
+				/>
 			</div>
 		</div>
-		<Slideshow
-			:imageUrls="content.imageUrls"
-			v-if="isImagesExpanded"
-			class="slideShow"
-		/>
 	</div>
 </template>
 
@@ -67,7 +69,7 @@ import Slideshow from './components/Slideshow.vue';
 
 export default {
 	props: ['ballot', 'voterVotes'],
-	compontents: {
+	components: {
 		Slideshow
 	},
 	data() {
@@ -106,16 +108,17 @@ export default {
 <style lang="scss">
 .wishlist-ballot {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	border: 1px solid #ddd;
 	border-radius: 15px;
 	padding: 12px;
 	margin-bottom: 20px;
 
 	.critical {
+		flex: 1;
 		display: flex;
 		flex-direction: row;
-		align-items: center;
+		align-items: flex-start;
 
 		.vote-box {
 			display: flex;
@@ -131,85 +134,92 @@ export default {
 			}
 		}
 
-		.main-content {
+		.ballot-image {
+			width: 100px;
+			min-width: 100px;
+			height: 100px;
+			min-height: 100px;
+			margin-right: 20px;
+		}
+
+		.item-content {
 			display: flex;
 			flex: 1;
-			flex-direction: row;
-			justify-content: space-between;
+			flex-direction: column;
 
-			.info {
+			.main-content {
 				display: flex;
+				flex: 1;
 				flex-direction: row;
-				.ballot-image {
-					width: 100px;
-					min-width: 100px;
-					height: 100px;
-					min-height: 100px;
-					margin-right: 20px;
-				}
+				justify-content: space-between;
 
-				.content {
-					h3.title {
-						font-size: 22px;
-						line-height: 24px;
-						margin-top: 0px;
-						margin-bottom: 8px;
-						font-family: 'silkalight';
-						font-weight: bold;
+				.info {
+					display: flex;
+					flex-direction: row;
 
-						a {
-							text-decoration: none;
+					.content {
+						h3.title {
+							font-size: 22px;
+							line-height: 24px;
+							margin-top: 0px;
+							margin-bottom: 8px;
+							font-family: 'silkalight';
+							font-weight: bold;
 
-							&:hover {
-								text-decoration: underline;
+							a {
+								text-decoration: none;
+
+								&:hover {
+									text-decoration: underline;
+								}
 							}
-						}
-
-						&:hover {
-							cursor: pointer;
-						}
-					}
-
-					.description {
-						height: Calc(3 * 1em);
-						overflow: hidden;
-						margin-right: 1rem;
-					}
-
-					.infoArea {
-						.metaInfo {
-							display: flex;
-							flex-direction: row;
-							align-items: center;
-							margin-top: 8px;
-							font-size: 14px;
-							color: #666;
 
 							&:hover {
 								cursor: pointer;
 							}
+						}
 
-							p {
-								margin-left: 4px;
-							}
+						.description {
+							height: Calc(3 * 1em);
+							overflow: hidden;
+							margin-right: 1rem;
+						}
 
-							.iconWrap {
+						.infoArea {
+							.metaInfo {
+								display: flex;
+								flex-direction: row;
+								align-items: center;
+								margin-top: 8px;
+								font-size: 14px;
+								color: #666;
+
+								&:hover {
+									cursor: pointer;
+								}
+
+								p {
+									margin-left: 4px;
+								}
+
+								.iconWrap {
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 
-		.score {
-			display: flex;
-			font-size: 32px;
-			border: 1px solid #ccc;
-			border-radius: 20px;
-			padding: 12px;
-			min-width: 120px;
-			justify-content: center;
-			align-items: center;
+			.score {
+				display: flex;
+				font-size: 32px;
+				border: 1px solid #ccc;
+				border-radius: 20px;
+				padding: 12px;
+				min-width: 120px;
+				justify-content: center;
+				align-items: center;
+			}
 		}
 	}
 }
