@@ -55,8 +55,8 @@
 	</div>
 </template>
 
-<script>
-import { mapGetters } from 'vuex'
+<script setup lang="ts">
+import { useStore } from 'vuex'
 import WishlistItem from './WishlistItem.vue'
 import BallotFilters from './BallotFilters.vue'
 import { BALLOT_SORT_MAP } from './constants/sort'
@@ -65,107 +65,103 @@ import {
 	fetchVoter,
 	fetchVoterVotes,
 	getCastVoteActions,
-	getJoinAndVoteActions
+	getJoinAndVoteActions,
+	joinGroupAction
 } from './util'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 
-export default {
-	components: {
-		WishlistItem,
-		BallotFilters
-	},
-	data() {
-		return {
-			interval: null,
-			ballots: null,
-			sortedBalots: null,
-			form: null,
-			voter: null,
-			voterVotes: null,
-			sort: 'highest-approval',
-			castVoteData: {
-				ballot_name: null,
-				option: null
-			}
-		}
-	},
-	methods: {
-		toggleJoinModal() {
-			this.form = !this.form
-		},
-		onSortChange({ value: newValue }) {
-			this.sort = newValue
-		},
-		castVote(type, ballot) {
-			if (!this.voter) {
-				this.castVoteData = {
-					ballot_name: ballot.ballot_name,
-					option: type
-				}
-				this.toggleJoinModal()
-				return
-			}
-			const castVoteActions = getCastVoteActions(
-				this.account,
-				ballot.ballot_name,
-				type
-			)
-			this.$store.$api.signTransaction(castVoteActions)
-			this.castVoteData = { ballot_name: null, option: null }
-			setTimeout(this.fetchEverything, 1000)
-			setTimeout(this.fetchEverything, 3000)
-		},
-		async joinAndVote() {
-			const joinAndVoteActions = getJoinAndVoteActions(
-				this.account,
-				this.castVoteData.ballot_name,
-				this.castVoteData.option
-			)
-			await this.$store.$api.signTransaction(joinAndVoteActions)
-			this.castVoteData = { ballot_name: null, option: null }
-		},
-		async joinGroup() {
-			const joinGroupAction = joinGroupAction(this.account)
-			await this.$store.$api.signTransaction(joinGroupAction)
-			setTimeout(this.fetchEverything, 1000)
-			setTimeout(this.fetchEverything, 3000)
-		},
-		async fetchBallots() {
-			this.ballots = await fetchBallots()
-		},
-		async fetchVoter() {
-			if (!this.account) return
-			this.voter = await fetchVoter(this.account, 'VOTE')
-		},
-		async fetchVoterVotes() {
-			if (!this.account) return
-			this.voterVotes = await fetchVoterVotes(this.account)
-		},
-		async fetchEverything() {
-			this.fetchBallots()
-			this.fetchVoter()
-			this.fetchVoterVotes()
-		}
-	},
-	computed: {
-		...mapGetters({
-			account: 'accounts/account'
-		}),
-		sortedBallots() {
-			const sortedBallots = [...this.ballots]
-			sortedBallots.sort(BALLOT_SORT_MAP[this.sort])
-			return sortedBallots
-		}
-	},
-	mounted() {
-		this.fetchEverything()
+const interval: any = ref(null)
+const ballots = ref(null)
+const form = ref(false)
+const voter = ref(null)
+const voterVotes = ref(null)
+const sort = ref('highest-approval')
+const castVoteData = ref({
+	ballot_name: null,
+	option: []
+})
 
-		this.interval = setInterval(() => {
-			this.fetchEverything()
-		}, 10000)
-	},
-	unmounted() {
-		clearInterval(this.interval)
+const store = useStore()
+const account = computed(() => {
+	return store.getters['accounts/account']
+})
+
+const toggleJoinModal = () => {
+	form.value = !form.value
+}
+
+const onSortChange = ({ value: newValue }: { value: string }) => {
+	sort.value = newValue
+}
+
+const castVote = (type: string, ballot: any) => {
+	if (!voter.value) {
+		castVoteData.value = {
+			ballot_name: ballot.ballot_name,
+			option: [type]
+		}
+		toggleJoinModal()
+		return
 	}
+	const castVoteActions = getCastVoteActions(
+		account.value,
+		ballot.ballot_name,
+		type
+	)
+	store.$api.signTransaction(castVoteActions)
+	castVoteData.value = { ballot_name: null, option: null }
+	setTimeout(fetchEverything, 1000)
+	setTimeout(fetchEverything, 3000)
+}
+
+const getBallots = async () => {
+	ballots.value = await fetchBallots()
+}
+
+const getVoter = async () => {
+	voter.value = await fetchVoter(account.value, 'VOTE')
+}
+
+const getVoterVotes = async () => {
+	voterVotes.value = await fetchVoterVotes(account.value)
+}
+
+const fetchEverything = async () => {
+	getBallots()
+	getVoter()
+	getVoterVotes()
+}
+
+onMounted(() => {
+	fetchEverything()
+	interval.value = setInterval(fetchEverything, 10000)
+})
+
+onUnmounted(() => {
+	clearInterval(interval.value)
+})
+
+const sortedBallots = computed(() => {
+	if (!ballots.value) return null
+	const sortedBallots = ballots.value.sort(BALLOT_SORT_MAP[sort.value])
+	return sortedBallots
+})
+
+const joinAndVote = async () => {
+	const joinAndVoteActions = getJoinAndVoteActions(
+		account.value,
+		castVoteData.value.ballot_name,
+		castVoteData.value.option
+	)
+	await store.$api.signTransaction(joinAndVoteActions)
+	castVoteData.value = { ballot_name: null, option: null }
+}
+
+const joinGroup = async () => {
+	const actions = joinGroupAction(account.value)
+	await store.$api.signTransaction(actions)
+	setTimeout(fetchEverything, 1000)
+	setTimeout(fetchEverything, 3000)
 }
 </script>
 
