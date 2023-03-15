@@ -36,9 +36,18 @@
 									<div class="iconWrap">
 										<q-icon
 											v-if="content.imageUrls.length"
-											@click="isImagesExpanded = !isImagesExpanded"
+											v-on:click="changeSlideshow('image')"
 											class="icon"
 											name="image"
+											size="2rem"
+										/>
+									</div>
+									<div class="iconWrap">
+										<q-icon
+											v-if="content.contentUrls.length"
+											v-on:click="changeSlideshow('doc')"
+											class="icon"
+											name="article"
 											size="2rem"
 										/>
 									</div>
@@ -53,7 +62,12 @@
 				</div>
 				<image-slideshow
 					:imageUrls="content.imageUrls"
-					v-if="isImagesExpanded && content.imageUrls.length"
+					v-show="slideshow === 'image' && content.imageUrls.length"
+					class="slideShow"
+				/>
+				<doc-slideshow
+					:contentUrls="content.contentUrls"
+					v-show="slideshow === 'doc' && content.contentUrls.length"
 					class="slideShow"
 				/>
 			</div>
@@ -66,20 +80,31 @@ import { mapGetters } from 'vuex';
 import { getBallotResults } from '../resolve/util';
 import { formatVoteCount, parseContent } from './util/';
 import ImageSlideshow from './components/ImageSlideshow.vue';
+import DocSlideshow from './components/DocSlideshow.vue';
 
 export default {
 	props: ['ballot', 'voterVotes'],
 	components: {
-		ImageSlideshow
+		ImageSlideshow,
+		DocSlideshow
 	},
 	data() {
 		return {
-			isImagesExpanded: false
+			slideshow: 'none'
 		};
 	},
 	methods: {
 		castVote(type) {
 			this.$emit('castVote', type, this.ballot);
+		},
+		changeSlideshow(type) {
+			if (type === 'doc') {
+				if (this.slideshow !== 'doc') this.slideshow = 'doc';
+				else this.slideshow = 'none';
+			} else if (type === 'image') {
+				if (this.slideshow !== 'image') this.slideshow = 'image';
+				else this.slideshow = 'none';
+			}
 		}
 	},
 	computed: {
