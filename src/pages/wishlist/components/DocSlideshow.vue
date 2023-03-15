@@ -1,15 +1,3 @@
-<!-- <template>
-	<div class="slideshowWrap">
-		<iframe
-			class="slide"
-			:src="slide"
-			width="100%"
-			frameborder="0"
-			allowfullscreen
-		/>
-	</div>
-</template> -->
-
 <template>
 	<div class="slideshowWrap">
 		<q-carousel
