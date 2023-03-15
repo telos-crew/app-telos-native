@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-const editor = ref('What you see is <b>what</b> you get.');
+const editor = ref('');
+const emit = defineEmits(['save']);
+
+const onSave = () => {
+	emit('save', editor.value);
+};
 </script>
 
 <template>
@@ -8,13 +13,14 @@ const editor = ref('What you see is <b>what</b> you get.');
 		<div class="editor">
 			<q-editor
 				v-model="editor"
-				min-height="5rem"
+				min-height="7rem"
 			/>
 		</div>
 		<div class="saveButtonWrap">
 			<q-btn
 				color="primary"
 				label="Save"
+				@click="onSave"
 			/>
 		</div>
 	</div>
