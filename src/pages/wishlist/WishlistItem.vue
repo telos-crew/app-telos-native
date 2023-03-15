@@ -31,7 +31,12 @@
 								}}</router-link>
 							</h3>
 							<div class="infoArea">
-								<p class="description">{{ ballot.description }}</p>
+								<p
+									class="description"
+									:class="{ shortDescription }"
+								>
+									{{ ballot.description }}
+								</p>
 								<div class="metaInfo">
 									<div class="iconWrap">
 										<q-icon
@@ -83,7 +88,7 @@ import ImageSlideshow from './components/ImageSlideshow.vue';
 import DocSlideshow from './components/DocSlideshow.vue';
 
 export default {
-	props: ['ballot', 'voterVotes'],
+	props: ['ballot', 'voterVotes', 'shortDescription'],
 	components: {
 		ImageSlideshow,
 		DocSlideshow
@@ -206,9 +211,12 @@ export default {
 						}
 
 						.description {
-							height: Calc(3 * 1em);
-							overflow: hidden;
 							margin-right: 1rem;
+
+							.shortDescription {
+								height: Calc(3 * 1em);
+								overflow: hidden;
+							}
 						}
 
 						.infoArea {

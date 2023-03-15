@@ -16,6 +16,7 @@
 			@castVote="castVote"
 			:voterVotes="voterVotes"
 			:key="ballot.ballot_name"
+			:shortDescription="true"
 		/>
 		<q-dialog
 			v-model="form"
@@ -56,10 +57,10 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from 'vuex'
-import WishlistItem from './WishlistItem.vue'
-import BallotFilters from './BallotFilters.vue'
-import { BALLOT_SORT_MAP } from './constants/sort'
+import { useStore } from 'vuex';
+import WishlistItem from './WishlistItem.vue';
+import BallotFilters from './BallotFilters.vue';
+import { BALLOT_SORT_MAP } from './constants/sort';
 import {
 	fetchBallots,
 	fetchVoter,
@@ -67,102 +68,102 @@ import {
 	getCastVoteActions,
 	getJoinAndVoteActions,
 	joinGroupAction
-} from './util'
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+} from './util';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 
-const interval: any = ref(null)
-const ballots = ref(null)
-const form = ref(false)
-const voter = ref(null)
-const voterVotes = ref(null)
-const sort = ref('highest-approval')
+const interval: any = ref(null);
+const ballots = ref(null);
+const form = ref(false);
+const voter = ref(null);
+const voterVotes = ref(null);
+const sort = ref('highest-approval');
 const castVoteData = ref({
 	ballot_name: null,
 	option: []
-})
+});
 
-const store = useStore()
+const store = useStore();
 const account = computed(() => {
-	return store.getters['accounts/account']
-})
+	return store.getters['accounts/account'];
+});
 
 const toggleJoinModal = () => {
-	form.value = !form.value
-}
+	form.value = !form.value;
+};
 
 const onSortChange = ({ value: newValue }: { value: string }) => {
-	sort.value = newValue
-}
+	sort.value = newValue;
+};
 
 const castVote = (type: string, ballot: any) => {
 	if (!voter.value) {
 		castVoteData.value = {
 			ballot_name: ballot.ballot_name,
 			option: [type]
-		}
-		toggleJoinModal()
-		return
+		};
+		toggleJoinModal();
+		return;
 	}
 	const castVoteActions = getCastVoteActions(
 		account.value,
 		ballot.ballot_name,
 		type
-	)
-	store.$api.signTransaction(castVoteActions)
-	castVoteData.value = { ballot_name: null, option: null }
-	setTimeout(fetchEverything, 1000)
-	setTimeout(fetchEverything, 3000)
-}
+	);
+	store.$api.signTransaction(castVoteActions);
+	castVoteData.value = { ballot_name: null, option: null };
+	setTimeout(fetchEverything, 1000);
+	setTimeout(fetchEverything, 3000);
+};
 
 const getBallots = async () => {
-	ballots.value = await fetchBallots()
-}
+	ballots.value = await fetchBallots();
+};
 
 const getVoter = async () => {
-	voter.value = await fetchVoter(account.value, 'VOTE')
-}
+	voter.value = await fetchVoter(account.value, 'VOTE');
+};
 
 const getVoterVotes = async () => {
-	voterVotes.value = await fetchVoterVotes(account.value)
-}
+	voterVotes.value = await fetchVoterVotes(account.value);
+};
 
 const fetchEverything = async () => {
-	getBallots()
-	getVoter()
-	getVoterVotes()
-}
+	getBallots();
+	getVoter();
+	getVoterVotes();
+};
 
 onMounted(() => {
-	fetchEverything()
-	interval.value = setInterval(fetchEverything, 10000)
-})
+	fetchEverything();
+	interval.value = setInterval(fetchEverything, 10000);
+});
 
 onUnmounted(() => {
-	clearInterval(interval.value)
-})
+	clearInterval(interval.value);
+});
 
 const sortedBallots = computed(() => {
-	if (!ballots.value) return null
-	const sortedBallots = ballots.value.sort(BALLOT_SORT_MAP[sort.value])
-	return sortedBallots
-})
+	if (!ballots.value) return null;
+	const sortedBallots = ballots.value.sort(BALLOT_SORT_MAP[sort.value]);
+	return sortedBallots;
+});
 
 const joinAndVote = async () => {
 	const joinAndVoteActions = getJoinAndVoteActions(
 		account.value,
 		castVoteData.value.ballot_name,
 		castVoteData.value.option
-	)
-	await store.$api.signTransaction(joinAndVoteActions)
-	castVoteData.value = { ballot_name: null, option: null }
-}
+	);
+	await store.$api.signTransaction(joinAndVoteActions);
+	castVoteData.value = { ballot_name: null, option: null };
+};
 
 const joinGroup = async () => {
-	const actions = joinGroupAction(account.value)
-	await store.$api.signTransaction(actions)
-	setTimeout(fetchEverything, 1000)
-	setTimeout(fetchEverything, 3000)
-}
+	const actions = joinGroupAction(account.value);
+	await store.$api.signTransaction(actions);
+	setTimeout(fetchEverything, 1000);
+	setTimeout(fetchEverything, 3000);
+};
 </script>
 
 <style lang="scss">
