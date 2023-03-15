@@ -40,6 +40,8 @@ const slide = ref(props.contentUrls[0]);
 	flex: 1;
 	.slide {
 		min-height: 600px;
+		padding-left: 0;
+		padding-right: 0;
 		.image {
 		}
 	}

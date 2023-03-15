@@ -17,15 +17,17 @@
 				:name="imageUrl"
 				class="column no-wrap flex-center slide"
 			>
-				<div
+				<!-- <div
 					class="image"
 					:style="{ backgroundImage: 'url(' + imageUrl + ')' }"
-				/>
-				<!-- <q-img
+				/> -->
+				<q-img
 					:src="imageUrl"
 					spinner-color="grey"
 					class="image"
-				/> -->
+					fit="contain"
+				>
+				</q-img>
 			</q-carousel-slide>
 		</q-carousel>
 	</div>
@@ -41,17 +43,16 @@ const slide = ref(props.imageUrls[0]);
 .slideshowWrap {
 	flex: 1;
 	.slide {
-		flex: 1;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 
 		.image {
-			width: 100%;
-			height: 100%;
-			background-size: contain;
-			background-repeat: no-repeat;
-			background-position: center;
+			max-width: 100%;
+
+			// background-size: contain;
+			// background-repeat: no-repeat;
+			// background-position: center;
 		}
 	}
 
