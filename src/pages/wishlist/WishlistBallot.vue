@@ -1,19 +1,21 @@
 <template>
-	<div class="wishlistBallot">
-		<wishlist-item
-			v-if="ballot"
-			:ballot="ballot"
-			:fetchBallots="fetchBallots"
-			:form="form"
-			@toggleJoinModal="toggleJoinModal"
-			@castVote="castVote"
-			:voterVotes="voterVotes"
-			:key="ballot.ballot_name"
-			:shortDescription="false"
-		/>
-	</div>
-	<div class="textEditorWrap">
-		<TextEditor @save="saveComment" />
+	<div class="wishlistBallotPage">
+		<div class="wishlistBallot">
+			<wishlist-item
+				v-if="ballot"
+				:ballot="ballot"
+				:fetchBallots="fetchBallots"
+				:form="form"
+				@toggleJoinModal="toggleJoinModal"
+				@castVote="castVote"
+				:voterVotes="voterVotes"
+				:key="ballot.ballot_name"
+				:shortDescription="false"
+			/>
+		</div>
+		<div class="textEditorWrap">
+			<TextEditor @save="saveComment" />
+		</div>
 	</div>
 </template>
 
@@ -55,7 +57,10 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-.wishlistBallot {
-	margin-top: 24px;
+.wishlistBallotPage {
+	margin-bottom: 52px;
+	.wishlistBallot {
+		margin-top: 24px;
+	}
 }
 </style>
