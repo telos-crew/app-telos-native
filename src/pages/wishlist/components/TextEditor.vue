@@ -1,7 +1,12 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
-const editor = ref('');
-const emit = defineEmits(['save']);
+import { ref, defineProps } from 'vue';
+// const editor = ref('');
+const props = defineProps(['draftComment', 'level']);
+const emit = defineEmits(['save', 'commentChange']);
+
+const onChange = (value: string) => {
+	editor.value = value;
+};
 
 const onSave = () => {
 	emit('save', editor.value);
@@ -12,7 +17,10 @@ const onSave = () => {
 	<div class="text-editor">
 		<div class="editor">
 			<q-editor
-				v-model="editor"
+				:modelValue="props.draftComment"
+				@update:modelValue="
+					(newValue) => emit('commentChange', newValue, props.level)
+				"
 				min-height="7rem"
 			/>
 		</div>
