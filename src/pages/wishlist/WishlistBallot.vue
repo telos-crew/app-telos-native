@@ -59,10 +59,11 @@ const onTopCommentChange = (content) => {
 	draftComments.value.top.content = content;
 };
 
-const saveComment = async (content) => {
+const saveComment = async (level) => {
+	console.log('level', level);
 	const payload = {
 		ballot_name: ballot.value.ballot_name,
-		content,
+		content: draftComments.value[level].content,
 		account_name: account.value
 	};
 	try {
@@ -72,6 +73,7 @@ const saveComment = async (content) => {
 			message: 'Comment saved!',
 			type: 'positive'
 		});
+		draftComments.value[level].content = '';
 	} catch (err) {
 		console.log(err);
 		$q.notify({

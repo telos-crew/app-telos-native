@@ -1,15 +1,12 @@
 <script lang="ts" setup>
-import { ref, defineProps } from 'vue';
+import { defineProps } from 'vue';
 // const editor = ref('');
 const props = defineProps(['draftComment', 'level']);
 const emit = defineEmits(['save', 'commentChange']);
 
-const onChange = (value: string) => {
-	editor.value = value;
-};
-
 const onSave = () => {
-	emit('save', editor.value);
+	console.log('onSave', props.level);
+	emit('save', props.level);
 };
 </script>
 
