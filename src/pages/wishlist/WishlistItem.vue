@@ -248,13 +248,14 @@ export default {
 
 			.score {
 				display: flex;
+				justify-content: center;
+				align-items: center;
 				font-size: 32px;
-				border: 1px solid #ccc;
 				border-radius: 20px;
 				padding: 12px;
 				min-width: 120px;
-				justify-content: center;
-				align-items: center;
+				max-height: 8rem;
+				border: 1px solid #ccc;
 			}
 		}
 	}
