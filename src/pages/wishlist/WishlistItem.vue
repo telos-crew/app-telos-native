@@ -177,6 +177,7 @@ export default {
 				flex: 1;
 				flex-direction: row;
 				justify-content: space-between;
+				margin-bottom: 20px;
 
 				.info {
 					display: flex;

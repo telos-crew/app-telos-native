@@ -6,7 +6,6 @@
 			animated
 			control-type="flat"
 			control-color="primary"
-			navigation
 			padding
 			arrows
 			height="300px"
