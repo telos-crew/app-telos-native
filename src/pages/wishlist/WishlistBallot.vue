@@ -9,6 +9,7 @@
 			@castVote="castVote"
 			:voterVotes="voterVotes"
 			:key="ballot.ballot_name"
+			:shortDescription="false"
 		/>
 	</div>
 	<div class="textEditorWrap">

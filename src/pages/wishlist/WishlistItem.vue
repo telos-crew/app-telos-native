@@ -33,7 +33,9 @@
 							<div class="infoArea">
 								<p
 									class="description"
-									:class="{ shortDescription }"
+									:class="{
+										shortDescription: shortDescription
+									}"
 								>
 									{{ ballot.description }}
 								</p>
@@ -213,7 +215,7 @@ export default {
 						.description {
 							margin-right: 1rem;
 
-							.shortDescription {
+							&.shortDescription {
 								height: Calc(3 * 1em);
 								overflow: hidden;
 							}
