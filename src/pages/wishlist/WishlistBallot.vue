@@ -1,17 +1,3 @@
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { fetchBallot } from './util'
-import WishlistItem from './WishlistItem.vue'
-
-const { params } = useRoute()
-const { ballot_name } = params
-const ballot = ref(null)
-onMounted(async () => {
-	ballot.value = await fetchBallot(ballot_name)
-})
-</script>
-
 <template>
 	<div class="wishlistBallot">
 		<wishlist-item
@@ -24,9 +10,26 @@ onMounted(async () => {
 			:voterVotes="voterVotes"
 			:key="ballot.ballot_name"
 		/>
-		{{ ballot }}
+	</div>
+	<div class="textEditorWrap">
+		<TextEditor />
 	</div>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { fetchBallot } from './util';
+import WishlistItem from './WishlistItem.vue';
+import TextEditor from './components/TextEditor.vue';
+
+const { params } = useRoute();
+const { ballot_name } = params;
+const ballot = ref(null);
+onMounted(async () => {
+	ballot.value = await fetchBallot(ballot_name);
+});
+</script>
 
 <style lang="scss">
 .wishlistBallot {
