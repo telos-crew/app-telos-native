@@ -26,6 +26,7 @@
 		"highcharts-vue": "^1.4.0",
 		"ipfs-core": "^0.15.4",
 		"iso-3166-1": "^2.1.1",
+		"luxon": "^3.3.0",
 		"md5": "^2.3.0",
 		"moment": "^2.29.4",
 		"pug-plain-loader": "^1.1.0",
