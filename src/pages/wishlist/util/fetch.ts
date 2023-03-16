@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { BALLOTS_SEARCH_ENDPOINT } from 'src/const/endpoints';
-import { BallotCommentPayload } from '../types/blockchain';
 
 export const fetchBallots = async () => {
 	const {
@@ -55,6 +54,14 @@ export const postBallotComment = async (payload: any) => {
 		method: 'POST',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comment`,
 		data: payload
+	});
+	return data;
+};
+
+export const fetchBallotComments = async (ballot_name: string) => {
+	const { data } = await axios({
+		method: 'GET',
+		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comments/${ballot_name}`
 	});
 	return data;
 };

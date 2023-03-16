@@ -33,7 +33,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-import { fetchBallot, postBallotComment } from './util';
+import { fetchBallot, postBallotComment, fetchBallotComments } from './util';
 import WishlistItem from './WishlistItem.vue';
 import TextEditor from './components/TextEditor.vue';
 import BallotCommentsSection from './components/BallotCommentsSection.vue';
@@ -42,6 +42,7 @@ const { params } = useRoute();
 const { ballot_name } = params;
 const $q = useQuasar();
 const ballot = ref(null);
+const ballotComments = ref(null);
 const draftComments = ref({
 	top: {
 		parent_id: null,
@@ -85,6 +86,8 @@ const saveComment = async (level) => {
 
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name);
+	ballotComments.value = await fetchBallotComments(ballot_name);
+
 	console.log(ballot.value);
 });
 </script>
