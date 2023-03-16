@@ -23,7 +23,7 @@
 			{{ draftComments.top.content }}
 		</div>
 		<div class="ballotCommentsArea">
-			<BallotCommentsSection />
+			<BallotCommentsSection :ballotComments="ballotComments" />
 		</div>
 	</div>
 </template>
@@ -100,8 +100,6 @@ onMounted(async () => {
 	}
 
 	.ballotCommentsArea {
-		margin-top: 36px;
-		border: 1px solid #e0e0e0;
 	}
 }
 </style>
