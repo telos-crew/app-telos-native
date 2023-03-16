@@ -10,7 +10,6 @@
 				:comment="comment"
 				:level="0"
 			/>
-			{{ topLevelComments }}
 		</div>
 	</div>
 </template>

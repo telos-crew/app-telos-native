@@ -2,21 +2,28 @@
 	<div class="ballotComment">
 		<div class="header">
 			<span class="accountName">@{{ account_name }}</span>
+			<span class="timeAgo">{{ date }}</span>
 		</div>
 		<div class="contentWrap">
 			<div class="content">
 				{{ content }}
 			</div>
 		</div>
+		<div class="footer">
+			<div class="permalink">link</div>
+			<div class="reply">reply</div>
+			<div class="hide">hide</div>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { DateTime } from 'luxon';
 import { defineProps } from 'vue';
 const props = defineProps(['comment', 'level']);
 const { comment, level } = props;
-const { account_name, content, created_at, is_deleted } = comment;
-console.log('ballotComment comment', comment);
+const { account_name, content, created_at } = comment;
+const date = DateTime.fromISO(created_at).toRelative();
 </script>
 
 <style lang="scss" scoped>
@@ -35,14 +42,37 @@ console.log('ballotComment comment', comment);
 			font-size: 0.8rem;
 			font-weight: bold;
 			margin-right: 6px;
+			color: $primary;
+		}
+
+		.timeAgo {
+			font-size: 0.8rem;
+			color: #888888;
 		}
 	}
 
 	.contentWrap {
-		margin-top: 6px;
+		margin: 12px auto 12px;
 
 		.content {
 			white-space: pre-wrap;
+			font-size: 0.9rem;
+			font-weight: 600;
+		}
+	}
+
+	.footer {
+		display: flex;
+		flex: 1;
+		flex-direction: row;
+		justify-content: flex-start;
+		font-size: 0.9rem;
+		color: #888888;
+		font-weight: 900;
+		text-transform: lowercase;
+
+		> div {
+			margin-right: 12px;
 		}
 	}
 }

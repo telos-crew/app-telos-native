@@ -23,6 +23,6 @@ export type Ballot = {
 export type BallotCommentPayload = {
 	account_name: string;
 	ballot_name: string;
-	parent_id: number | null;
+	parent_id: number;
 	content: any;
 };

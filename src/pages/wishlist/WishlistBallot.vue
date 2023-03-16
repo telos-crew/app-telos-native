@@ -20,7 +20,6 @@
 				:draftComment="draftComments.top.content"
 				level="top"
 			/>
-			{{ draftComments.top.content }}
 		</div>
 		<div class="ballotCommentsArea">
 			<BallotCommentsSection :ballotComments="ballotComments" />
@@ -45,7 +44,7 @@ const ballot = ref(null);
 const ballotComments = ref(null);
 const draftComments = ref({
 	top: {
-		parent_id: null,
+		parent_id: 0,
 		content: ''
 	}
 });
@@ -75,6 +74,7 @@ const saveComment = async (level) => {
 			type: 'positive'
 		});
 		draftComments.value[level].content = '';
+		ballotComments.value = await fetchBallotComments(ballot_name);
 	} catch (err) {
 		console.log(err);
 		$q.notify({
