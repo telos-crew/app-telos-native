@@ -2,9 +2,8 @@
 import { BallotComment } from '../types/blockchain';
 
 export const buildCommentTree = (comments: BallotComment[]) => {
-	let iterator = 0;
+	let final;
 	const levels = {};
-	const commentMap = {};
 	comments.forEach((comment) => {
 		if (!levels[comment.level]) {
 			levels[comment.level] = {};
@@ -26,9 +25,11 @@ export const buildCommentTree = (comments: BallotComment[]) => {
 					parentLevel[comment.parent_id].children.push(comment);
 				}
 			}
-			console.log('parentLevel final: ', parentLevel);
+			final = parentLevel;
 		}
 	});
+	console.log(final);
+	return final;
 };
 
 export const something = {

@@ -14,14 +14,22 @@
 			<div class="reply">reply</div>
 			<div class="hide">hide</div>
 		</div>
+		<div class="childrenComments">
+			<BallotComment
+				v-for="comment in comment.children"
+				:key="comment.id"
+				:comment="comment"
+			/>
+		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { DateTime } from 'luxon';
 import { defineProps } from 'vue';
-const props = defineProps(['comment', 'level']);
-const { comment, level } = props;
+import BallotComment from './BallotComment.vue';
+const props = defineProps(['comment']);
+const { comment } = props;
 const { account_name, content, created_at } = comment;
 const date = DateTime.fromISO(created_at).toRelative();
 </script>
@@ -74,6 +82,10 @@ const date = DateTime.fromISO(created_at).toRelative();
 		> div {
 			margin-right: 12px;
 		}
+	}
+
+	.childrenComments {
+		margin-left: 24px;
 	}
 }
 </style>

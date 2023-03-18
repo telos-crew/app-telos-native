@@ -4,13 +4,11 @@
 			v-if="props.ballotComments"
 			class="topLevelComment"
 		>
-			<!-- <BallotComment
+			<BallotComment
 				v-for="comment in topLevelComments"
 				:key="comment.id"
 				:comment="comment"
-				:level="0"
-			/> -->
-			{{ topLevelComments }}
+			/>
 		</div>
 	</div>
 </template>
