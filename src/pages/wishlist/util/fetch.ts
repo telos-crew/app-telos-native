@@ -63,5 +63,6 @@ export const fetchBallotComments = async (ballot_name: string) => {
 		method: 'GET',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comments/${ballot_name}`
 	});
+	console.log('fetchBallotComments: ', data);
 	return data;
 };

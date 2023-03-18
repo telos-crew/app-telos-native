@@ -26,3 +26,15 @@ export type BallotCommentPayload = {
 	parent_id: number;
 	content: any;
 };
+
+export type BallotComment = {
+	account_name: string;
+	ballot_name: string;
+	content: string;
+	created_at: string;
+	id: number;
+	is_deleted: false;
+	parent_id: number | null;
+	updated_at: string;
+	level: number;
+};

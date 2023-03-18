@@ -4,27 +4,29 @@
 			v-if="props.ballotComments"
 			class="topLevelComment"
 		>
-			<BallotComment
+			<!-- <BallotComment
 				v-for="comment in topLevelComments"
 				:key="comment.id"
 				:comment="comment"
 				:level="0"
-			/>
+			/> -->
+			{{ topLevelComments }}
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, computed } from 'vue';
+import { buildCommentTree } from '../util';
 import BallotComment from './BallotComment.vue';
 const props = defineProps(['ballotComments']);
 
-console.log('ballotCommentsSection props.ballotComments', props.ballotComments);
-
 const topLevelComments = computed(() => {
-	return props.ballotComments
-		? props.ballotComments.filter((comment: any) => comment.parent_id === null)
-		: null;
+	console.log(
+		'ballotCommentsSection props.ballotComments',
+		props.ballotComments
+	);
+	return props.ballotComments ? buildCommentTree(props.ballotComments) : null;
 });
 </script>
 
