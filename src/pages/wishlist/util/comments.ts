@@ -31,8 +31,7 @@ export const buildCommentTree = (comments: BallotComment[]) => {
 				};
 			}
 		}
-		console.log('commentMap', JSON.stringify(commentMap));
-		console.log('commentMap', commentMap);
+		console.log('commentMap', JSON.parse(JSON.stringify(commentMap)));
 	});
 };
 
