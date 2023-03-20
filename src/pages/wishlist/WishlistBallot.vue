@@ -15,6 +15,7 @@
 		</div>
 		<div class="textEditorWrap">
 			<TextEditor
+				v-if="account"
 				@save="saveComment"
 				@comment-change="onTopCommentChange"
 				:draftComment="draftComments.top.content"

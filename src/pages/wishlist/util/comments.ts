@@ -10,7 +10,6 @@ export const buildCommentTree = (comments: BallotComment[]) => {
 		}
 		levels[comment.level][comment.id] = comment;
 	});
-	console.log('levels before', JSON.parse(JSON.stringify(levels)));
 	const sortedLevelKeys = Object.keys(levels).sort().reverse();
 	sortedLevelKeys.forEach((levelKey: string) => {
 		const levelComments = levels[levelKey];
@@ -26,40 +25,9 @@ export const buildCommentTree = (comments: BallotComment[]) => {
 				}
 			}
 			final = parentLevel;
+		} else {
+			final = levelComments;
 		}
 	});
-	console.log(final);
 	return final;
-};
-
-export const something = {
-	99: {
-		id: 99
-	},
-	98: {
-		id: 98
-	}
-};
-
-export const junk = {
-	0: {
-		id: 0,
-		children: {
-			8: {
-				id: 8,
-				children: {}
-			}
-		}
-	},
-	1: {
-		id: 1,
-		children: {
-			3: {
-				id: 3,
-				children: {
-					id: 5
-				}
-			}
-		}
-	}
 };

@@ -16,9 +16,9 @@
 		</div>
 		<div class="childrenComments">
 			<BallotComment
-				v-for="comment in comment.children"
-				:key="comment.id"
-				:comment="comment"
+				v-for="childComment in comment.children"
+				:key="childComment.id"
+				:comment="childComment"
 			/>
 		</div>
 	</div>
