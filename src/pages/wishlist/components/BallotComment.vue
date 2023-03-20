@@ -1,5 +1,8 @@
 <template>
-	<div class="ballotComment">
+	<div
+		:id="`ballotComment-${comment.id}`"
+		class="ballotComment"
+	>
 		<div class="header">
 			<span class="accountName">@{{ account_name }}</span>
 			<span class="timeAgo">{{ date }}</span>
@@ -10,9 +13,9 @@
 			</div>
 		</div>
 		<div class="footer">
-			<div class="permalink">link</div>
-			<div class="reply">reply</div>
-			<div class="hide">hide</div>
+			<div class="clickable permalink">link</div>
+			<div class="clickable reply">reply</div>
+			<div class="clickable hide">hide</div>
 		</div>
 		<div class="childrenComments">
 			<BallotComment
@@ -81,6 +84,10 @@ const date = DateTime.fromISO(created_at).toRelative();
 
 		> div {
 			margin-right: 12px;
+		}
+
+		.clickable:hover {
+			cursor: pointer;
 		}
 	}
 
