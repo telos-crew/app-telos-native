@@ -41,6 +41,21 @@ const signTransaction = async function (actions) {
 	return transaction
 }
 
+const signArbitrary = async function (data, helpText = '') {
+	let signature = null
+	try {
+		signature = await this.$ualUser.signArbitrary(
+			data,
+			helpText
+		)
+		Notify.create({ type: 'positive', message: 'Signature signed' })
+	} catch (e) {
+		Notify.create({ type: 'negative', message: e.message })
+		throw e
+	}
+	return signature
+}
+
 const getTableRows = async function (options) {
 	try {
 		return this.$defaultApi.rpc.get_table_rows({
@@ -75,6 +90,7 @@ export default boot(async ({ store }) => {
 	store['$api'] = {
 		signTransaction: signTransaction.bind(store),
 		getTableRows: getTableRows.bind(store),
-		getAccount: getAccount.bind(store)
+		getAccount: getAccount.bind(store),
+		signArbitrary: signArbitrary.bind(store)
 	}
 })
