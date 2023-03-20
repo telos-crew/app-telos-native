@@ -1,23 +1,23 @@
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  name: "RequestAccount",
-  computed: {
-    ...mapGetters("accounts", [
-      "requestAccount",
-      "availableAccounts",
-      "availableAccountsLoaded",
-    ]),
-  },
-  methods: {
-    ...mapMutations("accounts", ["setRequestAccount"]),
-    async onContinue(account) {
-      this.setRequestAccount(false);
-      this.$emit("accountEntered", account);
-    },
-  },
-};
+	name: 'RequestAccount',
+	computed: {
+		...mapGetters('accounts', [
+			'requestAccount',
+			'availableAccounts',
+			'availableAccountsLoaded'
+		])
+	},
+	methods: {
+		...mapMutations('accounts', ['setRequestAccount']),
+		async onContinue(account) {
+			this.setRequestAccount(false)
+			this.$emit('accountEntered', account)
+		}
+	}
+}
 </script>
 
 <template lang="pug">

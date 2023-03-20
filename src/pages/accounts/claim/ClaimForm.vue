@@ -3,30 +3,29 @@ import { mapActions } from 'vuex'
 import { validation } from '~/mixins/validation'
 
 export default {
-  name: 'ClaimForm',
-  mixins: [validation],
-  data () {
-    return {
-      form: {
-        accountName: null
-      },
-      submitting: false,
-      state: null
-    }
-  },
-  methods: {
-    ...mapActions('accounts', ['isAccountClaimed']),
-    async onClaimCheck () {
-      this.resetValidation(this.form)
-      if (!(await this.validate(this.form))) return
-      this.state = await this.isAccountClaimed(this.form.accountName)
-    },
-    reset () {
-      this.state = null
-      this.form.accountName = null
-    }
-
-  }
+	name: 'ClaimForm',
+	mixins: [validation],
+	data() {
+		return {
+			form: {
+				accountName: null
+			},
+			submitting: false,
+			state: null
+		}
+	},
+	methods: {
+		...mapActions('accounts', ['isAccountClaimed']),
+		async onClaimCheck() {
+			this.resetValidation(this.form)
+			if (!(await this.validate(this.form))) return
+			this.state = await this.isAccountClaimed(this.form.accountName)
+		},
+		reset() {
+			this.state = null
+			this.form.accountName = null
+		}
+	}
 }
 </script>
 

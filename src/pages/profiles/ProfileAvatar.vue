@@ -5,23 +5,22 @@ q-avatar(:size='size')
 </template>
 
 <script>
-import md5 from "md5";
-import VueGravatar from "src/components/VueGravatar.vue";
+import md5 from 'md5'
+import VueGravatar from 'src/components/VueGravatar.vue'
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "ProfileAvatar",
-  components: {
-    VueGravatar,
-  },
-  props: {
-    size: String,
-    avatar: String,
-    account: String,
-  },
-  computed: {
-    accountHash() {
-      return md5(this.account || "");
-    },
-  },
-};
+	name: 'ProfileAvatar',
+	components: {
+		VueGravatar
+	},
+	props: {
+		size: String,
+		avatar: String,
+		account: String
+	},
+	computed: {
+		accountHash() {
+			return md5(this.account || '')
+		}
+	}
+}
 </script>

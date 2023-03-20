@@ -1,47 +1,45 @@
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
+import ResolveMenu from './ResolveMenu.vue'
+
+const NETWORK_ENV = process.env.NETWORK_ENV
 
 export default {
-  name: "HeaderMenu",
-  computed: {
-    ...mapGetters("accounts", ["isAuthenticated"]),
-  },
-  props: {
-    activeFilter: {},
-  },
-  data() {
-    return {
-      menuItems: [
-        { label: this.$t("menu.contacts"), route: "/profiles/contacts" },
-        {
-          label: this.$t("menu.trailsTreasuries"),
-          route: "/trails/treasuries",
-        },
-        [
-          { label: this.$t("menu.amendBallots"), filter: "amend-ballots" },
-          { label: this.$t("menu.TFElection"), filter: "t-f-election" },
-          { label: this.$t("menu.polls"), filter: "polls" },
-          {
-            label: this.$t("menu.workerProposals"),
-            filter: "worker-proposals",
-          },
-        ],
-        { label: this.$t("menu.tokens"), route: "/tokens" },
-      ],
-      localFileter: this.activeFilter,
-    };
-  },
-  watch: {
-    activeFilter: function () {
-      this.localFileter = this.activeFilter;
-    },
-    $route(to, from) {
-      if (!to.path.includes("/trails/ballots")) {
-        this.localFileter = "";
-      }
-    },
-  },
-};
+	name: 'HeaderMenu',
+	computed: {
+		...mapGetters('accounts', ['isAuthenticated']),
+		isTestnet() {
+			return NETWORK_ENV === 'testnet'
+		}
+	},
+	props: {
+		activeFilter: {}
+	},
+	components: {
+		ResolveMenu
+	},
+	data() {
+		return {
+			menuItems: [
+				{
+					label: this.$t('menu.wishlist'),
+					route: '/wishlist'
+				}
+			],
+			localFileter: this.activeFilter
+		}
+	},
+	watch: {
+		activeFilter: function () {
+			this.localFileter = this.activeFilter
+		},
+		$route(to) {
+			if (!to.path.includes('/trails/ballots')) {
+				this.localFileter = ''
+			}
+		}
+	}
+}
 </script>
 
 <template lang="pug">
@@ -59,9 +57,17 @@ q-tabs(
       :name="item.label"
       :label="item.label"
       :to="item.route"
-      v-if="!item.length"
+      v-if="item.route && !item.filter"
     )
-    q-btn-dropdown.header-submenu-tab(auto-close stretch flat label="Decide" v-else)
+    q-route-tab.q-mx-sm.header-menu-tab(
+      :key="index"
+      :name="item.label"
+      :label="item.label"
+      :to="item.route"
+      v-if="item.route && item.filter"
+      @click="item.filter ? $emit('set-active-filter', item.filter) : ''"
+    )
+    q-btn-dropdown.header-submenu-tab(auto-close stretch flat label="Decide" v-if="item.length > 0")
       q-list
         q-route-tab.q-mx-sm.header-submenu-item(
           v-for="(el,i) of item"
@@ -73,6 +79,9 @@ q-tabs(
           :class="[el.filter === localFileter ? 'active-tab': '']"
         )
     div.custom-separator
+  ResolveMenu(
+    v-if="isTestnet"
+  )
 </template>
 
 <style lang="sass">

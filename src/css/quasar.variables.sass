@@ -22,3 +22,98 @@ $positive  : #55c3b3
 $negative  : #ff422a
 $info      : #caccce
 $warning   : #F2C037
+
+// -------------------------------------
+  
+@mixin new_color($name, $color) 
+  $--q-name: --q- + $name
+  $bg-color: bg- + $name
+  $color-text: $name + -text
+  
+  :root
+    #{$--q-name}: #{$color}
+
+  .#{$bg-color}
+    background: $color !important
+    background: var(#{$--q-name}) !important
+
+  .#{$color-text}
+    color: $color !important
+    color: var(#{$--q-name}) !important
+
+$voted-color:                   #00A402
+$poll-color:                    #FFB010
+$referendum-color:              #F5898A
+$proposal-color:                #FA7238
+$election-color:                #71DA76
+$leaderboard-color:             #8A8EF5
+$ended-color:                   #F7F7F7
+
+@include new_color(voted,       $voted-color)
+@include new_color(poll,        $poll-color)
+@include new_color(referendum,  $referendum-color)
+@include new_color(proposal,    $proposal-color)
+@include new_color(election,    $election-color)
+@include new_color(ended,       $ended-color)
+
+// --------------------------------------
+
+@import '~quasar/src/css/variables'
+
+$container-padding: 20px
+
+div.container,
+div.container-sm,
+div.container-md,
+div.container-lg,
+div.container-xl 
+  width: 100%
+  margin-right: auto
+  margin-left: auto
+  max-width: none
+
+@media (min-width: $breakpoint-lg-min)
+  div.container,
+  div.container-sm,
+  div.container-md,
+  div.container-lg
+    max-width: $breakpoint-md - $container-padding
+
+@media (min-width: $breakpoint-xl-min)
+  div.container,
+  div.container-sm,
+  div.container-md,
+  div.container-lg,
+  div.container-xl
+    max-width: $breakpoint-lg - $container-padding
+
+@media (min-width: $breakpoint-md-min)
+  div.container,
+  div.container-sm,
+  div.container-md
+    max-width: $breakpoint-sm - $container-padding
+
+@media (min-width: $breakpoint-sm-min)
+  div.container,
+  div.container-sm
+    max-width: $breakpoint-xs - $container-padding
+
+// --------------------------------------
+
+$container-padding: 20px
+
+.gap
+  gap: 25px
+.gap-xs
+  gap: 4px
+.gap-sm
+  gap: 8px
+.gap-md
+  gap: 15px
+.gap-lg
+  gap: 20px
+.gap-xl
+  gap: 25px
+.gap-xxl
+  gap: 40px
+  
