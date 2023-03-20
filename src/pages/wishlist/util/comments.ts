@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { BallotComment } from '../types/blockchain';
 
+// comment architecture will have to change if we implement
+// pagination, lazy load, or scale to a large number of comments
 export const buildCommentTree = (comments: BallotComment[]) => {
 	let final;
 	const levels = {};

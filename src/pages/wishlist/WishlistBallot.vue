@@ -23,6 +23,13 @@
 			/>
 		</div>
 		<div class="ballotCommentsArea">
+			<div class="recentUserComments">
+				<BallotComment
+					v-for="comment in recentUserComments"
+					:comment="comment"
+					v-bind:key="comment.id"
+				/>
+			</div>
 			<BallotCommentsSection :ballotComments="ballotComments" />
 		</div>
 	</div>
@@ -37,6 +44,7 @@ import { fetchBallot, postBallotComment, fetchBallotComments } from './util';
 import WishlistItem from './WishlistItem.vue';
 import TextEditor from './components/TextEditor.vue';
 import BallotCommentsSection from './components/BallotCommentsSection.vue';
+import BallotComment from './components/BallotComment.vue';
 
 const { params } = useRoute();
 const { ballot_name } = params;
@@ -49,6 +57,7 @@ const draftComments = ref({
 		content: ''
 	}
 });
+const recentUserComments = ref([]);
 const { getters } = useStore();
 
 const account = computed(() => {
@@ -56,7 +65,6 @@ const account = computed(() => {
 });
 
 const onTopCommentChange = (content) => {
-	console.log(content);
 	draftComments.value.top.content = content;
 };
 
@@ -68,14 +76,14 @@ const saveComment = async (level) => {
 		account_name: account.value
 	};
 	try {
-		const response = await postBallotComment(payload);
-		console.log(response);
+		const { comment } = await postBallotComment(payload);
+		console.log('comment', comment);
 		$q.notify({
 			message: 'Comment saved!',
 			type: 'positive'
 		});
 		draftComments.value[level].content = '';
-		ballotComments.value = await fetchBallotComments(ballot_name);
+		recentUserComments.value = [comment[0], ...recentUserComments.value];
 	} catch (err) {
 		console.log(err);
 		$q.notify({
@@ -88,7 +96,7 @@ const saveComment = async (level) => {
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name);
 	ballotComments.value = await fetchBallotComments(ballot_name);
-
+	console.log('mounted ballotComments', ballotComments);
 	console.log(ballot.value);
 });
 </script>

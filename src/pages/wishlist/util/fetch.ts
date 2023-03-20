@@ -49,6 +49,13 @@ export const fetchVoterVotes = async (account_name: string) => {
 	return data;
 };
 
+export type postBallotCommentPaylot = {
+	ballot_name: string,
+	content: string,
+	account_name: string,
+	parent_id: null | undefined | number
+}
+
 export const postBallotComment = async (payload: any) => {
 	const { data } = await axios({
 		method: 'POST',
