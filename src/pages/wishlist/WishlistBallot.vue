@@ -69,7 +69,6 @@ const onTopCommentChange = (content) => {
 };
 
 const saveComment = async (level) => {
-	console.log('level', level);
 	const payload = {
 		ballot_name: ballot.value.ballot_name,
 		content: draftComments.value[level].content,
@@ -77,7 +76,6 @@ const saveComment = async (level) => {
 	};
 	try {
 		const { comment } = await postBallotComment(payload);
-		console.log('comment', comment);
 		$q.notify({
 			message: 'Comment saved!',
 			type: 'positive'
@@ -96,7 +94,6 @@ const saveComment = async (level) => {
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name);
 	ballotComments.value = await fetchBallotComments(ballot_name);
-	console.log('mounted ballotComments', ballotComments);
 	console.log(ballot.value);
 });
 </script>

@@ -31,5 +31,6 @@ export const buildCommentTree = (comments: BallotComment[]) => {
 			final = levelComments;
 		}
 	});
+	console.log('buildCommenTree(): ', final);
 	return final;
 };
