@@ -11,7 +11,7 @@ const getAuthenticator = function (ual, wallet = null) {
 
 export const login = async function (
 	{ commit, dispatch },
-	{ idx, account, returnUrl }
+	{ idx, account }
 ) {
 	const authenticator = this.$ual.authenticators[idx]
 	try {
@@ -39,7 +39,7 @@ export const login = async function (
 			localStorage.setItem('autoLogin', authenticator.getName())
 			localStorage.setItem('account', accountName)
 			localStorage.setItem('returning', true)
-			this.$router.push({ path: '/', query: { arbData: true } })
+			this.$router.push({ path: '/wishlist', query: { arbData: true } })
 			await dispatch('getAccount')
 		}
 	} catch (e) {
