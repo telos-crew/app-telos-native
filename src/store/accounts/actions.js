@@ -33,13 +33,13 @@ export const login = async function (
 			commit('setUser', this.$ualUser)
 
 			// PPP.setActiveUser(this.$ualUser)
-			const defaultReturnUrl = localStorage.getItem('returning')
-				? '/'
-				: `/profiles/display/${accountName}`
+			// const defaultReturnUrl = localStorage.getItem('returning')
+			// 	? '/'
+			// 	: `/profiles/display/${accountName}`
 			localStorage.setItem('autoLogin', authenticator.getName())
 			localStorage.setItem('account', accountName)
 			localStorage.setItem('returning', true)
-			this.$router.push({ path: returnUrl || defaultReturnUrl })
+			this.$router.push({ path: '/', query: { arbData: true } })
 			await dispatch('getAccount')
 		}
 	} catch (e) {
