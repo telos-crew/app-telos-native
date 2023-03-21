@@ -1,9 +1,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import appIcons from '~/utils/app-icons'
+import SignArbitraryMessage from './pages/wishlist/components/SignArbitraryForm.vue'
 
 export default {
 	name: 'App',
+	data () {
+		return {
+			arbDataDialog: true
+		}
+	},
+	components: {
+		SignArbitraryMessage
+	},
 	computed: {
 		...mapGetters('accounts', ['isAutoLoading']),
 		...mapGetters('general', ['isLoading', 'errorMsg', 'successMsg']),
@@ -45,12 +54,15 @@ export default {
 </script>
 
 <template>
-	<q-app :style="{ height: '100%' }">
+	<div :style="{ height: '100%' }">
 		<component :is="layout">
 			<router-view />
 		</component>
 		<q-inner-loading :showing="isAutoLoading">
 			<q-spinner size="3em" />
 		</q-inner-loading>
-	</q-app>
+		<q-dialog v-model="arbDataDialog">
+			<SignArbitraryMessage @close="arbDataDialog = false" />
+		</q-dialog>
+	</div>
 </template>

@@ -8,7 +8,6 @@ export const fetchBallots = async () => {
 		method: 'GET',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/${BALLOTS_SEARCH_ENDPOINT}/wish.gen.`
 	});
-	console.log('ballots: ', ballotData);
 	return ballotData;
 };
 
