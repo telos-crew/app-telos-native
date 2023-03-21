@@ -44,10 +44,13 @@ export default {
 }
 </script>
 
-<template lang="pug">
-.q-app
-  component(:is="layout")
-    router-view
-  q-inner-loading(:showing="isAutoLoading")
-    q-spinner(size="3em")
+<template>
+	<q-app :style="{ height: '100%' }">
+		<component :is="layout">
+			<router-view />
+		</component>
+		<q-inner-loading :showing="isAutoLoading">
+			<q-spinner size="3em" />
+		</q-inner-loading>
+	</q-app>
 </template>
