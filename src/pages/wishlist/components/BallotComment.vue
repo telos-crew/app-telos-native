@@ -82,7 +82,7 @@ const account = computed(() => {
 const onReplyChange = (content: string) => {
 	draftReply.value = content;
 };
-
+const postBallotComment2 = postBallotComment.bind({ name: 'kylan'})
 const onReplySave = async () => {
 	const payload = {
 		ballot_name: comment.ballot_name,
@@ -92,7 +92,7 @@ const onReplySave = async () => {
 	};
 
 	try {
-		const { comment: reply } = await postBallotComment(payload);
+		const { comment: reply } = await postBallotComment2(payload);
 		$q.notify({
 			message: 'Comment saved!',
 			type: 'positive'

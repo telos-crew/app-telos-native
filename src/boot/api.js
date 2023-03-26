@@ -3,6 +3,7 @@ import { Api, JsonRpc } from 'eosjs'
 import { Notify } from 'quasar'
 
 const signTransaction = async function (actions) {
+	console.log('this.$ualUser.signArbitrary', this.$ualUser.signArbitrary)
 	actions.forEach((action) => {
 		if (!action.authorization || !action.authorization.length) {
 			action.authorization = [
