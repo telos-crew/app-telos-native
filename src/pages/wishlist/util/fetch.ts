@@ -50,11 +50,11 @@ export const fetchVoterVotes = async (account_name: string) => {
 };
 
 export type postBallotCommentPaylot = {
-	ballot_name: string,
-	content: string,
-	account_name: string,
-	parent_id: null | undefined | number
-}
+	ballot_name: string;
+	content: string;
+	account_name: string;
+	parent_id: null | undefined | number;
+};
 
 export const postBallotComment = async (payload: any) => {
 	const { data } = await axios({
@@ -72,4 +72,95 @@ export const fetchBallotComments = async (ballot_name: string) => {
 	});
 	console.log('fetchBallotComments: ', data);
 	return data;
+};
+
+export const postBallotComment2 = async (payload: any) => {
+	const formData = new FormData();
+	const blob = new Blob([JSON.stringify(payload)], {
+		type: 'application/json'
+	});
+	formData.append('file', blob, 'file.json');
+
+	const { data } = await axios({
+		method: 'POST',
+		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comment`,
+		data: formData
+	});
+	return data;
+};
+
+export const fetchDstorAccessToken = async () => {
+	let accessToken;
+	const expiration = new Date().getTime() / 1000 + 3600 * 24;
+	try {
+		const headers = {
+			'api-key':
+				'OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg',
+			'x-expiration': expiration
+		};
+		const {
+			data: { access_token }
+		} = await axios({
+			url: 'https://api.dstor.cloud/v1/dev/temp-token',
+			headers
+		});
+		accessToken = access_token;
+	} catch (err: any) {
+		console.log('access_token error: ', err);
+		throw new Error(err && err.message);
+	}
+	return accessToken;
+};
+
+export const fetchDstorUploadToken = async (
+	folder_path: string,
+	access_token: string
+) => {
+	let uploadToken;
+	try {
+		const {
+			data: { token }
+		} = await axios({
+			method: 'POST',
+			url: 'https://api.dstor.cloud/v1/upload/get-token/',
+			headers: {
+				Authorization: `Bearer ${access_token}`
+			},
+			data: {
+				chunks_number: 1,
+				folder_path
+			}
+		});
+		uploadToken = token;
+	} catch (err: any) {
+		console.log('upload token error: ', err);
+		throw new Error(err && err.message);
+	}
+	return uploadToken;
+};
+
+export const uploadFileToDstor = async (
+	formData: any,
+	accessToken: string,
+	uploadToken: string,
+	comment: string,
+	onUploadProgress: any
+) => {
+	try {
+		const config = {
+			type: 'POST',
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				// "Access-Control-Allow-Origin": "*",
+				'Content-Type': 'multipart/form-data',
+				// "x-dstor-parent-id": 0, // root folder,
+				'x-dstor-comment': comment,
+				'x-dstor-upload-token': uploadToken
+			},
+			onUploadProgress
+		};
+		await axios.post('https://api.dstor.cloud/v1/upload/', formData, config);
+	} catch (err) {
+		console.log('upload error: ', err);
+	}
 };

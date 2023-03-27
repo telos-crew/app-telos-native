@@ -40,7 +40,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-import { fetchBallot, postBallotComment, fetchBallotComments } from './util';
+import { fetchBallot, postBallotComment, fetchBallotComments, postBallotComment2 } from './util';
 import WishlistItem from './WishlistItem.vue';
 import TextEditor from './components/TextEditor.vue';
 import BallotCommentsSection from './components/BallotCommentsSection.vue';
@@ -75,7 +75,7 @@ const saveComment = async (level) => {
 		account_name: account.value
 	};
 	try {
-		const { comment } = await postBallotComment(payload);
+		const { comment } = await postBallotComment2(payload);
 		$q.notify({
 			message: 'Comment saved!',
 			type: 'positive'

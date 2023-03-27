@@ -38,7 +38,7 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { validateIpfsHash } from '../util'
+import { validateIpfsHash, fetchDstorAccessToken, fetchDstorUploadToken, uploadFileToDstor } from '../util'
 
 export default {
 	data() {
@@ -58,43 +58,20 @@ export default {
 			const file = document.getElementById('file-input')?.files[0]
 			const formData = new FormData()
 			formData.append('file', file)
+
 			let accessToken
-			const expiration = new Date().getTime() / 1000 + 3600 * 24
 			try {
-				const headers = {
-					'api-key':
-						'OY77xJwvfIucJxOsv9h9IEGGUCKbFlmXkKdKz2HsjJhjwmlixyxUaer9D7ekXrPg',
-					'x-expiration': expiration
-				}
-				const {
-					data: { access_token }
-				} = await axios({
-					url: 'https://api.dstor.cloud/v1/dev/temp-token',
-					headers
-				})
-				this.progress = 10
-				accessToken = access_token
+				accessToken = await fetchDstorAccessToken()
 			} catch (err) {
-				console.log('access_token error: ', err)
+				console.log('access token error: ', err)
 			}
 
 			let uploadToken
 			try {
-				const {
-					data: { token }
-				} = await axios({
-					method: 'POST',
-					url: 'https://api.dstor.cloud/v1/upload/get-token/',
-					headers: {
-						Authorization: `Bearer ${accessToken}`
-					},
-					data: {
-						chunks_number: 1,
-						folder_path: `arbitration/${this.account}`
-					}
-				})
-				this.progress = 20
-				uploadToken = token
+				uploadToken = await fetchDstorUploadToken(
+					`resolve/${this.account}`,
+					accessToken
+				)
 			} catch (err) {
 				console.log('upload token error: ', err)
 			}
@@ -105,19 +82,13 @@ export default {
 			}
 
 			try {
-				const config = {
-					method: 'POST',
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-						// "Access-Control-Allow-Origin": "*",
-						'Content-Type': 'multipart/form-data',
-						// "x-dstor-parent-id": 0, // root folder,
-						'x-dstor-comment': `Upload from Resolve by ${this.account}`,
-						'x-dstor-upload-token': uploadToken
-					},
-					onUploadProgress: updateProgress
-				}
-				await axios.post('https://api.dstor.cloud/v1/upload/', formData, config)
+				await uploadFileToDstor(
+					formData,
+					accessToken,
+					uploadToken,
+					`Upload from Resolve by ${this.account}`,
+					updateProgress
+				)
 			} catch (err) {
 				console.log('upload error: ', err)
 			}
