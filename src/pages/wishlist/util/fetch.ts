@@ -74,6 +74,18 @@ export const fetchBallotComments = async (ballot_name: string) => {
 	return data
 }
 
+export const fetchCommentByHash = async (content_hash: string) => {
+	try {
+		const { data } = await axios(
+			`${process.env.COMMENT_INDEXER_HOSTNAME}/comment/${content_hash}`
+		)
+		return data
+	} catch (err: any) {
+		console.log('err: ', err)
+		throw new Error(err?.message)
+	}
+}
+
 type BallotCommentData = {
 	body: object
 	folder_path: string

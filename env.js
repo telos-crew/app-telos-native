@@ -27,7 +27,8 @@ const LOCAL = {
 	BLOCKCHAIN_EXPLORER: 'https://explorer-test.telos.net',
 	// NETWORK_ENV: 'testnet'
 	NETWORK_ENV: 'local',
-	GOODBLOCK_HOSTNAME: 'http://localhost:3888'
+	GOODBLOCK_HOSTNAME: 'http://localhost:3888',
+	COMMENT_INDEXER_HOSTNAME: 'http://localhost:3838'
 }
 
 const TESTNET = {

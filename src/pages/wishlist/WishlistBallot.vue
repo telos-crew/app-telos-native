@@ -42,7 +42,13 @@ import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchBallot, fetchBallotComments, postBallotComment2 } from './util'
+import { AnchorResponse } from './types/blockchain'
+import {
+	fetchBallot,
+	fetchBallotComments,
+	postBallotComment2,
+	fetchCommentByHash
+} from './util'
 import WishlistItem from './WishlistItem.vue'
 import TextEditor from './components/TextEditor.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
@@ -91,7 +97,7 @@ const saveComment = async (level: string) => {
 	}
 	try {
 		// start process
-		const content_hash = await postBallotComment2({
+		const content_hash: string = await postBallotComment2({
 			body: payload,
 			folder_path: `wishlist/${account.value}`,
 			comment: `Wishlist upload by ${account.value}`,
@@ -110,7 +116,13 @@ const saveComment = async (level: string) => {
 			}
 		]
 		saveProgress.value = 50
-		const result = await $api.signTransaction(actions)
+		const { transactionId, wasBroadcast }: AnchorResponse =
+			await $api.signTransaction(actions)
+		saveProgress.value = 75
+
+		const { data: fetchedComment } = await fetchCommentByHash(content_hash)
+		console.log('fetchedComment', fetchedComment)
+		saveProgress.value = 100
 		// check dStor
 		// end process
 		$q.notify({
