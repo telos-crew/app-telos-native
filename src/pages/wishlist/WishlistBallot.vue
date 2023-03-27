@@ -20,6 +20,8 @@
 				@comment-change="onTopCommentChange"
 				:draftComment="draftComments.top.content"
 				level="top"
+				:progress="saveProgress"
+				:isSaving="isSaving"
 			/>
 		</div>
 		<div class="ballotCommentsArea">
@@ -40,14 +42,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import {
-	fetchBallot,
-	fetchBallotComments,
-	fetchDstorAccessToken,
-	fetchDstorUploadToken,
-	postBallotComment2,
-	uploadFileToDstor
-} from './util'
+import { fetchBallot, fetchBallotComments, postBallotComment2 } from './util'
 import WishlistItem from './WishlistItem.vue'
 import TextEditor from './components/TextEditor.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
@@ -57,6 +52,7 @@ const { params } = useRoute()
 const { ballot_name } = params
 const $q = useQuasar()
 const saveProgress = ref(0)
+const isSaving = ref(false)
 const ballot = ref(null)
 const ballotComments = ref(null)
 const draftComments = ref({
@@ -66,7 +62,7 @@ const draftComments = ref({
 	}
 })
 const recentUserComments = ref([])
-const { getters } = useStore()
+const { getters, $api } = useStore()
 
 const account = computed(() => {
 	return getters['accounts/account']
@@ -76,25 +72,46 @@ const onTopCommentChange = (content: string) => {
 	draftComments.value.top.content = content
 }
 
-const updateProgress = (progress: number) => {
-	saveProgress.value = progress
+const onUploadProgress = (progress: number) => {
+	if (typeof progress !== 'number') return
+	saveProgress.value = progress * 0.5
 }
 
 const saveComment = async (level: string) => {
 	saveProgress.value = 0
+	isSaving.value = true
 	const payload = {
-		ballot_name: ballot?.value?.ballot_name,
+		parent_id: null,
 		content: draftComments.value[level].content,
-		account_name: account.value
+		table: 'ballots',
+		contract: 'telos.decide',
+		scope: 'telos.decide',
+		primary_key: ballot?.value?.ballot_name,
+		poster: account.value
 	}
 	try {
 		// start process
-		await postBallotComment2({
+		const content_hash = await postBallotComment2({
 			body: payload,
 			folder_path: `wishlist/${account.value}`,
 			comment: `Wishlist upload by ${account.value}`,
-			onUploadProgress: updateProgress
+			onUploadProgress
 		})
+		// sign
+		const actions = [
+			{
+				account: 'testcomments',
+				name: 'post',
+				data: {
+					poster: account.value,
+					content_hash,
+					post_id: content_hash
+				}
+			}
+		]
+		saveProgress.value = 50
+		const result = await $api.signTransaction(actions)
+		// check dStor
 		// end process
 		$q.notify({
 			message: 'Comment saved!',
@@ -108,6 +125,9 @@ const saveComment = async (level: string) => {
 			message: err?.message,
 			type: 'negative'
 		})
+	} finally {
+		isSaving.value = false
+		saveProgress.value = 0
 	}
 }
 

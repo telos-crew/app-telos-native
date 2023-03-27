@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { defineProps } from 'vue';
+import { defineProps } from 'vue'
 // const editor = ref('');
-const props = defineProps(['draftComment', 'level']);
-const emit = defineEmits(['save', 'commentChange']);
-
+const props = defineProps(['draftComment', 'level', 'isSaving', 'progress'])
+const emit = defineEmits(['save', 'commentChange'])
+console.log('TextEditor props', props)
 const onSave = () => {
-	console.log('onSave', props.level);
-	emit('save', props.level);
-};
+	console.log('onSave', props.level)
+	emit('save', props.level)
+}
 </script>
 
 <template>
@@ -27,6 +27,9 @@ const onSave = () => {
 				color="primary"
 				label="Save"
 				@click="onSave"
+				:loading="props.isSaving"
+				:percentage="props.progress"
+				dark-percentage
 			/>
 		</div>
 	</div>

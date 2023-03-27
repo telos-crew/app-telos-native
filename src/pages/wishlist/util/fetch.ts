@@ -186,41 +186,44 @@ export const fetchDstorUploadStatus = async (
 	uploadToken: string,
 	setProgress: (progress: number) => void
 ) => {
-	let interval = 2000
-	let timeout
-	const checkStatus = async () => {
-		try {
-			const { data: statusData } = await axios(
-				'https://api.dstor.cloud/v1/upload/get-status/',
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-						'x-dstor-upload-token': uploadToken
+	return new Promise((resolve, reject) => {
+		let interval = 2000
+		let timeout
+		setTimeout(reject, 60000)
+		const checkStatus = async () => {
+			try {
+				const { data: statusData } = await axios(
+					'https://api.dstor.cloud/v1/upload/get-status/',
+					{
+						headers: {
+							Authorization: `Bearer ${accessToken}`,
+							'x-dstor-upload-token': uploadToken
+						}
 					}
+				)
+				interval = interval + 250
+				timeout = setTimeout(checkStatus, interval)
+				switch (statusData.status) {
+					case 'ADDING_TO_IPFS':
+						setProgress(80)
+						break
+					case 'SAVING_DATA':
+						setProgress(90)
+						break
+					case 'DONE':
+						clearTimeout(timeout)
+						setProgress(100)
+						setTimeout(() => {
+							const newHash = statusData.data[0].Hash
+							setProgress(0)
+							return resolve(newHash)
+						}, 1000)
 				}
-			)
-			interval = interval + 250
-			timeout = setTimeout(checkStatus, interval)
-			switch (statusData.status) {
-				case 'ADDING_TO_IPFS':
-					setProgress(80)
-					break
-				case 'SAVING_DATA':
-					setProgress(90)
-					break
-				case 'DONE':
-					clearTimeout(timeout)
-					setProgress(100)
-					setTimeout(() => {
-						const newHash = statusData.data[0].Hash
-						setProgress(0)
-						return newHash
-					}, 1000)
+			} catch (err: any) {
+				setProgress(0)
+				throw new Error(err && err.message)
 			}
-		} catch (err: any) {
-			setProgress(0)
-			throw new Error(err && err.message)
 		}
-	}
-	checkStatus()
+		return checkStatus()
+	})
 }
