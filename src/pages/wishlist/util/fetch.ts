@@ -75,15 +75,15 @@ export const fetchBallotComments = async (ballot_name: string) => {
 }
 
 type BallotCommentData = {
-	formData: object
+	body: object
 	folder_path: string
 	comment: string
-	onUploadProgress: () => void
+	onUploadProgress: (progress: number) => void
 }
 
 export const postBallotComment2 = async (data: BallotCommentData) => {
 	const formData = new FormData()
-	const blob = new Blob([JSON.stringify(data.formData)], {
+	const blob = new Blob([JSON.stringify(data.body)], {
 		type: 'application/json'
 	})
 	formData.append('file', blob, 'file.json')
@@ -96,8 +96,7 @@ export const postBallotComment2 = async (data: BallotCommentData) => {
 		data.comment,
 		data.onUploadProgress
 	)
-
-	return data
+	await fetchDstorUploadStatus(accessToken, uploadToken, data.onUploadProgress)
 }
 
 export const fetchDstorAccessToken = async () => {

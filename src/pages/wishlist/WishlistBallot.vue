@@ -35,16 +35,18 @@
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import {
 	fetchBallot,
-	postBallotComment,
 	fetchBallotComments,
-	postBallotComment2
+	fetchDstorAccessToken,
+	fetchDstorUploadToken,
+	postBallotComment2,
+	uploadFileToDstor
 } from './util'
 import WishlistItem from './WishlistItem.vue'
 import TextEditor from './components/TextEditor.vue'
@@ -54,6 +56,7 @@ import BallotComment from './components/BallotComment.vue'
 const { params } = useRoute()
 const { ballot_name } = params
 const $q = useQuasar()
+const saveProgress = ref(0)
 const ballot = ref(null)
 const ballotComments = ref(null)
 const draftComments = ref({
@@ -69,18 +72,30 @@ const account = computed(() => {
 	return getters['accounts/account']
 })
 
-const onTopCommentChange = (content) => {
+const onTopCommentChange = (content: string) => {
 	draftComments.value.top.content = content
 }
 
-const saveComment = async (level) => {
+const updateProgress = (progress: number) => {
+	saveProgress.value = progress
+}
+
+const saveComment = async (level: string) => {
+	saveProgress.value = 0
 	const payload = {
-		ballot_name: ballot.value.ballot_name,
+		ballot_name: ballot?.value?.ballot_name,
 		content: draftComments.value[level].content,
 		account_name: account.value
 	}
 	try {
-		const { comment } = await postBallotComment2(payload)
+		// start process
+		await postBallotComment2({
+			body: payload,
+			folder_path: `wishlist/${account.value}`,
+			comment: `Wishlist upload by ${account.value}`,
+			onUploadProgress: updateProgress
+		})
+		// end process
 		$q.notify({
 			message: 'Comment saved!',
 			type: 'positive'
@@ -88,9 +103,9 @@ const saveComment = async (level) => {
 		draftComments.value[level].content = ''
 		recentUserComments.value = [comment[0], ...recentUserComments.value]
 	} catch (err) {
-		console.log(err)
+		console.log(err: any)
 		$q.notify({
-			message: 'Error saving comment',
+			message: err && err.message,
 			type: 'negative'
 		})
 	}
