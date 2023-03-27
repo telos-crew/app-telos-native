@@ -86,7 +86,8 @@ export const postBallotComment2 = async (data: BallotCommentData) => {
 	const blob = new Blob([JSON.stringify(data.body)], {
 		type: 'application/json'
 	})
-	formData.append('file', blob, 'file.json')
+	const filename = new Date().getTime()
+	formData.append('file', blob, `${filename}.json`)
 	const accessToken = await fetchDstorAccessToken()
 	const uploadToken = await fetchDstorUploadToken(data.folder_path, accessToken)
 	await uploadFileToDstor(
@@ -96,7 +97,12 @@ export const postBallotComment2 = async (data: BallotCommentData) => {
 		data.comment,
 		data.onUploadProgress
 	)
-	await fetchDstorUploadStatus(accessToken, uploadToken, data.onUploadProgress)
+	const hash = await fetchDstorUploadStatus(
+		accessToken,
+		uploadToken,
+		data.onUploadProgress
+	)
+	return hash
 }
 
 export const fetchDstorAccessToken = async () => {

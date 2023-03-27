@@ -101,11 +101,11 @@ const saveComment = async (level: string) => {
 			type: 'positive'
 		})
 		draftComments.value[level].content = ''
-		recentUserComments.value = [comment[0], ...recentUserComments.value]
+		// recentUserComments.value = [comment[0], ...recentUserComments.value]
 	} catch (err) {
-		console.log(err: any)
+		console.log(err)
 		$q.notify({
-			message: err && err.message,
+			message: err?.message,
 			type: 'negative'
 		})
 	}
