@@ -74,18 +74,29 @@ export const fetchBallotComments = async (ballot_name: string) => {
 	return data
 }
 
-export const postBallotComment2 = async (payload: any) => {
+type BallotCommentData = {
+	formData: object
+	folder_path: string
+	comment: string
+	onUploadProgress: () => void
+}
+
+export const postBallotComment2 = async (data: BallotCommentData) => {
 	const formData = new FormData()
-	const blob = new Blob([JSON.stringify(payload)], {
+	const blob = new Blob([JSON.stringify(data.formData)], {
 		type: 'application/json'
 	})
 	formData.append('file', blob, 'file.json')
+	const accessToken = await fetchDstorAccessToken()
+	const uploadToken = await fetchDstorUploadToken(data.folder_path, accessToken)
+	await uploadFileToDstor(
+		formData,
+		accessToken,
+		uploadToken,
+		data.comment,
+		data.onUploadProgress
+	)
 
-	const { data } = await axios({
-		method: 'POST',
-		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comment`,
-		data: formData
-	})
 	return data
 }
 
@@ -163,4 +174,48 @@ export const uploadFileToDstor = async (
 	} catch (err) {
 		console.log('upload error: ', err)
 	}
+}
+
+export const fetchDstorUploadStatus = async (
+	accessToken: string,
+	uploadToken: string,
+	setProgress: (progress: number) => void
+) => {
+	let interval = 2000
+	let timeout
+	const checkStatus = async () => {
+		try {
+			const { data: statusData } = await axios(
+				'https://api.dstor.cloud/v1/upload/get-status/',
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+						'x-dstor-upload-token': uploadToken
+					}
+				}
+			)
+			interval = interval + 250
+			timeout = setTimeout(checkStatus, interval)
+			switch (statusData.status) {
+				case 'ADDING_TO_IPFS':
+					setProgress(80)
+					break
+				case 'SAVING_DATA':
+					setProgress(90)
+					break
+				case 'DONE':
+					clearTimeout(timeout)
+					setProgress(100)
+					setTimeout(() => {
+						const newHash = statusData.data[0].Hash
+						setProgress(0)
+						return newHash
+					}, 1000)
+			}
+		} catch (err: any) {
+			setProgress(0)
+			throw new Error(err && err.message)
+		}
+	}
+	checkStatus()
 }

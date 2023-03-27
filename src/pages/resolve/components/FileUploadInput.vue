@@ -37,6 +37,7 @@
 
 <script>
 import axios from 'axios'
+import { fetchDstorUploadStatus } from 'src/pages/wishlist/util'
 import { mapGetters } from 'vuex'
 import {
 	validateIpfsHash,
@@ -98,49 +99,22 @@ export default {
 				console.log('upload error: ', err)
 			}
 
-			let interval = 2000
-			let timeout
-			const checkStatus = async () => {
-				try {
-					const { data: statusData } = await axios(
-						'https://api.dstor.cloud/v1/upload/get-status/',
-						{
-							headers: {
-								Authorization: `Bearer ${accessToken}`,
-								'x-dstor-upload-token': uploadToken
-							}
-						}
-					)
-					interval = interval + 250
-					timeout = setTimeout(checkStatus, interval)
-					switch (statusData.status) {
-						case 'ADDING_TO_IPFS':
-							this.progress = 80
-							break
-						case 'SAVING_DATA':
-							this.progress = 90
-							break
-						case 'DONE':
-							clearTimeout(timeout)
-							this.progress = 100
-							setTimeout(() => {
-								const newHash = statusData.data[0].Hash
-								this.hash = newHash
-								this.onHashChange(newHash)
-								this.isUploading = false
-								this.progress = 0
-							}, 1000)
-							return
-					}
-				} catch (err) {
-					this.progress = 0
-					this.$q.notify({
-						message: this.$t('pages.resolve.file_upload_failed'),
-						color: 'negative'
-					})
-				}
+			try {
+				const newHash = await fetchDstorUploadStatus(
+					accessToken,
+					uploadToken,
+					(progress) => (this.progress = progress)
+				)
+				this.hash = newHash
+				this.onHashChange(newHash)
+			} catch (err) {
+				this.$q.notify({
+					message: this.$t(err && err.message),
+					color: 'negative'
+				})
+			} finally {
+				this.isUploading = false
 			}
-			checkStatus()
 		}
 	},
 	computed: {
