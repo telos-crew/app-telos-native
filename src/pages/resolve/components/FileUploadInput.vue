@@ -38,7 +38,12 @@
 <script>
 import axios from 'axios'
 import { mapGetters } from 'vuex'
-import { validateIpfsHash, fetchDstorAccessToken, fetchDstorUploadToken, uploadFileToDstor } from '../util'
+import {
+	validateIpfsHash,
+	fetchDstorAccessToken,
+	fetchDstorUploadToken,
+	uploadFileToDstor
+} from '../util'
 
 export default {
 	data() {
