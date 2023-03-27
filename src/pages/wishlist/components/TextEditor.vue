@@ -19,6 +19,7 @@ const onSave = () => {
 					(newValue) => emit('commentChange', newValue, props.level)
 				"
 				min-height="7rem"
+				:toolbar="[]"
 			/>
 		</div>
 		<div class="saveButtonWrap">
