@@ -4,7 +4,7 @@
 		class="ballotComment"
 	>
 		<div class="header">
-			<span class="accountName">@{{ account_name }}</span>
+			<span class="accountName">@{{ poster }}</span>
 			<span class="timeAgo">{{ date }}</span>
 		</div>
 		<div class="contentWrap">
@@ -68,7 +68,7 @@ const draftReply = ref('');
 const isReplyEditorVisible = ref(false);
 const props = defineProps(['comment']);
 const { comment } = props;
-const { account_name, content, created_at } = comment;
+const { poster, content, created_at } = comment;
 const date = DateTime.fromISO(created_at).toRelative();
 
 const onReplyClick = () => {

@@ -1,5 +1,25 @@
 import axios from 'axios'
 import { BALLOTS_SEARCH_ENDPOINT } from 'src/const/endpoints'
+import { FetchItemConfig } from '../types/blockchain'
+
+export const stringifyUrlParams = (
+	url: string,
+	params: { [key: string]: any }
+) => {
+	let newURL = new URL(url)
+	for (const key in params) {
+		let serializedParam
+		if (typeof params[key] === 'string') {
+			serializedParam = params[key]
+		} else if (params[key] === null) {
+			continue
+		} else {
+			params[key].toString()
+		}
+		newURL.searchParams.set(key, serializedParam)
+	}
+	return newURL.toString()
+}
 
 export const fetchBallots = async () => {
 	const {
@@ -72,6 +92,35 @@ export const fetchBallotComments_old = async (ballot_name: string) => {
 	})
 	console.log('fetchBallotComments_old: ', data)
 	return data
+}
+
+export const fetchItemComments = async (config: FetchItemConfig) => {
+	const path = `${process.env.COMMENT_INDEXER_HOSTNAME}/item/comments`
+	const searchParams = config
+	const url = stringifyUrlParams(path, searchParams)
+	console.log('url', url)
+	const { data } = await axios({
+		method: 'GET',
+		url
+	})
+	console.log('fetchItemComments: ', data)
+	return data
+}
+
+export const fetchBallotComments = async (
+	ballot_name: string,
+	parent_id: string | null
+) => {
+	const config = {
+		contract: 'telos.decide',
+		scope: 'telos.decide',
+		table: 'ballots',
+		primary_key: ballot_name,
+		parent_id
+	}
+	console.log('fetchBallotComments config: ', config)
+	const itemComments = await fetchItemComments(config)
+	return itemComments
 }
 
 export const fetchCommentByHash = async (content_hash: string) => {

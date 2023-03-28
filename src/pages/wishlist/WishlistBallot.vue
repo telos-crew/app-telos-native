@@ -25,14 +25,11 @@
 			/>
 		</div>
 		<div class="ballotCommentsArea">
-			<div class="recentUserComments">
-				<BallotComment
-					v-for="comment in recentUserComments"
-					:comment="comment"
-					v-bind:key="comment.id"
-				/>
-			</div>
 			<BallotCommentsSection :ballotComments="ballotComments" />
+			<BallotCommentBranch
+				:ballot_name="ballot_name"
+				:parent_id="null"
+			/>
 		</div>
 	</div>
 </template>
@@ -53,6 +50,7 @@ import WishlistItem from './WishlistItem.vue'
 import TextEditor from './components/TextEditor.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
+import BallotCommentBranch from './components/BallotCommentBranch.vue'
 
 const { params } = useRoute()
 const { ballot_name } = params

@@ -45,3 +45,11 @@ export type AnchorResponse = {
 	transactionId: string
 	wasBroadcasted: boolean
 }
+
+export type FetchItemConfig = {
+	contract: string
+	scope: string
+	table: string
+	primary_key: string
+	parent_id: string | null
+}
