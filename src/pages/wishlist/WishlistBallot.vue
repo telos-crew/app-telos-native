@@ -45,7 +45,7 @@ import { useRoute } from 'vue-router'
 import { AnchorResponse } from './types/blockchain'
 import {
 	fetchBallot,
-	fetchBallotComments,
+	fetchBallotComments_old,
 	postBallotComment2,
 	fetchCommentByHash
 } from './util'
@@ -145,7 +145,7 @@ const saveComment = async (level: string) => {
 
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name)
-	ballotComments.value = await fetchBallotComments(ballot_name)
+	ballotComments.value = await fetchBallotComments_old(ballot_name)
 	console.log(ballot.value)
 })
 </script>

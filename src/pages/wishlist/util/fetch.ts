@@ -65,12 +65,12 @@ export const postBallotComment = async (payload: any) => {
 	return data
 }
 
-export const fetchBallotComments = async (ballot_name: string) => {
+export const fetchBallotComments_old = async (ballot_name: string) => {
 	const { data } = await axios({
 		method: 'GET',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comments/${ballot_name}`
 	})
-	console.log('fetchBallotComments: ', data)
+	console.log('fetchBallotComments_old: ', data)
 	return data
 }
 
