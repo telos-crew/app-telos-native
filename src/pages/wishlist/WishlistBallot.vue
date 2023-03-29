@@ -14,7 +14,7 @@
 			/>
 		</div>
 		<div class="textEditorWrap">
-			<HtmlEditor
+			<MarkdownEditor
 				v-if="account"
 				@save="saveComment"
 				@comment-change="onTopCommentChange"
@@ -23,6 +23,9 @@
 				:progress="saveProgress"
 				:isSaving="isSaving"
 			/>
+		</div>
+		<div class="markdown-renderer-wrap">
+			<MarkdownRenderer :content="draftComments.top.content" />
 		</div>
 		<div class="ballotCommentsArea">
 			<BallotCommentsSection :ballotComments="ballotComments" />
@@ -51,6 +54,8 @@ import HtmlEditor from './components/HtmlEditor.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
 import BallotCommentBranch from './components/BallotCommentBranch.vue'
+import MarkdownEditor from './components/MarkdownEditor.vue'
+import MarkdownRenderer from './components/MarkdownRenderer.vue'
 
 const { params } = useRoute()
 const { ballot_name } = params
@@ -73,6 +78,7 @@ const account = computed(() => {
 })
 
 const onTopCommentChange = (content: string) => {
+	console.log('onTopCommentChange: ', onTopCommentChange)
 	draftComments.value.top.content = content
 }
 
