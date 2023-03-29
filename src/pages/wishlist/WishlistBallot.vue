@@ -14,7 +14,7 @@
 			/>
 		</div>
 		<div class="textEditorWrap">
-			<TextEditor
+			<HtmlEditor
 				v-if="account"
 				@save="saveComment"
 				@comment-change="onTopCommentChange"
@@ -47,7 +47,7 @@ import {
 	fetchCommentByHash
 } from './util'
 import WishlistItem from './WishlistItem.vue'
-import TextEditor from './components/TextEditor.vue'
+import HtmlEditor from './components/HtmlEditor.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
 import BallotCommentBranch from './components/BallotCommentBranch.vue'

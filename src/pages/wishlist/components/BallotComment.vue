@@ -28,7 +28,7 @@
 			class="replyArea"
 		>
 			<KeepAlive>
-				<TextEditor
+				<HtmlEditor
 					@save="onReplySave"
 					@comment-change="onReplyChange"
 					:draftComment="draftReply"
@@ -52,36 +52,36 @@
 </template>
 
 <script setup lang="ts">
-import { DateTime } from 'luxon';
-import { defineProps, ref, computed, KeepAlive } from 'vue';
-import { postBallotComment } from '../util';
-import BallotComment from './BallotComment.vue';
-import TextEditor from './TextEditor.vue';
-import { useQuasar } from 'quasar';
-import { useStore } from 'vuex';
+import { DateTime } from 'luxon'
+import { defineProps, ref, computed, KeepAlive } from 'vue'
+import { postBallotComment } from '../util'
+import BallotComment from './BallotComment.vue'
+import HtmlEditor from './HtmlEditor.vue'
+import { useQuasar } from 'quasar'
+import { useStore } from 'vuex'
 
-const $q = useQuasar();
-const { getters } = useStore();
+const $q = useQuasar()
+const { getters } = useStore()
 
-const recentUserReplies = ref([]);
-const draftReply = ref('');
-const isReplyEditorVisible = ref(false);
-const props = defineProps(['comment']);
-const { comment } = props;
-const { poster, content, created_at } = comment;
-const date = DateTime.fromISO(created_at).toRelative();
+const recentUserReplies = ref([])
+const draftReply = ref('')
+const isReplyEditorVisible = ref(false)
+const props = defineProps(['comment'])
+const { comment } = props
+const { poster, content, created_at } = comment
+const date = DateTime.fromISO(created_at).toRelative()
 
 const onReplyClick = () => {
-	isReplyEditorVisible.value = true;
-};
+	isReplyEditorVisible.value = true
+}
 
 const account = computed(() => {
-	return getters['accounts/account'];
-});
+	return getters['accounts/account']
+})
 
 const onReplyChange = (content: string) => {
-	draftReply.value = content;
-};
+	draftReply.value = content
+}
 
 const onReplySave = async () => {
 	const payload = {
@@ -89,25 +89,25 @@ const onReplySave = async () => {
 		content: draftReply.value,
 		account_name: account.value,
 		parent_id: comment.id
-	};
+	}
 
 	try {
-		const { comment: reply } = await postBallotComment(payload);
+		const { comment: reply } = await postBallotComment(payload)
 		$q.notify({
 			message: 'Comment saved!',
 			type: 'positive'
-		});
-		draftReply.value = '';
-		recentUserReplies.value = [...reply, ...recentUserReplies.value];
-		isReplyEditorVisible.value = false;
+		})
+		draftReply.value = ''
+		recentUserReplies.value = [...reply, ...recentUserReplies.value]
+		isReplyEditorVisible.value = false
 	} catch (err) {
 		$q.notify({
 			// @ts-ignore
 			message: err.message,
 			type: 'negative'
-		});
+		})
 	}
-};
+}
 </script>
 
 <style lang="scss" scoped>
