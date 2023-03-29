@@ -4,7 +4,6 @@
 		id="wishlist"
 	>
 		<ballot-filters
-			@onCreateItemFormSuccess="setTimeout(fetchEverything, 2000)"
 			@onSortChange="onSortChange"
 		/>
 		<wishlist-item
