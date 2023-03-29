@@ -40,6 +40,7 @@ export default {
 	components: {
 		CreateItemForm
 	},
+	emits: ['onSortChange'],
 	data() {
 		return {
 			options,
