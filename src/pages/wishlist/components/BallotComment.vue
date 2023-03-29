@@ -4,12 +4,12 @@
 		class="ballotComment"
 	>
 		<div class="header">
-			<span class="accountName">@{{ poster }}</span>
+			<span class="accountName">@{{ props.comment.poster }}</span>
 			<span class="timeAgo">{{ date }}</span>
 		</div>
 		<div class="contentWrap">
 			<div class="content">
-				{{ content }}
+				{{ props.comment.content }}
 			</div>
 		</div>
 		<div class="footer">
@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 import { DateTime } from 'luxon'
-import { defineProps, ref, computed, KeepAlive } from 'vue'
+import { defineProps, ref, computed } from 'vue'
 import { postBallotComment } from '../util'
 import BallotComment from './BallotComment.vue'
 import HtmlEditor from './HtmlEditor.vue'
@@ -67,9 +67,7 @@ const recentUserReplies = ref([])
 const draftReply = ref('')
 const isReplyEditorVisible = ref(false)
 const props = defineProps(['comment'])
-const { comment } = props
-const { poster, content, created_at } = comment
-const date = DateTime.fromISO(created_at).toRelative()
+const date = DateTime.fromISO(props.comment.created_at).toRelative()
 
 const onReplyClick = () => {
 	isReplyEditorVisible.value = true
@@ -79,16 +77,16 @@ const account = computed(() => {
 	return getters['accounts/account']
 })
 
-const onReplyChange = (content: string) => {
-	draftReply.value = content
+const onReplyChange = (newContent: string) => {
+	draftReply.value = newContent
 }
 
 const onReplySave = async () => {
 	const payload = {
-		ballot_name: comment.ballot_name,
+		ballot_name: props.comment.ballot_name,
 		content: draftReply.value,
 		account_name: account.value,
-		parent_id: comment.id
+		parent_id: props.comment.id
 	}
 
 	try {
