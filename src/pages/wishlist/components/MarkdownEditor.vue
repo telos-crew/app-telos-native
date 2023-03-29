@@ -13,7 +13,7 @@ const onSave = () => {
 		<div class="editor">
 			<textarea
 				:value="props.draftComment"
-				@input="(e: Event) => emit('commentChange', e?.target?.value, props.level)"
+				@input="(e: any) => emit('commentChange', e?.target?.value, props.level)"
 				class="editor-textarea"
 				min-height="7rem"
 				:toolbar="[]"
