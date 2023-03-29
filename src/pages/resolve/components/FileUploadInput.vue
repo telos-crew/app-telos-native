@@ -36,15 +36,14 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { fetchDstorUploadStatus } from 'src/pages/wishlist/util'
 import { mapGetters } from 'vuex'
 import {
-	validateIpfsHash,
 	fetchDstorAccessToken,
 	fetchDstorUploadToken,
 	uploadFileToDstor
-} from '../util'
+} from '../../wishlist/util'
+import { validateIpfsHash } from '../util'
 
 export default {
 	data() {
