@@ -45,12 +45,12 @@ export default {
 </script>
 
 <template>
-	<q-app :style="{ height: '100%' }">
+	<div :style="{ height: '100%' }">
 		<component :is="layout">
 			<router-view />
 		</component>
 		<q-inner-loading :showing="isAutoLoading">
 			<q-spinner size="3em" />
 		</q-inner-loading>
-	</q-app>
+	</div>
 </template>
