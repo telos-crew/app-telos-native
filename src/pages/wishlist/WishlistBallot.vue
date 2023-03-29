@@ -50,7 +50,6 @@ import {
 	fetchCommentByHash
 } from './util'
 import WishlistItem from './WishlistItem.vue'
-import HtmlEditor from './components/HtmlEditor.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
 import BallotCommentBranch from './components/BallotCommentBranch.vue'

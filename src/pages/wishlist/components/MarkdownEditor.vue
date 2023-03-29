@@ -2,7 +2,6 @@
 import { defineProps } from 'vue'
 const props = defineProps(['draftComment', 'level', 'isSaving', 'progress'])
 const emit = defineEmits(['save', 'commentChange'])
-console.log('HtmlEditor props', props)
 const onSave = () => {
 	emit('save', props.level)
 }
