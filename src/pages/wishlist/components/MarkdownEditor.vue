@@ -27,6 +27,7 @@ const onSave = () => {
 				:percentage="props.progress"
 				dark-percentage
 			/>
+			{{ props.progress }}
 		</div>
 	</div>
 </template>

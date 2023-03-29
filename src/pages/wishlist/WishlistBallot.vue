@@ -133,7 +133,7 @@ const saveComment = async (level: string) => {
 			type: 'positive'
 		})
 		draftComments.value[level].content = ''
-		// recentUserComments.value = [comment[0], ...recentUserComments.value]
+		// need to refetch
 	} catch (err) {
 		console.log(err)
 		$q.notify({

@@ -142,7 +142,9 @@ type BallotCommentData = {
 	onUploadProgress: (progress: number) => void
 }
 
-export const postBallotComment2 = async (data: BallotCommentData) => {
+export const postBallotComment2 = async (
+	data: BallotCommentData
+): Promise<string> => {
 	const formData = new FormData()
 	const blob = new Blob([JSON.stringify(data.body)], {
 		type: 'application/json'
@@ -158,7 +160,7 @@ export const postBallotComment2 = async (data: BallotCommentData) => {
 		data.comment,
 		data.onUploadProgress
 	)
-	const hash = await fetchDstorUploadStatus(
+	const hash: string = await fetchDstorUploadStatus(
 		accessToken,
 		uploadToken,
 		data.onUploadProgress
@@ -246,7 +248,7 @@ export const fetchDstorUploadStatus = async (
 	accessToken: string,
 	uploadToken: string,
 	setProgress: (progress: number) => void
-) => {
+): Promise<string> => {
 	return new Promise((resolve, reject) => {
 		let interval = 2000
 		let timeout
