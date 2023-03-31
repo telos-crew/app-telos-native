@@ -44,6 +44,7 @@
 				<MarkdownEditor
 					v-if="account"
 					@save="onReplySave"
+					@cancel="onReplyCancel"
 					@comment-change="onReplyChange"
 					:draftComment="draftReply"
 					level="reply"
@@ -128,6 +129,10 @@ const onUploadProgress = (progress: number) => {
 	console.log('progress: ', progress)
 	if (typeof progress !== 'number') return
 	saveProgress.value = 10 + progress * 0.5
+}
+
+const onReplyCancel = () => {
+	isReplyEditorVisible.value = false
 }
 
 const onReplySave = async () => {

@@ -8,10 +8,14 @@ const props = defineProps([
 	'progress',
 	'hash'
 ])
-const emit = defineEmits(['save', 'commentChange'])
+const emit = defineEmits(['save', 'commentChange', 'cancel'])
 
 const onSave = () => {
 	emit('save', props.level)
+}
+
+const onCancel = () => {
+	emit('cancel', props.level)
 }
 
 const editorId = computed(() => {
@@ -46,7 +50,12 @@ onMounted(() => {
 				:loading="props.isSaving"
 				:percentage="props.progress"
 				dark-percentage
+			/>&nbsp;&nbsp;
+			<q-btn
+				label="Cancel"
+				@click="onCancel"
 			/>
+
 			<!-- {{ props.isSaving }}
 			{{ props.progress }} -->
 		</div>
