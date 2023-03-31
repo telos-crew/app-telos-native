@@ -1,10 +1,30 @@
 <script lang="ts" setup>
-import { defineProps } from 'vue'
-const props = defineProps(['draftComment', 'level', 'isSaving', 'progress'])
+import { defineProps, onMounted, computed } from 'vue'
+import { scrollToHash } from '../../resolve/util'
+const props = defineProps([
+	'draftComment',
+	'level',
+	'isSaving',
+	'progress',
+	'hash'
+])
 const emit = defineEmits(['save', 'commentChange'])
+
 const onSave = () => {
 	emit('save', props.level)
 }
+
+const editorId = computed(() => {
+	return `ballotComment-${props.hash}-reply-editor`
+})
+
+onMounted(() => {
+	if (props.level === 'reply') {
+		const editorHash = `ballotComment-${props.hash}-reply-editor`
+		scrollToHash(editorHash)
+		document.getElementById(editorHash).focus()
+	}
+})
 </script>
 
 <template>
@@ -15,7 +35,7 @@ const onSave = () => {
 				@input="(e: any) => emit('commentChange', e?.target?.value, props.level)"
 				class="editor-textarea"
 				min-height="7rem"
-				:toolbar="[]"
+				:id="editorId"
 			/>
 		</div>
 		<div class="saveButtonWrap">

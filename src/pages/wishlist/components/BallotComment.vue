@@ -49,6 +49,7 @@
 					level="reply"
 					:progress="saveProgress"
 					:isSaving="isSaving"
+					:hash="props.comment.post_id"
 				/>
 			</KeepAlive>
 			<div class="markdown-renderer-wrap">
@@ -76,11 +77,7 @@
 <script setup lang="ts">
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
-import {
-	postBallotComment2,
-	fetchCommentByHash,
-	fetchBallotComments
-} from '../util'
+import { postBallotComment2, fetchBallotComments } from '../util'
 import BallotComment from './BallotComment.vue'
 import MarkdownEditor from './MarkdownEditor.vue'
 import { useQuasar } from 'quasar'
@@ -185,24 +182,6 @@ const onReplySave = async () => {
 		})
 		draftReply.value = ''
 		isReplyEditorVisible.value = false
-		// const getComment = () => {
-		// 	let iterator = 1
-		// 	return new Promise((resolve, reject) => {
-		// 		const interval = setInterval(async () => {
-		// 			const comment = await fetchCommentByHash(content_hash)
-		// 			if (comment) {
-		// 				clearInterval(interval)
-		// 				resolve(comment)
-		// 			} else if (iterator > 60) {
-		// 				clearInterval(interval)
-		// 				reject(new Error('Comment not found'))
-		// 			} else {
-		// 				iterator++
-		// 			}
-		// 		}, 1000)
-		// 	})
-		// }
-		// const fetchedComment = await getComment()
 	} catch (err) {
 		$q.notify({
 			// @ts-ignore
@@ -219,6 +198,7 @@ const onReplySave = async () => {
 	border-radius: 8px;
 	margin-top: 36px;
 	border: 1px solid #f0f0f0;
+	scroll-behavior: smooth;
 
 	.header {
 		display: flex;
