@@ -128,7 +128,7 @@ export const fetchCommentByHash = async (content_hash: string) => {
 		const { data } = await axios(
 			`${process.env.COMMENT_INDEXER_HOSTNAME}/comment/${content_hash}`
 		)
-		return data
+		return data[0]
 	} catch (err: any) {
 		console.log('err: ', err)
 		throw new Error(err?.message)

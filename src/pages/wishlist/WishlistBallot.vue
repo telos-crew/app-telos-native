@@ -28,6 +28,11 @@
 			<MarkdownRenderer :content="draftComments.top.content" />
 		</div>
 		<div class="ballotCommentsArea">
+			<BallotComment
+				v-for="reply in recentUserComments"
+				:key="reply.post_id"
+				:comment="reply"
+			/>
 			<BallotCommentsSection :ballotComments="ballotComments" />
 			<BallotCommentBranch
 				:ballot_name="ballot_name"
@@ -83,7 +88,7 @@ const onTopCommentChange = (content: string) => {
 
 const onUploadProgress = (progress: number) => {
 	if (typeof progress !== 'number') return
-	saveProgress.value = progress * 0.5
+	saveProgress.value = 10 + progress * 0.5
 }
 
 const saveComment = async (level: string) => {
@@ -123,7 +128,7 @@ const saveComment = async (level: string) => {
 			await $api.signTransaction(actions)
 		saveProgress.value = 75
 
-		const { data: fetchedComment } = await fetchCommentByHash(content_hash)
+		const fetchedComment = await fetchCommentByHash(content_hash)
 		console.log('fetchedComment', fetchedComment)
 		saveProgress.value = 100
 		// check dStor
@@ -133,6 +138,14 @@ const saveComment = async (level: string) => {
 			type: 'positive'
 		})
 		draftComments.value[level].content = ''
+		recentUserComments.value = [
+			{
+				...payload,
+				post_id: content_hash,
+				created_at: new Date().toISOString()
+			},
+			...recentUserComments.value
+		]
 		// need to refetch
 	} catch (err) {
 		console.log(err)

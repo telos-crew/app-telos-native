@@ -1,11 +1,11 @@
 <template>
 	<div
-		:id="`ballotComment-${comment.id}`"
+		:id="`ballotComment-${comment.post_id}`"
 		class="ballotComment"
 	>
 		<div class="header">
 			<span class="accountName">@{{ props.comment.poster }}</span>
-			<span class="timeAgo">{{ date }}</span>
+			<span class="timeAgo">{{ relativeTime }}</span>
 		</div>
 		<div class="contentWrap">
 			<div class="content">
@@ -24,10 +24,16 @@
 			</div>
 			<div
 				class="clickable load-replies"
-				v-if="props.comment.children"
-				@click="toggleShowReplies"
+				v-if="props.comment.children + recentUserReplies.length"
+				@click="
+					showChildren ? toggleShowChildren(false) : toggleShowChildren(true)
+				"
 			>
-				load {{ props.comment.children }} replies
+				<span v-if="showChildren"> hide replies </span>
+				<span v-else
+					>load
+					{{ props.comment.children + recentUserReplies.length }} replies</span
+				>
 			</div>
 		</div>
 		<div
@@ -50,7 +56,7 @@
 			</div>
 		</div>
 		<div
-			v-if="showReplies"
+			v-if="showChildren"
 			class="childrenComments"
 		>
 			<BallotComment
@@ -59,8 +65,8 @@
 				:comment="reply"
 			/>
 			<BallotComment
-				v-for="childComment in comment.children"
-				:key="childComment.id"
+				v-for="childComment in childComments"
+				:key="childComment.post_id"
 				:comment="childComment"
 			/>
 		</div>
@@ -70,7 +76,11 @@
 <script setup lang="ts">
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
-import { postBallotComment2, fetchCommentByHash } from '../util'
+import {
+	postBallotComment2,
+	fetchCommentByHash,
+	fetchBallotComments
+} from '../util'
 import BallotComment from './BallotComment.vue'
 import MarkdownEditor from './MarkdownEditor.vue'
 import { useQuasar } from 'quasar'
@@ -85,12 +95,16 @@ const isSaving = ref(false)
 const recentUserReplies = ref([])
 const draftReply = ref('')
 const isReplyEditorVisible = ref(false)
-const showReplies = ref(false)
+const showChildren = ref(false)
+const childComments = ref(null)
 const props = defineProps(['comment'])
-const date = DateTime.fromISO(props.comment.created_at).toRelative()
 
-const toggleShowReplies = () => {
-	showReplies.value = !showReplies.value
+const dateTimeFromIso = DateTime.fromISO(props.comment.created_at)
+const relativeTime = dateTimeFromIso.toRelative()
+
+const toggleShowChildren = (newValue: boolean) => {
+	if (newValue === true && !childComments.value) fetchBallotCommentReplies()
+	showChildren.value = newValue
 }
 
 const onReplyClick = () => {
@@ -105,9 +119,18 @@ const onReplyChange = (newContent: string) => {
 	draftReply.value = newContent
 }
 
+const fetchBallotCommentReplies = async () => {
+	const replies = await fetchBallotComments(
+		props.comment.primary_key,
+		props.comment.post_id
+	)
+	childComments.value = replies
+}
+
 const onUploadProgress = (progress: number) => {
+	console.log('progress: ', progress)
 	if (typeof progress !== 'number') return
-	saveProgress.value = progress * 0.5
+	saveProgress.value = 10 + progress * 0.5
 }
 
 const onReplySave = async () => {
@@ -117,10 +140,10 @@ const onReplySave = async () => {
 		table: 'ballots',
 		contract: 'telos.decide',
 		scope: 'telos.decide',
-		primary_key: props.comment.ballot_name,
+		primary_key: props.comment.primary_key,
 		poster: account.value
 	}
-
+	saveProgress.value = 10
 	try {
 		const content_hash = await postBallotComment2({
 			body: payload,
@@ -141,22 +164,45 @@ const onReplySave = async () => {
 				}
 			}
 		]
-		saveProgress.value = 50
+		saveProgress.value = 60
 		const { transactionId, wasBroadcast }: AnchorResponse =
 			await $api.signTransaction(actions)
-		saveProgress.value = 75
 
-		const { data: fetchedComment } = await fetchCommentByHash(content_hash)
-		console.log('fetchedComment', fetchedComment)
+		recentUserReplies.value = [
+			{
+				...payload,
+				post_id: content_hash,
+				created_at: DateTime.local().toISO()
+			},
+			...recentUserReplies.value
+		]
 		saveProgress.value = 100
-
+		toggleShowChildren(true)
+		// need to refetch
 		$q.notify({
 			message: 'Comment saved!',
 			type: 'positive'
 		})
 		draftReply.value = ''
-		// need to refetch
 		isReplyEditorVisible.value = false
+		// const getComment = () => {
+		// 	let iterator = 1
+		// 	return new Promise((resolve, reject) => {
+		// 		const interval = setInterval(async () => {
+		// 			const comment = await fetchCommentByHash(content_hash)
+		// 			if (comment) {
+		// 				clearInterval(interval)
+		// 				resolve(comment)
+		// 			} else if (iterator > 60) {
+		// 				clearInterval(interval)
+		// 				reject(new Error('Comment not found'))
+		// 			} else {
+		// 				iterator++
+		// 			}
+		// 		}, 1000)
+		// 	})
+		// }
+		// const fetchedComment = await getComment()
 	} catch (err) {
 		$q.notify({
 			// @ts-ignore
