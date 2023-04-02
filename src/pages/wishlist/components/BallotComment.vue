@@ -137,7 +137,7 @@ const onReplyCancel = () => {
 
 const onReplySave = async () => {
 	const payload = {
-		parent_id: props.comment.post_id,
+		parent_hash: props.comment.post_id,
 		content: draftReply.value,
 		table: 'ballots',
 		contract: 'telos.decide',

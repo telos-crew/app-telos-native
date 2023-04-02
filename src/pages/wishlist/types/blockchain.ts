@@ -23,7 +23,7 @@ export type Ballot = {
 export type BallotCommentPayload = {
 	account_name: string
 	ballot_name: string
-	parent_id: number
+	parent_hash: number
 	content: any
 }
 
@@ -34,7 +34,7 @@ export type BallotComment = {
 	created_at: string
 	id: number
 	is_deleted: false
-	parent_id: number | null
+	parent_hash: string | null
 	updated_at: string
 	level: number
 }
@@ -51,5 +51,5 @@ export type FetchItemConfig = {
 	scope: string
 	table: string
 	primary_key: string
-	parent_id: string | null
+	parent_hash: string | null
 }

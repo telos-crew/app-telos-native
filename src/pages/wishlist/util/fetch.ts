@@ -73,7 +73,7 @@ export type postBallotCommentPaylot = {
 	ballot_name: string
 	content: string
 	account_name: string
-	parent_id: null | undefined | number
+	parent_hash: null | undefined | string
 }
 
 export const postBallotComment = async (payload: any) => {
@@ -109,14 +109,14 @@ export const fetchItemComments = async (config: FetchItemConfig) => {
 
 export const fetchBallotComments = async (
 	ballot_name: string,
-	parent_id: string | null
+	parent_hash: string | null
 ) => {
 	const config = {
 		contract: 'telos.decide',
 		scope: 'telos.decide',
 		table: 'ballots',
 		primary_key: ballot_name,
-		parent_id
+		parent_hash
 	}
 	console.log('fetchBallotComments config: ', config)
 	const itemComments = await fetchItemComments(config)

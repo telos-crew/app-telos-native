@@ -36,7 +36,7 @@
 			<BallotCommentsSection :ballotComments="ballotComments" />
 			<BallotCommentBranch
 				:ballot_name="ballot_name"
-				:parent_id="null"
+				:parent_hash="null"
 			/>
 		</div>
 	</div>
@@ -70,7 +70,7 @@ const ballot = ref(null)
 const ballotComments = ref(null)
 const draftComments = ref({
 	top: {
-		parent_id: 0,
+		parent_hash: null,
 		content: ''
 	}
 })
@@ -95,7 +95,7 @@ const saveComment = async (level: string) => {
 	saveProgress.value = 0
 	isSaving.value = true
 	const payload = {
-		parent_id: null,
+		parent_hash: null,
 		content: draftComments.value[level].content,
 		table: 'ballots',
 		contract: 'telos.decide',
