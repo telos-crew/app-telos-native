@@ -22,6 +22,8 @@ const editorId = computed(() => {
 	return `ballotComment-${props.hash}-reply-editor`
 })
 
+const onFormat = (type: string) => {}
+
 onMounted(() => {
 	if (props.level === 'reply') {
 		const editorHash = `ballotComment-${props.hash}-reply-editor`
@@ -33,6 +35,56 @@ onMounted(() => {
 
 <template>
 	<div class="markdown-editor">
+		<div class="toolbar">
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-bold"
+					@click="onBold"
+				/>
+			</div>
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-italic"
+					@click="onItalic"
+				/>
+			</div>
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-link"
+					@click="onLink"
+				/>
+			</div>
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-image"
+					@click="onImage"
+				/>
+			</div>
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-quotes"
+					@click="onQuote"
+				/>
+			</div>
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-code"
+					@click="onCode"
+				/>
+			</div>
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-list"
+					@click="onList"
+				/>
+			</div>
+			<div class="toolbar-item">
+				<q-btn
+					icon="fas fa-heading"
+					@click="onHeading"
+				/>
+			</div>
+		</div>
 		<div class="editor">
 			<textarea
 				:value="props.draftComment"
@@ -65,6 +117,13 @@ onMounted(() => {
 <style lang="scss" scoped>
 .markdown-editor {
 	margin-top: 3rem;
+
+	.toolbar {
+		flex: 1;
+		flex-direction: row;
+		display: flex;
+		justify-content: flex-start;
+	}
 
 	.editor {
 		.editor-textarea {
