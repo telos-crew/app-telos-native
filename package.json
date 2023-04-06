@@ -1,9 +1,9 @@
 {
-	"name": "Telos Wishlist",
+	"name": "TelosWishlist",
 	"version": "0.1.0",
 	"description": "Native App",
 	"productName": "Telos App",
-	"author": "Don Peat <don@caleos.io>",
+	"author": "Kylan Hurt <kylan.hurt@gmail.com>",
 	"private": true,
 	"scripts": {
 		"dev": "quasar dev -m spa",
