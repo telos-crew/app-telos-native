@@ -105,6 +105,7 @@ const saveComment = async (level: string) => {
 	}
 	try {
 		// start process
+		saveProgress.value = 10
 		const content_hash: string = await postBallotComment(payload)
 		saveProgress.value = 50
 		// sign

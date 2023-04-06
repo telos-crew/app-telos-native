@@ -78,7 +78,11 @@
 <script setup lang="ts">
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
-import { postBallotComment2, fetchBallotComments } from '../util'
+import {
+	postBallotComment2,
+	fetchBallotComments,
+	postBallotComment
+} from '../util'
 import BallotComment from './BallotComment.vue'
 import MarkdownEditor from './MarkdownEditor.vue'
 import { useQuasar } from 'quasar'
@@ -147,13 +151,8 @@ const onReplySave = async () => {
 	}
 	saveProgress.value = 10
 	try {
-		const content_hash = await postBallotComment2({
-			body: payload,
-			folder_path: `wishlist/${account.value}`,
-			comment: `Wishlist upload by ${account.value}`,
-			onUploadProgress
-		})
-
+		const content_hash: string = await postBallotComment(payload)
+		saveProgress.value = 50
 		// sign
 		const actions = [
 			{
@@ -161,12 +160,10 @@ const onReplySave = async () => {
 				name: 'post',
 				data: {
 					poster: account.value,
-					content_hash,
-					post_id: content_hash
+					content_hash
 				}
 			}
 		]
-		saveProgress.value = 60
 		const { transactionId, wasBroadcast }: AnchorResponse =
 			await $api.signTransaction(actions)
 
