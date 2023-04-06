@@ -3,6 +3,7 @@ import { Api, JsonRpc } from 'eosjs'
 import { Notify } from 'quasar'
 
 const signTransaction = async function (actions) {
+	console.log('signTransaction', actions)
 	actions.forEach((action) => {
 		if (!action.authorization || !action.authorization.length) {
 			action.authorization = [

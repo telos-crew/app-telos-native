@@ -51,7 +51,7 @@ import { AnchorResponse } from './types/blockchain'
 import {
 	fetchBallot,
 	fetchBallotComments_old,
-	postBallotComment2,
+	postBallotComment,
 	fetchCommentByHash
 } from './util'
 import WishlistItem from './WishlistItem.vue'
@@ -105,12 +105,8 @@ const saveComment = async (level: string) => {
 	}
 	try {
 		// start process
-		const content_hash: string = await postBallotComment2({
-			body: payload,
-			folder_path: `wishlist/${account.value}`,
-			comment: `Wishlist upload by ${account.value}`,
-			onUploadProgress
-		})
+		const content_hash: string = await postBallotComment(payload)
+		saveProgress.value = 50
 		// sign
 		const actions = [
 			{
@@ -118,12 +114,10 @@ const saveComment = async (level: string) => {
 				name: 'post',
 				data: {
 					poster: account.value,
-					content_hash,
-					post_id: content_hash
+					content_hash
 				}
 			}
 		]
-		saveProgress.value = 50
 		const { transactionId, wasBroadcast }: AnchorResponse =
 			await $api.signTransaction(actions)
 		saveProgress.value = 75

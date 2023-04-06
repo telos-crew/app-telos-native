@@ -69,20 +69,11 @@ export const fetchVoterVotes = async (account_name: string) => {
 	return data
 }
 
-export type postBallotCommentPaylot = {
+export type PostBallotCommentPayload = {
 	ballot_name: string
 	content: string
 	account_name: string
 	parent_hash: null | undefined | string
-}
-
-export const postBallotComment = async (payload: any) => {
-	const { data } = await axios({
-		method: 'POST',
-		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comment`,
-		data: payload
-	})
-	return data
 }
 
 export const fetchBallotComments_old = async (ballot_name: string) => {
@@ -289,4 +280,25 @@ export const fetchDstorUploadStatus = async (
 		}
 		return checkStatus()
 	})
+}
+
+export type CommentUploadPayload = {
+	parent_hash?: string | null
+	content: string
+	table: string
+	contract: string
+	scope: string
+	primary_key?: string
+	poster: string
+}
+
+export const postBallotComment = async (
+	data: CommentUploadPayload
+): Promise<string> => {
+	if (!process.env.COMMENT_INDEXER_HOSTNAME)
+		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
+	const {
+		data: { hash }
+	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/upload`, data)
+	return hash
 }
