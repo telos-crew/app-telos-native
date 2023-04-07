@@ -6,6 +6,8 @@ export const stringifyUrlParams = (
 	url: string,
 	params: { [key: string]: any }
 ) => {
+	console.log('url: ', url)
+	console.log('params: ', params)
 	let newURL = new URL(url)
 	for (const key in params) {
 		let serializedParam
@@ -88,6 +90,7 @@ export const fetchBallotComments_old = async (ballot_name: string) => {
 export const fetchItemComments = async (config: FetchItemConfig) => {
 	const path = `${process.env.COMMENT_INDEXER_HOSTNAME}/item/comments`
 	const searchParams = config
+	console.log('config: ', config)
 	const url = stringifyUrlParams(path, searchParams)
 	console.log('url', url)
 	const { data } = await axios({
@@ -107,7 +110,7 @@ export const fetchBallotComments = async (
 		scope: 'telos.decide',
 		table: 'ballots',
 		primary_key: ballot_name,
-		parent_hash
+		parent_hash: parent_hash || null
 	}
 	console.log('fetchBallotComments config: ', config)
 	const itemComments = await fetchItemComments(config)
@@ -301,4 +304,16 @@ export const postBallotComment = async (
 		data: { hash }
 	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/upload`, data)
 	return hash
+}
+
+export const uploadMedia = async (payload: FormData, onUploadProgress: any) => {
+	if (!process.env.COMMENT_INDEXER_HOSTNAME)
+		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
+	console.log('uploadMedia'), payload
+	const {
+		data
+	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/upload/media`, payload, {
+		onUploadProgress
+	})
+	return data
 }

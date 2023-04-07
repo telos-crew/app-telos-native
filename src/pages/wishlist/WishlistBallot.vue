@@ -30,7 +30,7 @@
 		<div class="ballotCommentsArea">
 			<BallotComment
 				v-for="reply in recentUserComments"
-				:key="reply.post_id"
+				:key="reply.content_hash"
 				:comment="reply"
 			/>
 			<BallotCommentsSection :ballotComments="ballotComments" />
@@ -136,7 +136,7 @@ const saveComment = async (level: string) => {
 		recentUserComments.value = [
 			{
 				...payload,
-				post_id: content_hash,
+				content_hash: content_hash,
 				created_at: new Date().toISOString()
 			},
 			...recentUserComments.value

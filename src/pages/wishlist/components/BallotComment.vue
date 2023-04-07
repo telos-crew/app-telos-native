@@ -1,7 +1,7 @@
 <template>
 	<div
-		:id="`ballotComment-${comment.post_id}`"
-		class="ballotComment"
+	:id="`ballotComment-${comment.content_hash}`"
+	class="ballotComment"
 	>
 		<div class="header">
 			<span class="accountName">@{{ props.comment.poster }}</span>
@@ -50,7 +50,7 @@
 					level="reply"
 					:progress="saveProgress"
 					:isSaving="isSaving"
-					:hash="props.comment.post_id"
+					:hash="props.comment.content_hash"
 				/>
 			</KeepAlive>
 			<div class="markdown-renderer-wrap">
@@ -63,12 +63,12 @@
 		>
 			<BallotComment
 				v-for="reply in recentUserReplies"
-				:key="reply.post_id"
+				:key="reply.content_hash"
 				:comment="reply"
 			/>
 			<BallotComment
 				v-for="childComment in childComments"
-				:key="childComment.post_id"
+				:key="childComment.content_hash"
 				:comment="childComment"
 			/>
 		</div>
@@ -79,7 +79,6 @@
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
 import {
-	postBallotComment2,
 	fetchBallotComments,
 	postBallotComment
 } from '../util'
@@ -124,15 +123,9 @@ const onReplyChange = (newContent: string) => {
 const fetchBallotCommentReplies = async () => {
 	const replies = await fetchBallotComments(
 		props.comment.primary_key,
-		props.comment.post_id
+		props.comment.content_hash
 	)
 	childComments.value = replies
-}
-
-const onUploadProgress = (progress: number) => {
-	console.log('progress: ', progress)
-	if (typeof progress !== 'number') return
-	saveProgress.value = 10 + progress * 0.5
 }
 
 const onReplyCancel = () => {
@@ -141,7 +134,7 @@ const onReplyCancel = () => {
 
 const onReplySave = async () => {
 	const payload = {
-		parent_hash: props.comment.post_id,
+		parent_hash: props.comment.content_hash,
 		content: draftReply.value,
 		table: 'ballots',
 		contract: 'telos.decide',
@@ -170,7 +163,7 @@ const onReplySave = async () => {
 		recentUserReplies.value = [
 			{
 				...payload,
-				post_id: content_hash,
+				content_hash: content_hash,
 				created_at: DateTime.local().toISO()
 			},
 			...recentUserReplies.value

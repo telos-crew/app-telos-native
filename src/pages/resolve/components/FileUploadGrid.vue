@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { uploadMedia } from 'src/pages/wishlist/util'
 import { mapGetters } from 'vuex'
 import { generateRandomId } from '../util'
 import FileUploadGridButton from './FileUploadGridButton.vue'
@@ -67,148 +67,44 @@ export default {
 			const usableKey = key || generateRandomId()
 			this.updateFile({
 				key: usableKey,
-				progress: 0,
+				progress: 10,
 				isUploading: true
 			})
 			const file = document.getElementById('new-upload')?.files[0]
 			const formData = new FormData()
 			formData.append('file', file)
-			let accessToken
-			const expiration = new Date().getTime() / 1000 + 3600 * 24
+			formData.append('uploader', this.account)
+			const onUploadProgress = (progressEvent) => {
+				console.log('onuploadprogress', progressEvent)
+				const progress = Math.round(
+					(progressEvent.loaded * 100) / progressEvent.total
+				)
+				this.updateFile({
+					key: usableKey,
+					progress,
+					isUploading: true
+				})
+			}
 			try {
-				const headers = {
-					'api-key':
-						'N4EbVMgjvJmNvHwTHQhzzDsJjFKg7BeTnQ4pOd0D4H42NIgBfTF8LTjemBmTCcxa',
-					'x-expiration': expiration
+				const { hash, filename } = await uploadMedia(formData, onUploadProgress)
+				this.updateFile({
+					key: usableKey,
+					progress: 50,
+					isUploading: true
+				})
+				const newFile = {
+					hash,
+					filename,
 				}
-				const {
-					data: { access_token }
-				} = await axios({
-					url: 'https://api.dstor.cloud/v1/dev/temp-token',
-					headers
-				})
-				this.progress = 10
 				this.updateFile({
 					key: usableKey,
-					progress: 10
+					progress: 0,
+					isUploading: false,
+					...newFile
 				})
-				accessToken = access_token
-			} catch (err) {
-				console.log('access_token error: ', err)
-			}
-			let uploadToken
-			try {
-				const {
-					data: { token }
-				} = await axios({
-					method: 'POST',
-					url: 'https://api.dstor.cloud/v1/upload/get-token/',
-					headers: {
-						Authorization: `Bearer ${accessToken}`
-					},
-					data: {
-						chunks_number: 1,
-						folder_path: `arbitration/${this.account}`
-					}
-				})
-				this.updateFile({
-					key: usableKey,
-					progress: 20
-				})
-				uploadToken = token
-			} catch (err) {
-				console.log('upload token error: ', err)
-			}
-
-			const onUploadProgress = (event) => {
-				const prog = Math.round((event.loaded * 100) / event.total) * 0.4 + 30
-				this.updateFile({
-					key: usableKey,
-					progress: prog
-				})
-			}
-
-			try {
-				const config = {
-					method: 'POST',
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-						'Content-Type': 'multipart/form-data',
-						// "x-dstor-parent-id": 0, // root folder,
-						'x-dstor-comment': `Upload from Resolve by ${this.account}`,
-						'x-dstor-upload-token': uploadToken
-					},
-					onUploadProgress
-				}
-				await axios.post('https://api.dstor.cloud/v1/upload/', formData, config)
 			} catch (err) {
 				console.log('upload error: ', err)
 			}
-
-			let interval = 2000
-			let timeout
-			const checkStatus = async () => {
-				try {
-					const { data: statusData } = await axios(
-						'https://api.dstor.cloud/v1/upload/get-status/',
-						{
-							headers: {
-								Authorization: `Bearer ${accessToken}`,
-								'x-dstor-upload-token': uploadToken
-							}
-						}
-					)
-					interval = interval + 250
-					timeout = setTimeout(checkStatus, interval)
-					switch (statusData.status) {
-						case 'ADDING_TO_IPFS':
-							this.progress = 80
-							this.updateFile({
-								key: usableKey,
-								progress: 80
-							})
-							break
-						case 'SAVING_DATA':
-							this.progress = 90
-							this.updateFile({
-								key: usableKey,
-								progress: 90
-							})
-							break
-						case 'DONE':
-							clearTimeout(timeout)
-							this.updateFile({
-								key: usableKey,
-								progress: 100
-							})
-							setTimeout(() => {
-								const newHash = statusData.data[0].Hash
-								const newFilename = statusData.data[0].Name
-								const newFile = {
-									hash: newHash,
-									filename: newFilename
-								}
-								this.updateFile({
-									key: usableKey,
-									progress: 0,
-									isUploading: false,
-									...newFile
-								})
-							}, 1000)
-					}
-				} catch (err) {
-					this.updateFile({
-						key: usableKey,
-						progress: 0,
-						isUploading: false
-					})
-					this.$q.notify({
-						message: this.$t('pages.resolve.file_upload_failed'),
-						color: 'negative'
-					})
-				}
-			}
-			checkStatus()
 		},
 		chooseFile(key) {
 			const fileElem = document.getElementById('new-upload')
