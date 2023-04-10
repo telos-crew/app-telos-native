@@ -151,7 +151,7 @@ export default {
 			} else {
 				iterator += 1
 			}
-		}, 40)
+		}, 30)
 
 	}
 };
