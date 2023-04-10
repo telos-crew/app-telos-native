@@ -40,7 +40,9 @@ const TESTNET = {
 	WEBSERVICES_URL: 'https://api-dev.telos.net',
 	HYPERION_URL: 'https://testnet.telos.caleos.io',
 	BLOCKCHAIN_EXPLORER: 'https://explorer-test.telos.net',
-	NETWORK_ENV: 'testnet'
+	NETWORK_ENV: 'testnet',
+	GOODBLOCK_HOSTNAME: 'https://api.test.decidevoter.app',
+	COMMENT_INDEXER_HOSTNAME: 'http://localhost:3838'
 }
 
 const MAINNET = {
@@ -52,7 +54,9 @@ const MAINNET = {
 	WEBSERVICES_URL: 'https://api.telos.net',
 	HYPERION_URL: 'https://mainnet.telos.net',
 	BLOCKCHAIN_EXPLORER: 'https://explorer.telos.net',
-	NETWORK_ENV: 'mainnet'
+	NETWORK_ENV: 'mainnet',
+	GOODBLOCK_HOSTNAME: 'https://api.mainnet.decidevoter.app',
+	COMMENT_INDEXER_HOSTNAME: 'http://localhost:3838'
 }
 
 const env =
