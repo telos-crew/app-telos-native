@@ -50,9 +50,9 @@ import { useRoute } from 'vue-router'
 import { AnchorResponse } from './types/blockchain'
 import {
 	fetchBallot,
-	fetchBallotComments_old,
 	postBallotComment,
-	fetchCommentByHash
+	fetchCommentByHash,
+	fetchItemComments
 } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
@@ -156,7 +156,14 @@ const saveComment = async (level: string) => {
 
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name)
-	ballotComments.value = await fetchBallotComments_old(ballot_name)
+	const config = {
+		contract: 'telos.decide',
+		table: 'ballots',
+		scope: 'telos.decide',
+		primary_key: ballot_name,
+		parent_hash: null
+	}
+	ballotComments.value = await fetchItemComments(config)
 	console.log(ballot.value)
 })
 </script>

@@ -78,15 +78,6 @@ export type PostBallotCommentPayload = {
 	parent_hash: null | undefined | string
 }
 
-export const fetchBallotComments_old = async (ballot_name: string) => {
-	const { data } = await axios({
-		method: 'GET',
-		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/comments/${ballot_name}`
-	})
-	console.log('fetchBallotComments_old: ', data)
-	return data
-}
-
 export const fetchItemComments = async (config: FetchItemConfig) => {
 	const path = `${process.env.COMMENT_INDEXER_HOSTNAME}/item/comments`
 	const searchParams = config
