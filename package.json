@@ -21,6 +21,7 @@
 		"@types/marked": "^4.0.8",
 		"assert": "^2.0.0",
 		"axios": "^0.21.1",
+		"bezier-easing": "^2.1.0",
 		"core-js": "^3.6.5",
 		"dompurify": "^3.0.1",
 		"dotenv": "^16.0.1",
