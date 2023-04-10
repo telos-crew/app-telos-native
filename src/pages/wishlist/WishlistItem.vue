@@ -142,7 +142,7 @@ export default {
 		let iterator = 0
 		const theInterval = setInterval(() => {
 			const ratio = easing(iterator / totalIterations)
-			const adjustedScore = ratio * netYes
+			const adjustedScore = (.5 * netYes) + (ratio * netYes * 0.5)
 			this.score = adjustedScore
 
 			if (iterator > totalIterations) {
