@@ -4,14 +4,14 @@
 			<div class="vote-box">
 				<q-icon
 					name="fas fa-arrow-up"
-					class="icon"
+					class="vote-icon up"
 					:color="voterVoteKey === 'yes' ? 'primary' : 'secondary'"
 					size="42px"
 					@click="castVote('yes')"
 				/>
 				<q-icon
 					name="fas fa-arrow-down"
-					class="icon"
+					class="vote-icon down"
 					:color="voterVoteKey === 'no' ? 'primary' : 'secondary'"
 					size="42px"
 					@click="castVote('no')"
@@ -159,9 +159,10 @@ export default {
 			align-items: center;
 			margin-right: 20px;
 
-			.icon {
+			.vote-icon {
 				&:hover {
 					cursor: pointer;
+					color: $primary !important;
 				}
 			}
 		}

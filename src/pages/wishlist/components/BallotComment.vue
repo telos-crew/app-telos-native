@@ -163,7 +163,7 @@ const onReplySave = async () => {
 		recentUserReplies.value = [
 			{
 				...payload,
-				content_hash: content_hash,
+				content_hash,
 				created_at: DateTime.local().toISO()
 			},
 			...recentUserReplies.value
