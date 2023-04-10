@@ -92,6 +92,7 @@ const toggleJoinModal = () => {
 
 const onSortChange = ({ value: newValue }: { value: string }) => {
 	sort.value = newValue;
+	getBallots()
 };
 
 const castVote = (type: string, ballot: any) => {
@@ -127,12 +128,12 @@ const getVoterVotes = async () => {
 };
 
 const fetchEverything = async () => {
-	getBallots();
 	getVoter();
 	getVoterVotes();
 };
 
 onMounted(() => {
+	getBallots()
 	fetchEverything();
 	interval.value = setInterval(fetchEverything, 10000);
 });
