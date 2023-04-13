@@ -52,7 +52,8 @@ import {
 	fetchBallot,
 	postBallotComment,
 	fetchCommentByHash,
-	fetchItemComments
+	fetchItemComments,
+	fetchNonce
 } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
@@ -94,34 +95,37 @@ const onUploadProgress = (progress: number) => {
 const saveComment = async (level: string) => {
 	saveProgress.value = 0
 	isSaving.value = true
-	const payload = {
-		parent_hash: null,
-		content: draftComments.value[level].content,
-		table: 'ballots',
-		contract: 'telos.decide',
-		scope: 'telos.decide',
-		primary_key: ballot?.value?.ballot_name,
-		poster: account.value
-	}
 	try {
 		// start process
 		saveProgress.value = 10
-		const content_hash: string = await postBallotComment(payload)
-		saveProgress.value = 50
-		// sign
+		const nonce = await fetchNonce(account.value)
+		saveProgress.value = 20
+		const payload = {
+			parent_hash: null,
+			content: draftComments.value[level].content,
+			table: 'ballots',
+			contract: 'telos.decide',
+			scope: 'telos.decide',
+			primary_key: ballot?.value?.ballot_name,
+			poster: account.value,
+			nonce
+		}
+		const serializedPayload = JSON.stringify(payload)
 		const actions = [
 			{
 				account: 'testcomments',
 				name: 'post',
 				data: {
 					poster: account.value,
-					content_hash
+					content_hash: serializedPayload
 				}
 			}
 		]
-		const { transactionId, wasBroadcast }: AnchorResponse =
-			await $api.signTransaction(actions)
+		const { transaction }: AnchorResponse =
+			await $api.signTransaction(actions, { broadcast: false })
+		console.log('transaction: ', transaction)
 		saveProgress.value = 75
+		// send to server with transaction data
 
 		const fetchedComment = await fetchCommentByHash(content_hash)
 		console.log('fetchedComment', fetchedComment)

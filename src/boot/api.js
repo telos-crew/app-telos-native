@@ -2,7 +2,7 @@ import { boot } from 'quasar/wrappers'
 import { Api, JsonRpc } from 'eosjs'
 import { Notify } from 'quasar'
 
-const signTransaction = async function (actions) {
+const signTransaction = async function (actions, config) {
 	console.log('signTransaction', actions)
 	actions.forEach((action) => {
 		if (!action.authorization || !action.authorization.length) {
@@ -22,7 +22,8 @@ const signTransaction = async function (actions) {
 			},
 			{
 				blocksBehind: 3,
-				expireSeconds: 30
+				expireSeconds: 30,
+				...config
 			}
 		)
 		Notify.create({ type: 'positive', message: 'Transaction signed' })

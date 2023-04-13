@@ -308,3 +308,12 @@ export const uploadMedia = async (payload: FormData, onUploadProgress: any) => {
 	})
 	return data
 }
+
+export const fetchNonce = async (account_name: string) => {
+	if (!process.env.COMMENT_INDEXER_HOSTNAME)
+		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
+	const {
+		data: { nonce }
+	} = await axios.get(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce?account_name=${account_name}`)
+	return nonce
+}
