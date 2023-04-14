@@ -317,3 +317,19 @@ export const fetchNonce = async (account_name: string) => {
 	} = await axios.get(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce?account_name=${account_name}`)
 	return nonce
 }
+
+export const saveItemComment = async (account_name: string, payload: any, transaction: any) => {
+	if (!process.env.COMMENT_INDEXER_HOSTNAME)
+		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
+	const {
+		data: { nonce }
+	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`, {
+		data: {
+			account_name,
+			payload,
+			serializedTransaction: btoa(String.fromCharCode.apply(null, transaction.serializedTransaction)),
+			signatures: transaction.signatures
+		}
+	})
+	return nonce
+}

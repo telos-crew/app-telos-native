@@ -53,7 +53,8 @@ import {
 	postBallotComment,
 	fetchCommentByHash,
 	fetchItemComments,
-	fetchNonce
+	fetchNonce,
+	saveItemComment
 } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
@@ -121,12 +122,14 @@ const saveComment = async (level: string) => {
 				}
 			}
 		]
+		console.log('actions: ', actions)
 		const { transaction }: AnchorResponse =
 			await $api.signTransaction(actions, { broadcast: false })
 		console.log('transaction: ', transaction)
-		saveProgress.value = 75
+		saveProgress.value = 50
 		// send to server with transaction data
-
+		const resp = await saveItemComment(account.value, payload, transaction)
+		saveProgress.value = 80
 		const fetchedComment = await fetchCommentByHash(content_hash)
 		console.log('fetchedComment', fetchedComment)
 		saveProgress.value = 100
