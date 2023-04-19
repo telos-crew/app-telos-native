@@ -33,6 +33,7 @@ module.exports = configure(function (ctx) {
 			'i18n',
 			{ path: 'ual', server: false },
 			{ path: 'api', server: false },
+			{ path: 'auth', server: false },
 			'mixins',
 			'ga'
 		],

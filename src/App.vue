@@ -49,22 +49,26 @@ export default {
 				return { icon }
 			}
 		}
+	},
+	methods: {
+		doSignArb() {
+			console.log('doSignArb')
+		},
 	}
 }
 </script>
 
 <template>
 	<div :style="{ height: '100%' }">
-		<component :is="layout">
-			<router-view />
+		<component :is="layout" @doSignArb="doSignArb">
+			<router-view @doSignArb="doSignArb" />
 		</component>
 		<q-inner-loading :showing="isAutoLoading">
 			<q-spinner size="3em" />
 		</q-inner-loading>
 		<q-dialog v-model="arbDataDialog">
 			<SignArbitraryMessage
-				@openSignArb="arbDataDialog = true"
-				@closeSignArb="arbDataDialog = false"
+				@doSignArb="doSignArb"
 			/>
 		</q-dialog>
 	</div>

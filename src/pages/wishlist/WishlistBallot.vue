@@ -54,7 +54,8 @@ import {
 	fetchCommentByHash,
 	fetchItemComments,
 	fetchNonce,
-	saveItemComment
+	saveItemComment,
+	checkAuth
 } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
@@ -70,6 +71,7 @@ const saveProgress = ref(0)
 const isSaving = ref(false)
 const ballot = ref(null)
 const ballotComments = ref(null)
+const emit = defineEmits(['doSignArb'])
 const draftComments = ref({
 	top: {
 		parent_hash: null,
@@ -77,7 +79,8 @@ const draftComments = ref({
 	}
 })
 const recentUserComments = ref([])
-const { getters, $api } = useStore()
+const store = useStore()
+const { getters, $api, $auth } = store
 
 const account = computed(() => {
 	return getters['accounts/account']
@@ -94,71 +97,7 @@ const onUploadProgress = (progress: number) => {
 }
 
 const saveComment = async (level: string) => {
-	saveProgress.value = 0
-	isSaving.value = true
-	try {
-		// start process
-		saveProgress.value = 10
-		const nonce = await fetchNonce(account.value)
-		saveProgress.value = 20
-		const payload = {
-			parent_hash: null,
-			content: draftComments.value[level].content,
-			table: 'ballots',
-			contract: 'telos.decide',
-			scope: 'telos.decide',
-			primary_key: ballot?.value?.ballot_name,
-			poster: account.value,
-			nonce
-		}
-		const serializedPayload = JSON.stringify(payload)
-		const actions = [
-			{
-				account: 'testcomments',
-				name: 'post',
-				data: {
-					poster: account.value,
-					content_hash: serializedPayload
-				}
-			}
-		]
-		console.log('actions: ', actions)
-		const { transaction }: AnchorResponse =
-			await $api.signTransaction(actions, { broadcast: false })
-		console.log('transaction: ', transaction)
-		saveProgress.value = 50
-		// send to server with transaction data
-		const resp = await saveItemComment(account.value, payload, transaction)
-		saveProgress.value = 80
-		const fetchedComment = await fetchCommentByHash(content_hash)
-		console.log('fetchedComment', fetchedComment)
-		saveProgress.value = 100
-		// check dStor
-		// end process
-		$q.notify({
-			message: 'Comment saved!',
-			type: 'positive'
-		})
-		draftComments.value[level].content = ''
-		recentUserComments.value = [
-			{
-				...payload,
-				content_hash: content_hash,
-				created_at: new Date().toISOString()
-			},
-			...recentUserComments.value
-		]
-		// need to refetch
-	} catch (err) {
-		console.log(err)
-		$q.notify({
-			message: err?.message,
-			type: 'negative'
-		})
-	} finally {
-		isSaving.value = false
-		saveProgress.value = 0
-	}
+	await saveItemComment(account.value, '', '', store)
 }
 
 onMounted(async () => {

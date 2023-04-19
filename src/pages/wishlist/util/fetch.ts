@@ -301,11 +301,13 @@ export const uploadMedia = async (payload: FormData, onUploadProgress: any) => {
 	if (!process.env.COMMENT_INDEXER_HOSTNAME)
 		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
 	console.log('uploadMedia'), payload
-	const {
-		data
-	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/upload/media`, payload, {
-		onUploadProgress
-	})
+	const { data } = await axios.post(
+		`${process.env.COMMENT_INDEXER_HOSTNAME}/upload/media`,
+		payload,
+		{
+			onUploadProgress
+		}
+	)
 	return data
 }
 
@@ -314,11 +316,66 @@ export const fetchNonce = async (account_name: string) => {
 		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
 	const {
 		data: { nonce }
-	} = await axios.get(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce?account_name=${account_name}`)
+	} = await axios.get(
+		`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce?account_name=${account_name}`
+	)
+	console.log('nonce: ', nonce)
 	return nonce
 }
 
-export const saveItemComment = async (account_name: string, payload: any, transaction: any) => {
+export const validateNonce = async (
+	account_name: string,
+	transaction: any,
+	nonce: any
+) => {
+	if (!process.env.COMMENT_INDEXER_HOSTNAME)
+		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
+	try {
+		await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce`, {
+			account_name,
+			...formatTxForFetch(transaction),
+			nonce
+		})
+		return true
+	} catch (err) {
+		return false
+	}
+}
+
+export const checkAuth = async (account_name: string, store: any) => {
+	const value = localStorage.getItem(`nonce:${account_name}`)
+	const [nonce, expiration] = value ? value.split(':') : []
+	if (!nonce || !expiration || Date.now() > Number(expiration)) {
+		localStorage.removeItem(`nonce:${account_name}`)
+		await store.$auth.showApprovalDialog()
+		const response = await fetchNonce(account_name)
+		const [nonce, expiration] = response.split(':')
+		console.log('nonce2: ', nonce)
+		const { transaction } = await store.$api.signTransaction(
+			[
+				{
+					account: 'testcomments',
+					name: 'auth',
+					data: {
+						account_name,
+						nonce
+					}
+				}
+			],
+			{ broadcast: false }
+		)
+		await validateNonce(account_name, transaction, nonce)
+		localStorage.setItem(`nonce:${account_name}`, `${nonce}:${expiration}`)
+	}
+}
+
+export const saveItemComment = async (
+	account_name: string,
+	payload: any,
+	transaction: any,
+	store: any
+) => {
+	await checkAuth(account_name, store)
 	if (!process.env.COMMENT_INDEXER_HOSTNAME)
 		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
 	const {
@@ -327,9 +384,17 @@ export const saveItemComment = async (account_name: string, payload: any, transa
 		data: {
 			account_name,
 			payload,
-			serializedTransaction: btoa(String.fromCharCode.apply(null, transaction.serializedTransaction)),
-			signatures: transaction.signatures
+			...formatTxForFetch(transaction)
 		}
 	})
 	return nonce
+}
+
+export const formatTxForFetch = (transaction: any) => {
+	return {
+		serializedTransaction: btoa(
+			String.fromCharCode.apply(null, transaction.serializedTransaction)
+		),
+		signatures: transaction.signatures
+	}
 }
