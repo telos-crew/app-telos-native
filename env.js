@@ -41,7 +41,8 @@ const TESTNET = {
 	HYPERION_URL: 'https://testnet.telos.caleos.io',
 	BLOCKCHAIN_EXPLORER: 'https://explorer-test.telos.net',
 	NETWORK_ENV: 'testnet',
-	GOODBLOCK_HOSTNAME: 'https://api.test.decidevoter.app',
+	// GOODBLOCK_HOSTNAME: 'https://api.test.decidevoter.app',
+	GOODBLOCK_HOSTNAME: 'http://localhost:3888',
 	COMMENT_INDEXER_HOSTNAME: 'http://localhost:3838'
 }
 
@@ -55,7 +56,8 @@ const MAINNET = {
 	HYPERION_URL: 'https://mainnet.telos.net',
 	BLOCKCHAIN_EXPLORER: 'https://explorer.telos.net',
 	NETWORK_ENV: 'mainnet',
-	GOODBLOCK_HOSTNAME: 'https://api.mainnet.decidevoter.app',
+	// GOODBLOCK_HOSTNAME: 'https://api.mainnet.decidevoter.app',
+	GOODBLOCK_HOSTNAME: 'http://localhost:3888',
 	COMMENT_INDEXER_HOSTNAME: 'http://localhost:3838'
 }
 

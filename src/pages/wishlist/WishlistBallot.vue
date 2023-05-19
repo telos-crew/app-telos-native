@@ -82,6 +82,14 @@ const recentUserComments = ref([])
 const store = useStore()
 const { getters, $api, $auth } = store
 
+const payload = {
+	contract: 'telos.decide',
+	table: 'ballots',
+	scope: 'telos.decide',
+	primary_key: ballot_name,
+	parent_hash: null
+}
+
 const account = computed(() => {
 	return getters['accounts/account']
 })
@@ -97,19 +105,17 @@ const onUploadProgress = (progress: number) => {
 }
 
 const saveComment = async (level: string) => {
-	await saveItemComment(account.value, '', '', store)
+	const data = {
+		...payload,
+		level,
+		account: account.value
+	}
+	await saveItemComment(account.value, data, store)
 }
 
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name)
-	const config = {
-		contract: 'telos.decide',
-		table: 'ballots',
-		scope: 'telos.decide',
-		primary_key: ballot_name,
-		parent_hash: null
-	}
-	ballotComments.value = await fetchItemComments(config)
+	ballotComments.value = await fetchItemComments(payload)
 	console.log(ballot.value)
 })
 </script>

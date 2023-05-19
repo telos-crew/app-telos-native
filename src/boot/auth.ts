@@ -3,7 +3,7 @@ import { boot } from 'quasar/wrappers'
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
 export default boot(async ({ app, router, store }) => {
-  // something to do
+	// something to do
 	const showApprovalDialog = async () => {
 		await new Promise((resolve, reject) => {
 			app.config.globalProperties.$q
@@ -14,7 +14,7 @@ export default boot(async ({ app, router, store }) => {
 										</q-card>`,
 					html: true,
 					cancel: true,
-					fullWidth: true,
+					fullWidth: false,
 					ok: {
 						label: 'OK'
 					}

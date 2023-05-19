@@ -372,7 +372,6 @@ export const checkAuth = async (account_name: string, store: any) => {
 export const saveItemComment = async (
 	account_name: string,
 	payload: any,
-	transaction: any,
 	store: any
 ) => {
 	await checkAuth(account_name, store)
@@ -383,8 +382,7 @@ export const saveItemComment = async (
 	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`, {
 		data: {
 			account_name,
-			payload,
-			...formatTxForFetch(transaction)
+			payload
 		}
 	})
 	return nonce

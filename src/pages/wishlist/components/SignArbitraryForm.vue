@@ -1,18 +1,37 @@
 <template>
 	<q-card id="signArbMessage">
 		<q-card-section class="content">
-			<q-icon name="mdi-information-outline" color="primary" size="6rem" class="info-icon" />
+			<q-icon
+				name="mdi-information-outline"
+				color="primary"
+				size="6rem"
+				class="info-icon"
+			/>
 			<div class="text">
-				<p>This off-chain action requires you to sign an arbitrary piece of data for us to verify that you are the Telos user you say you are. No on-chain actions are signed nor broadcasted, and you won't have to do it again for a month.</p>
+				<p>
+					1This off-chain action requires you to sign an arbitrary piece of data
+					for us to verify that you are the Telos user you say you are. No
+					on-chain actions are signed nor broadcasted, and you won't have to do
+					it again for a month.
+				</p>
 			</div>
-			<q-btn color="primary" size="1.2rem" @click="$emit('do-sign-arb')">OK</q-btn>
-			<q-btn color="tertiary" size="1.2rem" @click="$emit('close-sign-arb')">Cancel</q-btn>
+			<q-btn
+				color="primary"
+				size="1.2rem"
+				@click="$emit('do-sign-arb')"
+				>OK</q-btn
+			>
+			<q-btn
+				color="tertiary"
+				size="1.2rem"
+				@click="$emit('close-sign-arb')"
+				>Cancel</q-btn
+			>
 		</q-card-section>
 	</q-card>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss" scoped>
 #signArbMessage {
