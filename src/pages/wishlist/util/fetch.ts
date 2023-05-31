@@ -345,7 +345,8 @@ export const validateNonce = async (
 export const checkAuth = async (account_name: string, store: any) => {
 	const value = localStorage.getItem(`nonce:${account_name}`)
 	const [nonce, expiration] = value ? value.split(':') : []
-	if (!nonce || !expiration || Date.now() > Number(expiration)) {
+	// if no nonce, no expiration, or expired
+	if (!nonce || !expiration || Date.now() > Number(expiration) * 1000) {
 		localStorage.removeItem(`nonce:${account_name}`)
 		await store.$auth.showApprovalDialog()
 		const response = await fetchNonce(account_name)
@@ -366,6 +367,7 @@ export const checkAuth = async (account_name: string, store: any) => {
 		)
 		await validateNonce(account_name, transaction, nonce)
 		localStorage.setItem(`nonce:${account_name}`, `${nonce}:${expiration}`)
+		return // ?
 	}
 }
 
