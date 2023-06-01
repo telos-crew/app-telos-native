@@ -18,19 +18,22 @@
 				v-if="account"
 				@save="saveComment"
 				@comment-change="onTopCommentChange"
-				:draftComment="draftComments.top.content"
-				level="top"
+				:draftComment="draftComments[0].content"
+				:level="0"
 				:progress="saveProgress"
 				:isSaving="isSaving"
 			/>
 		</div>
 		<div class="markdown-renderer-wrap">
-			<MarkdownRenderer :content="draftComments.top.content" />
+			<MarkdownRenderer :content="draftComments[0].content" />
 		</div>
-		<div class="ballotCommentsArea">
+		<div
+			v-if="recentUserComments"
+			class="ballotCommentsArea"
+		>
 			<BallotComment
 				v-for="reply in recentUserComments"
-				:key="reply.content_hash"
+				:key="reply.id"
 				:comment="reply"
 			/>
 			<BallotCommentsSection :ballotComments="ballotComments" />
@@ -47,16 +50,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { AnchorResponse } from './types/blockchain'
-import {
-	fetchBallot,
-	postBallotComment,
-	fetchCommentByHash,
-	fetchItemComments,
-	fetchNonce,
-	saveItemComment,
-	checkAuth
-} from './util'
+import { fetchBallot, fetchItemComments, saveItemComment } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
@@ -73,7 +67,7 @@ const ballot = ref(null)
 const ballotComments = ref(null)
 const emit = defineEmits(['doSignArb'])
 const draftComments = ref({
-	top: {
+	0: {
 		parent_hash: null,
 		content: ''
 	}
@@ -86,8 +80,7 @@ const payload = {
 	contract: 'telos.decide',
 	table: 'ballots',
 	scope: 'telos.decide',
-	primary_key: ballot_name,
-	parent_hash: null
+	primary_key: ballot_name
 }
 
 const account = computed(() => {
@@ -104,11 +97,13 @@ const onUploadProgress = (progress: number) => {
 	saveProgress.value = 10 + progress * 0.5
 }
 
-const saveComment = async (level: string) => {
+const saveComment = async (level: string = 0) => {
+	console.log('saveComment account: ', account.value)
 	const data = {
 		...payload,
 		level,
-		account: account.value
+		account_name: account.value,
+		content: draftComments.value[level].content
 	}
 	await saveItemComment(account.value, data, store)
 }

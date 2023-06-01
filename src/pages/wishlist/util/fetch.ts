@@ -383,7 +383,6 @@ export const saveItemComment = async (
 		data: { nonce }
 	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`, {
 		data: {
-			account_name,
 			payload
 		}
 	})
