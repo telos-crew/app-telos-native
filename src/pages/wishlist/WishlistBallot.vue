@@ -18,14 +18,14 @@
 				v-if="account"
 				@save="saveComment"
 				@comment-change="onTopCommentChange"
-				:draftComment="draftComments.top.content"
-				level="top"
+				:draftComment="draftComments['0'].content"
+				:level="'0'"
 				:progress="saveProgress"
 				:isSaving="isSaving"
 			/>
 		</div>
 		<div class="markdown-renderer-wrap">
-			<MarkdownRenderer :content="draftComments.top.content" />
+			<MarkdownRenderer :content="draftComments['0'].content" />
 		</div>
 		<div class="ballotCommentsArea">
 			<BallotComment
@@ -73,7 +73,7 @@ const ballot = ref(null)
 const ballotComments = ref(null)
 const emit = defineEmits(['doSignArb'])
 const draftComments = ref({
-	top: {
+	'0': {
 		parent_hash: null,
 		content: ''
 	}
@@ -86,8 +86,8 @@ const payload = {
 	contract: 'telos.decide',
 	table: 'ballots',
 	scope: 'telos.decide',
-	primary_key: ballot_name,
-	parent_hash: null
+	primary_key: ballot_name
+	// parent_hash: null
 }
 
 const account = computed(() => {
@@ -96,7 +96,7 @@ const account = computed(() => {
 
 const onTopCommentChange = (content: string) => {
 	console.log('onTopCommentChange: ', onTopCommentChange)
-	draftComments.value.top.content = content
+	draftComments.value['0'].content = content
 }
 
 const onUploadProgress = (progress: number) => {
@@ -107,10 +107,11 @@ const onUploadProgress = (progress: number) => {
 const saveComment = async (level: string) => {
 	const data = {
 		...payload,
-		level,
-		account: account.value
+		level: parseInt(level),
+		poster: account.value,
+		content: draftComments.value['0'].content
 	}
-	await saveItemComment(account.value, data, store)
+	await saveItemComment(data)
 }
 
 onMounted(async () => {

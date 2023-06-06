@@ -369,21 +369,14 @@ export const checkAuth = async (account_name: string, store: any) => {
 	}
 }
 
-export const saveItemComment = async (
-	account_name: string,
-	payload: any,
-	store: any
-) => {
-	await checkAuth(account_name, store)
+export const saveItemComment = async (payload: any) => {
+	// await checkAuth(account_name, store)
 	if (!process.env.COMMENT_INDEXER_HOSTNAME)
 		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
 	const {
 		data: { nonce }
 	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`, {
-		data: {
-			account_name,
-			payload
-		}
+		data: payload
 	})
 	return nonce
 }
