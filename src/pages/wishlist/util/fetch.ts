@@ -317,7 +317,13 @@ export const fetchNonce = async (account_name: string) => {
 	const {
 		data: { nonce }
 	} = await axios.get(
-		`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce?account_name=${account_name}`
+		`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce?account_name=${account_name}`,
+		{
+			withCredentials: true,
+			headers: {
+				'Access-Control-Allow-Credentials': true
+			}
+		}
 	)
 	console.log('nonce: ', nonce)
 	return nonce
@@ -331,54 +337,100 @@ export const validateNonce = async (
 	if (!process.env.COMMENT_INDEXER_HOSTNAME)
 		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
 	try {
-		await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce`, {
-			account_name,
-			...formatTxForFetch(transaction),
-			nonce
-		})
+		await axios.post(
+			`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce`,
+			{
+				account_name,
+				...formatTxForFetch(transaction),
+				nonce
+			},
+			{
+				withCredentials: true,
+				headers: {
+					'Access-Control-Allow-Credentials': true
+				}
+			}
+		)
 		return true
 	} catch (err) {
 		return false
 	}
 }
 
-export const checkAuth = async (account_name: string, store: any) => {
-	const value = localStorage.getItem(`nonce:${account_name}`)
-	const [nonce, expiration] = value ? value.split(':') : []
-	if (!nonce || !expiration || Date.now() > Number(expiration)) {
-		localStorage.removeItem(`nonce:${account_name}`)
-		await store.$auth.showApprovalDialog()
-		const response = await fetchNonce(account_name)
-		const [nonce, expiration] = response.split(':')
-		console.log('nonce2: ', nonce)
-		const { transaction } = await store.$api.signTransaction(
-			[
-				{
-					account: 'testcomments',
-					name: 'auth',
-					data: {
-						account_name,
-						nonce
-					}
+export const getAuth = async (store: any) => {
+	const { account: account_name } = store.state.accounts
+	await store.$auth.showApprovalDialog()
+	const response = await fetchNonce(account_name)
+	const [nonce, expiration] = response.split(':')
+	console.log('nonce2: ', nonce)
+	const { transaction } = await store.$api.signTransaction(
+		[
+			{
+				account: 'testcomments',
+				name: 'auth',
+				data: {
+					account_name,
+					nonce
 				}
-			],
-			{ broadcast: false }
-		)
-		await validateNonce(account_name, transaction, nonce)
-		localStorage.setItem(`nonce:${account_name}`, `${nonce}:${expiration}`)
-	}
+			}
+		],
+		{ broadcast: false }
+	)
+	await validateNonce(account_name, transaction, nonce)
 }
 
-export const saveItemComment = async (payload: any) => {
-	// await checkAuth(account_name, store)
-	if (!process.env.COMMENT_INDEXER_HOSTNAME)
-		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
-	const {
-		data: { nonce }
-	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`, {
-		data: payload
-	})
-	return nonce
+export const authFetch = async (
+	callback: Function,
+	tryAgain = false,
+	store: any
+) => {
+	console.log(
+		'authFetch store.state.accounts.account: ',
+		store.state.accounts.account
+	)
+	const exec = async () => {
+		try {
+			const { data } = await callback()
+			return data
+		} catch (err: any) {
+			console.log('authFetch->exec err: ', err)
+			if (err.response.status === 401) {
+				await getAuth(store)
+				const { data } = await callback()
+				return data
+			}
+		}
+	}
+	await exec()
+}
+
+export const saveItemComment = async (payload: any, store: any) => {
+	console.log('saveItemComment store: ', store)
+	await authFetch(
+		async () => {
+			const response = await axios.post(
+				`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`,
+				{
+					data: payload
+				},
+				{
+					withCredentials: true,
+					headers: {
+						'Access-Control-Allow-Credentials': true
+					}
+				}
+			)
+			console.log('saveItemComment->authFetch response: ', response)
+			return response
+		},
+		true,
+		store
+	)
+}
+
+export const testFetch = async () => {
+	console.log('testing fetch')
+	await axios.get(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/test`)
 }
 
 export const formatTxForFetch = (transaction: any) => {

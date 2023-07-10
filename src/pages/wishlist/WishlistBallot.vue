@@ -111,7 +111,7 @@ const saveComment = async (level: string) => {
 		poster: account.value,
 		content: draftComments.value['0'].content
 	}
-	await saveItemComment(data)
+	await saveItemComment(data, store)
 }
 
 onMounted(async () => {
