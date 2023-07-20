@@ -24,20 +24,31 @@
 				:isSaving="isSaving"
 			/>
 		</div>
+		<!-- recentUserComments:
+		{{ JSON.stringify(recentUserComments) }} -->
+		<!-- ballotComments:
+		{{ ballotComments }} -->
+		<!-- <br /><br />
+		draftComments:
+		{{ draftComments }} -->
 		<div class="markdown-renderer-wrap">
 			<MarkdownRenderer :content="draftComments['0'].content" />
 		</div>
 		<div class="ballotCommentsArea">
+			a
 			<BallotComment
 				v-for="reply in recentUserComments"
-				:key="reply.content_hash"
+				:key="reply.id"
 				:comment="reply"
 			/>
+			b
 			<BallotCommentsSection :ballotComments="ballotComments" />
+			c
 			<BallotCommentBranch
 				:ballot_name="ballot_name"
-				:parent_hash="null"
+				:parent_id="null"
 			/>
+			d
 		</div>
 	</div>
 </template>
@@ -74,7 +85,7 @@ const ballotComments = ref(null)
 const emit = defineEmits(['doSignArb'])
 const draftComments = ref({
 	'0': {
-		parent_hash: null,
+		parent_id: null,
 		content: ''
 	}
 })
@@ -87,7 +98,7 @@ const payload = {
 	table: 'ballots',
 	scope: 'telos.decide',
 	primary_key: ballot_name
-	// parent_hash: null
+	// parent_id: null
 }
 
 const account = computed(() => {
@@ -99,10 +110,10 @@ const onTopCommentChange = (content: string) => {
 	draftComments.value['0'].content = content
 }
 
-const onUploadProgress = (progress: number) => {
-	if (typeof progress !== 'number') return
-	saveProgress.value = 10 + progress * 0.5
-}
+// const onUploadProgress = (progress: number) => {
+// 	if (typeof progress !== 'number') return
+// 	saveProgress.value = 10 + progress * 0.5
+// }
 
 const saveComment = async (level: string) => {
 	const data = {
@@ -111,7 +122,12 @@ const saveComment = async (level: string) => {
 		poster: account.value,
 		content: draftComments.value['0'].content
 	}
-	await saveItemComment(data, store)
+	const {
+		data: { comment }
+	} = await saveItemComment(data, store)
+	console.log('comment: ', comment)
+	draftComments.value['0'] = { parent_id: null, content: '' }
+	recentUserComments.value.unshift(comment)
 }
 
 onMounted(async () => {

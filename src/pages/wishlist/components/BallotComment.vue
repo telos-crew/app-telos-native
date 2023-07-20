@@ -1,7 +1,7 @@
 <template>
 	<div
-	:id="`ballotComment-${comment.content_hash}`"
-	class="ballotComment"
+		:id="`ballotComment-${comment.id}`"
+		class="ballotComment"
 	>
 		<div class="header">
 			<span class="accountName">@{{ props.comment.poster }}</span>
@@ -63,12 +63,12 @@
 		>
 			<BallotComment
 				v-for="reply in recentUserReplies"
-				:key="reply.content_hash"
+				:key="reply.id"
 				:comment="reply"
 			/>
 			<BallotComment
 				v-for="childComment in childComments"
-				:key="childComment.content_hash"
+				:key="childComment.id"
 				:comment="childComment"
 			/>
 		</div>
@@ -78,10 +78,7 @@
 <script setup lang="ts">
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
-import {
-	fetchBallotComments,
-	postBallotComment
-} from '../util'
+import { fetchBallotComments, postBallotComment } from '../util'
 import BallotComment from './BallotComment.vue'
 import MarkdownEditor from './MarkdownEditor.vue'
 import { useQuasar } from 'quasar'
@@ -134,7 +131,7 @@ const onReplyCancel = () => {
 
 const onReplySave = async () => {
 	const payload = {
-		parent_hash: props.comment.content_hash,
+		parent_id: props.comment.content_hash,
 		content: draftReply.value,
 		table: 'ballots',
 		contract: 'telos.decide',

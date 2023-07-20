@@ -75,7 +75,7 @@ export type PostBallotCommentPayload = {
 	ballot_name: string
 	content: string
 	account_name: string
-	parent_hash: null | undefined | string
+	parent_id: null | undefined | string
 }
 
 export const fetchItemComments = async (config: FetchItemConfig) => {
@@ -94,14 +94,14 @@ export const fetchItemComments = async (config: FetchItemConfig) => {
 
 export const fetchBallotComments = async (
 	ballot_name: string,
-	parent_hash: string | null
+	parent_id: string | null
 ) => {
 	const config = {
 		contract: 'telos.decide',
 		scope: 'telos.decide',
 		table: 'ballots',
 		primary_key: ballot_name,
-		parent_hash: parent_hash || null
+		parent_id: parent_id || null
 	}
 	console.log('fetchBallotComments config: ', config)
 	const itemComments = await fetchItemComments(config)
@@ -277,7 +277,7 @@ export const fetchDstorUploadStatus = async (
 }
 
 export type CommentUploadPayload = {
-	parent_hash?: string | null
+	parent_id?: string | null
 	content: string
 	table: string
 	contract: string
@@ -390,23 +390,24 @@ export const authFetch = async (
 	)
 	const exec = async () => {
 		try {
-			const { data } = await callback()
-			return data
+			const response = await callback()
+			return response
 		} catch (err: any) {
 			console.log('authFetch->exec err: ', err)
 			if (err.response.status === 401) {
 				await getAuth(store)
-				const { data } = await callback()
-				return data
+				const response = await callback()
+				return response
 			}
 		}
 	}
-	await exec()
+	const output = await exec()
+	return output
 }
 
 export const saveItemComment = async (payload: any, store: any) => {
 	console.log('saveItemComment store: ', store)
-	await authFetch(
+	const response = await authFetch(
 		async () => {
 			const response = await axios.post(
 				`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`,
@@ -426,6 +427,8 @@ export const saveItemComment = async (payload: any, store: any) => {
 		true,
 		store
 	)
+	console.log('saveItemComment response: ', response)
+	return response
 }
 
 export const testFetch = async () => {
