@@ -82,6 +82,7 @@ export const fetchItemComments = async (config: FetchItemConfig) => {
 	const path = `${process.env.COMMENT_INDEXER_HOSTNAME}/item/comments`
 	const searchParams = config
 	console.log('config: ', config)
+	// because we want to use 'get' and not 'post'
 	const url = stringifyUrlParams(path, searchParams)
 	console.log('url', url)
 	const { data } = await axios({
@@ -89,6 +90,17 @@ export const fetchItemComments = async (config: FetchItemConfig) => {
 		url
 	})
 	console.log('fetchItemComments: ', data)
+	return data
+}
+
+export const fetchReplies = async (id: number) => {
+	const url = `${process.env.COMMENT_INDEXER_HOSTNAME}/replies/${id}`
+	console.log('url', url)
+	const { data } = await axios({
+		method: 'GET',
+		url
+	})
+	console.log('fetchReplies: ', data)
 	return data
 }
 

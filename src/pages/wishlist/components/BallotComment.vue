@@ -78,7 +78,7 @@
 <script setup lang="ts">
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
-import { fetchBallotComments, postBallotComment } from '../util'
+import { fetchReplies, postBallotComment } from '../util'
 import BallotComment from './BallotComment.vue'
 import MarkdownEditor from './MarkdownEditor.vue'
 import { useQuasar } from 'quasar'
@@ -117,11 +117,9 @@ const onReplyChange = (newContent: string) => {
 	draftReply.value = newContent
 }
 
+// grab direct children from ID
 const fetchBallotCommentReplies = async () => {
-	const replies = await fetchBallotComments(
-		props.comment.primary_key,
-		props.comment.content_hash
-	)
+	const replies = await fetchReplies(props.comment.id)
 	childComments.value = replies
 }
 
