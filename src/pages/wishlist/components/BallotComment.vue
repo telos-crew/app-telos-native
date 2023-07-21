@@ -78,7 +78,7 @@
 <script setup lang="ts">
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
-import { fetchReplies, postBallotComment } from '../util'
+import { fetchReplies, postBallotComment, saveItemComment } from '../util'
 import BallotComment from './BallotComment.vue'
 import MarkdownEditor from './MarkdownEditor.vue'
 import { useQuasar } from 'quasar'
@@ -87,7 +87,8 @@ import MarkdownRenderer from './MarkdownRenderer.vue'
 import { AnchorResponse } from '../types/blockchain'
 
 const $q = useQuasar()
-const { getters, $api } = useStore()
+const store = useStore()
+const { getters, $api } = store
 const saveProgress = ref(0)
 const isSaving = ref(false)
 const recentUserReplies = ref([])
@@ -129,56 +130,22 @@ const onReplyCancel = () => {
 
 const onReplySave = async () => {
 	const payload = {
-		parent_id: props.comment.id,
-		content: draftReply.value,
-		table: 'ballots',
 		contract: 'telos.decide',
+		table: 'ballots',
 		scope: 'telos.decide',
 		primary_key: props.comment.primary_key,
-		poster: account.value
+		parent_id: props.comment.id,
+		poster: account.value,
+		level: props.comment.level, // todo
+		content: draftReply.value // todo
 	}
-	saveProgress.value = 10
-	try {
-		const content_hash: string = await postBallotComment(payload)
-		saveProgress.value = 50
-		// sign
-		const actions = [
-			{
-				account: 'testcomments',
-				name: 'post',
-				data: {
-					poster: account.value,
-					content_hash
-				}
-			}
-		]
-		const { transactionId, wasBroadcast }: AnchorResponse =
-			await $api.signTransaction(actions)
-
-		recentUserReplies.value = [
-			{
-				...payload,
-				content_hash,
-				created_at: DateTime.local().toISO()
-			},
-			...recentUserReplies.value
-		]
-		saveProgress.value = 100
-		toggleShowChildren(true)
-		// need to refetch
-		$q.notify({
-			message: 'Comment saved!',
-			type: 'positive'
-		})
-		draftReply.value = ''
-		isReplyEditorVisible.value = false
-	} catch (err) {
-		$q.notify({
-			// @ts-ignore
-			message: err.message,
-			type: 'negative'
-		})
-	}
+	const {
+		data: { comment }
+	} = await saveItemComment(payload, store)
+	console.log('comment: ', comment)
+	draftReply.value = ''
+	recentUserReplies.value.unshift(comment)
+	isReplyEditorVisible.value = false
 }
 </script>
 
