@@ -50,7 +50,7 @@
 					level="reply"
 					:progress="saveProgress"
 					:isSaving="isSaving"
-					:hash="props.comment.content_hash"
+					:id="props.comment.id"
 				/>
 			</KeepAlive>
 			<div class="markdown-renderer-wrap">
@@ -129,7 +129,7 @@ const onReplyCancel = () => {
 
 const onReplySave = async () => {
 	const payload = {
-		parent_id: props.comment.content_hash,
+		parent_id: props.comment.id,
 		content: draftReply.value,
 		table: 'ballots',
 		contract: 'telos.decide',

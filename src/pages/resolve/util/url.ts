@@ -26,6 +26,6 @@ export const scrollToHash = (newHash: string) => {
 	if (!el) return
 	const target = getScrollTarget(el)
 	const offset = el.offsetTop
-	const duration = 500
-	setVerticalScrollPosition(target, offset - 100, duration)
+	const duration = 300
+	setVerticalScrollPosition(target, offset - 150, duration)
 }
