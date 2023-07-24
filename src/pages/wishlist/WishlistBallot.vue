@@ -110,11 +110,6 @@ const onTopCommentChange = (content: string) => {
 	draftComments.value['0'].content = content
 }
 
-// const onUploadProgress = (progress: number) => {
-// 	if (typeof progress !== 'number') return
-// 	saveProgress.value = 10 + progress * 0.5
-// }
-
 const saveComment = async (level: string) => {
 	const data = {
 		...payload,
