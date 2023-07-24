@@ -75,13 +75,14 @@ export type PostBallotCommentPayload = {
 	ballot_name: string
 	content: string
 	account_name: string
-	parent_hash: null | undefined | string
+	parent_id: null | undefined | string
 }
 
 export const fetchItemComments = async (config: FetchItemConfig) => {
 	const path = `${process.env.COMMENT_INDEXER_HOSTNAME}/item/comments`
 	const searchParams = config
 	console.log('config: ', config)
+	// because we want to use 'get' and not 'post'
 	const url = stringifyUrlParams(path, searchParams)
 	console.log('url', url)
 	const { data } = await axios({
@@ -92,16 +93,27 @@ export const fetchItemComments = async (config: FetchItemConfig) => {
 	return data
 }
 
+export const fetchReplies = async (id: number) => {
+	const url = `${process.env.COMMENT_INDEXER_HOSTNAME}/replies/${id}`
+	console.log('url', url)
+	const { data } = await axios({
+		method: 'GET',
+		url
+	})
+	console.log('fetchReplies: ', data)
+	return data
+}
+
 export const fetchBallotComments = async (
 	ballot_name: string,
-	parent_hash: string | null
+	parent_id: string | null
 ) => {
 	const config = {
 		contract: 'telos.decide',
 		scope: 'telos.decide',
 		table: 'ballots',
 		primary_key: ballot_name,
-		parent_hash: parent_hash || null
+		parent_id: parent_id || null
 	}
 	console.log('fetchBallotComments config: ', config)
 	const itemComments = await fetchItemComments(config)
@@ -277,7 +289,7 @@ export const fetchDstorUploadStatus = async (
 }
 
 export type CommentUploadPayload = {
-	parent_hash?: string | null
+	parent_id?: string | null
 	content: string
 	table: string
 	contract: string
@@ -301,10 +313,146 @@ export const uploadMedia = async (payload: FormData, onUploadProgress: any) => {
 	if (!process.env.COMMENT_INDEXER_HOSTNAME)
 		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
 	console.log('uploadMedia'), payload
-	const {
-		data
-	} = await axios.post(`${process.env.COMMENT_INDEXER_HOSTNAME}/upload/media`, payload, {
-		onUploadProgress
-	})
+	const { data } = await axios.post(
+		`${process.env.COMMENT_INDEXER_HOSTNAME}/upload/media`,
+		payload,
+		{
+			onUploadProgress
+		}
+	)
 	return data
+}
+
+export const fetchNonce = async (account_name: string) => {
+	if (!process.env.COMMENT_INDEXER_HOSTNAME)
+		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
+	const {
+		data: { nonce }
+	} = await axios.get(
+		`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce?account_name=${account_name}`,
+		{
+			withCredentials: true,
+			headers: {
+				'Access-Control-Allow-Credentials': true
+			}
+		}
+	)
+	console.log('nonce: ', nonce)
+	return nonce
+}
+
+export const validateNonce = async (
+	account_name: string,
+	transaction: any,
+	nonce: any
+) => {
+	if (!process.env.COMMENT_INDEXER_HOSTNAME)
+		throw new Error('COMMENT_INDEXER_HOSTNAME env variable not set')
+	try {
+		await axios.post(
+			`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/nonce`,
+			{
+				account_name,
+				...formatTxForFetch(transaction),
+				nonce
+			},
+			{
+				withCredentials: true,
+				headers: {
+					'Access-Control-Allow-Credentials': true
+				}
+			}
+		)
+		return true
+	} catch (err) {
+		return false
+	}
+}
+
+export const getAuth = async (store: any) => {
+	const { account: account_name } = store.state.accounts
+	await store.$auth.showApprovalDialog()
+	const response = await fetchNonce(account_name)
+	const [nonce, expiration] = response.split(':')
+	console.log('nonce2: ', nonce)
+	const { transaction } = await store.$api.signTransaction(
+		[
+			{
+				account: 'testcomments',
+				name: 'auth',
+				data: {
+					account_name,
+					nonce
+				}
+			}
+		],
+		{ broadcast: false }
+	)
+	await validateNonce(account_name, transaction, nonce)
+}
+
+export const authFetch = async (
+	callback: Function,
+	tryAgain = false,
+	store: any
+) => {
+	console.log(
+		'authFetch store.state.accounts.account: ',
+		store.state.accounts.account
+	)
+	const exec = async () => {
+		try {
+			const response = await callback()
+			return response
+		} catch (err: any) {
+			console.log('authFetch->exec err: ', err)
+			if (err.response.status === 401) {
+				await getAuth(store)
+				const response = await callback()
+				return response
+			}
+		}
+	}
+	const output = await exec()
+	return output
+}
+
+export const saveItemComment = async (payload: any, store: any) => {
+	console.log('saveItemComment store: ', store)
+	const response = await authFetch(
+		async () => {
+			const response = await axios.post(
+				`${process.env.COMMENT_INDEXER_HOSTNAME}/item/comment`,
+				{
+					data: payload
+				},
+				{
+					withCredentials: true,
+					headers: {
+						'Access-Control-Allow-Credentials': true
+					}
+				}
+			)
+			console.log('saveItemComment->authFetch response: ', response)
+			return response
+		},
+		true,
+		store
+	)
+	console.log('saveItemComment response: ', response)
+	return response
+}
+
+export const testFetch = async () => {
+	console.log('testing fetch')
+	await axios.get(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/test`)
+}
+
+export const formatTxForFetch = (transaction: any) => {
+	return {
+		serializedTransaction: btoa(
+			String.fromCharCode.apply(null, transaction.serializedTransaction)
+		),
+		signatures: transaction.signatures
+	}
 }

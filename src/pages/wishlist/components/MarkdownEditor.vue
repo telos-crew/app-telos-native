@@ -6,7 +6,7 @@ const props = defineProps([
 	'level',
 	'isSaving',
 	'progress',
-	'hash'
+	'id'
 ])
 const emit = defineEmits(['save', 'commentChange', 'cancel'])
 
@@ -19,14 +19,14 @@ const onCancel = () => {
 }
 
 const editorId = computed(() => {
-	return `ballotComment-${props.hash}-reply-editor`
+	return `ballotComment-${props.id}-reply-editor`
 })
 
 const onFormat = (type: string) => {}
 
 onMounted(() => {
 	if (props.level === 'reply') {
-		const editorHash = `ballotComment-${props.hash}-reply-editor`
+		const editorHash = `ballotComment-${props.id || ''}-reply-editor`
 		scrollToHash(editorHash)
 		document.getElementById(editorHash).focus()
 	}

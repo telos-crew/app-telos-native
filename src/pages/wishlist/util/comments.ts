@@ -20,10 +20,10 @@ export const buildCommentTree = (comments: BallotComment[]) => {
 			const parentLevel = levels[parseInt(levelKey) - 1]
 			for (const key in levelComments) {
 				const comment = levelComments[key]
-				if (!parentLevel[comment.parent_hash].children) {
-					parentLevel[comment.parent_hash].children = [comment]
+				if (!parentLevel[comment.parent_id].children) {
+					parentLevel[comment.parent_id].children = [comment]
 				} else {
-					parentLevel[comment.parent_hash].children.push(comment)
+					parentLevel[comment.parent_id].children.push(comment)
 				}
 			}
 			final = parentLevel

@@ -18,26 +18,37 @@
 				v-if="account"
 				@save="saveComment"
 				@comment-change="onTopCommentChange"
-				:draftComment="draftComments.top.content"
-				level="top"
+				:draftComment="draftComments['0'].content"
+				:level="'0'"
 				:progress="saveProgress"
 				:isSaving="isSaving"
 			/>
 		</div>
+		<!-- recentUserComments:
+		{{ JSON.stringify(recentUserComments) }} -->
+		<!-- ballotComments:
+		{{ ballotComments }} -->
+		<!-- <br /><br />
+		draftComments:
+		{{ draftComments }} -->
 		<div class="markdown-renderer-wrap">
-			<MarkdownRenderer :content="draftComments.top.content" />
+			<MarkdownRenderer :content="draftComments['0'].content" />
 		</div>
 		<div class="ballotCommentsArea">
+			a
 			<BallotComment
 				v-for="reply in recentUserComments"
-				:key="reply.content_hash"
+				:key="reply.id"
 				:comment="reply"
 			/>
+			b
 			<BallotCommentsSection :ballotComments="ballotComments" />
+			c
 			<BallotCommentBranch
 				:ballot_name="ballot_name"
-				:parent_hash="null"
+				:parent_id="null"
 			/>
+			d
 		</div>
 	</div>
 </template>
@@ -52,7 +63,10 @@ import {
 	fetchBallot,
 	postBallotComment,
 	fetchCommentByHash,
-	fetchItemComments
+	fetchItemComments,
+	fetchNonce,
+	saveItemComment,
+	checkAuth
 } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
@@ -68,14 +82,24 @@ const saveProgress = ref(0)
 const isSaving = ref(false)
 const ballot = ref(null)
 const ballotComments = ref(null)
+const emit = defineEmits(['doSignArb'])
 const draftComments = ref({
-	top: {
-		parent_hash: null,
+	'0': {
+		parent_id: null,
 		content: ''
 	}
 })
 const recentUserComments = ref([])
-const { getters, $api } = useStore()
+const store = useStore()
+const { getters, $api, $auth } = store
+
+const payload = {
+	contract: 'telos.decide',
+	table: 'ballots',
+	scope: 'telos.decide',
+	primary_key: ballot_name
+	// parent_id: null
+}
 
 const account = computed(() => {
 	return getters['accounts/account']
@@ -83,87 +107,27 @@ const account = computed(() => {
 
 const onTopCommentChange = (content: string) => {
 	console.log('onTopCommentChange: ', onTopCommentChange)
-	draftComments.value.top.content = content
-}
-
-const onUploadProgress = (progress: number) => {
-	if (typeof progress !== 'number') return
-	saveProgress.value = 10 + progress * 0.5
+	draftComments.value['0'].content = content
 }
 
 const saveComment = async (level: string) => {
-	saveProgress.value = 0
-	isSaving.value = true
-	const payload = {
-		parent_hash: null,
-		content: draftComments.value[level].content,
-		table: 'ballots',
-		contract: 'telos.decide',
-		scope: 'telos.decide',
-		primary_key: ballot?.value?.ballot_name,
-		poster: account.value
+	const data = {
+		...payload,
+		level: parseInt(level),
+		poster: account.value,
+		content: draftComments.value['0'].content
 	}
-	try {
-		// start process
-		saveProgress.value = 10
-		const content_hash: string = await postBallotComment(payload)
-		saveProgress.value = 50
-		// sign
-		const actions = [
-			{
-				account: 'testcomments',
-				name: 'post',
-				data: {
-					poster: account.value,
-					content_hash
-				}
-			}
-		]
-		const { transactionId, wasBroadcast }: AnchorResponse =
-			await $api.signTransaction(actions)
-		saveProgress.value = 75
-
-		const fetchedComment = await fetchCommentByHash(content_hash)
-		console.log('fetchedComment', fetchedComment)
-		saveProgress.value = 100
-		// check dStor
-		// end process
-		$q.notify({
-			message: 'Comment saved!',
-			type: 'positive'
-		})
-		draftComments.value[level].content = ''
-		recentUserComments.value = [
-			{
-				...payload,
-				content_hash: content_hash,
-				created_at: new Date().toISOString()
-			},
-			...recentUserComments.value
-		]
-		// need to refetch
-	} catch (err) {
-		console.log(err)
-		$q.notify({
-			message: err?.message,
-			type: 'negative'
-		})
-	} finally {
-		isSaving.value = false
-		saveProgress.value = 0
-	}
+	const {
+		data: { comment }
+	} = await saveItemComment(data, store)
+	console.log('comment: ', comment)
+	draftComments.value['0'] = { parent_id: null, content: '' }
+	recentUserComments.value.unshift(comment)
 }
 
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name)
-	const config = {
-		contract: 'telos.decide',
-		table: 'ballots',
-		scope: 'telos.decide',
-		primary_key: ballot_name,
-		parent_hash: null
-	}
-	ballotComments.value = await fetchItemComments(config)
+	ballotComments.value = await fetchItemComments(payload)
 	console.log(ballot.value)
 })
 </script>

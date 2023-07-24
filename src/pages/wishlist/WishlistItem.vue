@@ -83,11 +83,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { getBallotResults } from '../resolve/util';
-import { formatVoteCount, parseContent } from './util/';
-import ImageSlideshow from './components/ImageSlideshow.vue';
-import DocSlideshow from './components/DocSlideshow.vue';
+import { mapGetters } from 'vuex'
+import { getBallotResults } from '../resolve/util'
+import { formatVoteCount, parseContent } from './util/'
+import ImageSlideshow from './components/ImageSlideshow.vue'
+import DocSlideshow from './components/DocSlideshow.vue'
 import BezierEasing from 'bezier-easing'
 
 const easing = BezierEasing(0.0, 0.0, 0.08, 1.0)
@@ -102,19 +102,19 @@ export default {
 		return {
 			slideshow: 'none',
 			score: 0
-		};
+		}
 	},
 	methods: {
 		castVote(type) {
-			this.$emit('castVote', type, this.ballot);
+			this.$emit('castVote', type, this.ballot)
 		},
 		changeSlideshow(type) {
 			if (type === 'doc') {
-				if (this.slideshow !== 'doc') this.slideshow = 'doc';
-				else this.slideshow = 'none';
+				if (this.slideshow !== 'doc') this.slideshow = 'doc'
+				else this.slideshow = 'none'
 			} else if (type === 'image') {
-				if (this.slideshow !== 'image') this.slideshow = 'image';
-				else this.slideshow = 'none';
+				if (this.slideshow !== 'image') this.slideshow = 'image'
+				else this.slideshow = 'none'
 			}
 		},
 		formatVoteCount
@@ -124,37 +124,36 @@ export default {
 			account: 'accounts/account'
 		}),
 		content() {
-			return parseContent(this.ballot.content);
+			return parseContent(this.ballot.content)
 		},
 		voterVoteKey() {
-			if (!this.voterVotes) return null;
+			if (!this.voterVotes) return null
 			const voterVote = this.voterVotes.find(
 				(vote) => vote.ballot === this.ballot.ballot_name
-			);
-			if (!voterVote) return null;
-			return voterVote.weighted_votes[0].key;
+			)
+			if (!voterVote) return null
+			return voterVote.weighted_votes[0].key
 		}
 	},
-	mounted () {
-		const results = getBallotResults(this.ballot);
+	mounted() {
+		const results = getBallotResults(this.ballot)
 		const { netYes } = results
 		const totalIterations = 100
 		let iterator = 0
 		const theInterval = setInterval(() => {
 			const ratio = easing(iterator / totalIterations)
-			const adjustedScore = (.5 * netYes) + (ratio * netYes * 0.5)
+			const adjustedScore = 0.5 * netYes + ratio * netYes * 0.5
 			this.score = adjustedScore
 
 			if (iterator > totalIterations) {
 				clearInterval(theInterval)
-				this.score = parseInt(netYes, 10);
+				this.score = parseInt(netYes, 10)
 			} else {
 				iterator += 1
 			}
 		}, 30)
-
 	}
-};
+}
 </script>
 
 <style lang="scss">
