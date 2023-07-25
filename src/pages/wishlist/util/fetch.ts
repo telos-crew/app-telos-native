@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { BALLOTS_SEARCH_ENDPOINT } from 'src/const/endpoints'
 import { FetchItemConfig } from '../types/blockchain'
+import { TABLE_ROWS_ENDPOINT } from 'src/pages/resolve/constants'
 
 export const stringifyUrlParams = (
 	url: string,
@@ -28,7 +29,7 @@ export const fetchBallots = async () => {
 		data: { data: ballotData }
 	} = await axios({
 		method: 'GET',
-		url: `${process.env.GOODBLOCK_HOSTNAME}/${BALLOTS_SEARCH_ENDPOINT}/wish.gen.`
+		url: `${process.env.GOODBLOCK_HOSTNAME}/${BALLOTS_SEARCH_ENDPOINT}`
 	})
 	console.log('ballots: ', ballotData)
 	return ballotData
@@ -66,7 +67,7 @@ export const fetchVoterVotes = async (account_name: string) => {
 		}
 	} = await axios({
 		method: 'GET',
-		url: `${process.env.GOODBLOCK_HOSTNAME}/votes/${account_name}/4,VOTE`
+		url: `${process.env.GOODBLOCK_HOSTNAME}/votes/${account_name}/4,WISH`
 	})
 	return data
 }
@@ -455,4 +456,27 @@ export const formatTxForFetch = (transaction: any) => {
 		),
 		signatures: transaction.signatures
 	}
+}
+
+export const isUserTreasuryVoter = async (
+	account_name: string,
+	treasury_symbol: string
+): Promise<boolean> => {
+	if (!account_name) return false
+	// get user from treasury
+	const payload = {
+		code: 'telos.decide',
+		table: 'voters',
+		scope: account_name,
+		// index_position: 'string', // 1
+		// key_type: 'string', / i64,
+		upper_bound: treasury_symbol,
+		lower_bound: treasury_symbol
+	}
+	// TABLE_ROWS_ENDPOINT should be passed in or this._____
+	const {
+		data: { rows }
+	} = await axios.post(TABLE_ROWS_ENDPOINT, payload)
+	const [row] = rows
+	return !!row
 }

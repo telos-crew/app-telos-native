@@ -6,7 +6,7 @@ const NETWORK_PROTOCOL = process.env.NETWORK_PROTOCOL
 const ARBITRATION_CONTRACT = process.env.ARBITRATION_CONTRACT
 
 const TABLE_ROWS_SUFFIX = 'v1/chain/get_table_rows'
-const TABLE_ROWS_ENDPOINT = `${NETWORK_PROTOCOL}://${NETWORK_HOST}/${TABLE_ROWS_SUFFIX}`
+export const TABLE_ROWS_ENDPOINT = `${NETWORK_PROTOCOL}://${NETWORK_HOST}/${TABLE_ROWS_SUFFIX}`
 
 export const GET_TABLE_ROWS = async (
 	config: TableRowsConfig

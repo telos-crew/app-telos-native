@@ -120,7 +120,7 @@ const getBallots = async () => {
 };
 
 const getVoter = async () => {
-	voter.value = await fetchVoter(account.value, 'VOTE');
+	voter.value = await fetchVoter(account.value, 'WISH');
 };
 
 const getVoterVotes = async () => {

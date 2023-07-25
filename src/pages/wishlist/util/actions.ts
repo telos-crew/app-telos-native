@@ -35,7 +35,7 @@ export const getJoinAndVoteActions = async (
 			name: 'regvoter',
 			data: {
 				voter: account_name,
-				treasury_symbol: '4,VOTE'
+				treasury_symbol: '4,WISH'
 			}
 		},
 		{
@@ -51,14 +51,14 @@ export const getJoinAndVoteActions = async (
 	return actions
 }
 
-export const joinGroupAction = async (account_name: string) => {
+export const joinGroupAction = (account_name: string) => {
 	const action = [
 		{
 			account: 'telos.decide',
 			name: 'regvoter',
 			data: {
 				voter: account_name,
-				treasury_symbol: '4,VOTE'
+				treasury_symbol: '4,WISH'
 			}
 		}
 	]

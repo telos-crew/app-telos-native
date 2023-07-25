@@ -16,7 +16,7 @@
 		</div>
 		<q-btn
 			v-if="account"
-			@click="toggleDialog"
+			@click="checkMembership"
 			color="primary"
 			size="lg"
 		>
@@ -31,6 +31,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import CreateItemForm from './components/CreateItemForm.vue';
+import { isUserTreasuryVoter, joinGroupAction } from './util';
 
 const options = [
 	{ label: 'Highest Approval', value: 'highest-approval' },
@@ -45,10 +46,41 @@ export default {
 		return {
 			options,
 			sort: null,
-			dialog: false
+			dialog: false,
+			isMember: false
 		};
 	},
 	methods: {
+		async fetchMembership () {
+			const isMember = await isUserTreasuryVoter(this.account, 'WISH')
+			this.isMember = isMember
+		},
+		async checkMembership() {
+			const action = joinGroupAction(this.account)
+			if (!this.isMember) {
+				this.$q
+				.dialog({
+					color: 'primary',
+					message: `<q-card class="text">
+											<p>${this.$t('pages.wishlist.submission_not_member')}</p>
+										</q-card>`,
+					html: true,
+					cancel: true,
+					fullWidth: false,
+					ok: {
+						label: 'OK'
+					}
+				})
+				.onOk(async () => {
+					await this.$store.$api.signTransaction(action)
+					console.log('something')
+					setTimeout(this.fetchMembership, 2000)
+					setTimeout(this.fetchMembership, 5000)
+				})
+			} else {
+				this.toggleDialog();
+			}
+		},
 		toggleDialog() {
 			this.dialog = !this.dialog;
 		}
@@ -62,6 +94,9 @@ export default {
 		sort(newValue) {
 			this.$emit('onSortChange', newValue);
 		}
+	},
+	mounted () {
+		this.fetchMembership()
 	}
 };
 </script>

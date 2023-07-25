@@ -116,8 +116,8 @@ export default {
 						ballot_name,
 						category: 'proposal',
 						publisher: this.account,
-						treasury_symbol: '4,VOTE',
-						voting_method: '1token1vote',
+						treasury_symbol: '4,WISH',
+						voting_method: '1acct1vote',
 						initial_options: ['yes', 'no', 'abstain']
 					}
 				},

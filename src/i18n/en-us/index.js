@@ -739,13 +739,15 @@ export default {
 			account_balance_withdraw: 'Withdraw'
 		},
 		wishlist: {
+			create_new_button: 'Create New',
 			title: 'Title',
 			subtitle: 'Subtitle',
 			description: 'Description',
 			create_new_title: 'Create New Item',
 			create_new_title_hint: 'Display name for your item',
 			create_new_subtitle_hint: 'Subtitle',
-			create_new_description_hint: 'Detailed explanation of your item'
+			create_new_description_hint: 'Detailed explanation of your item',
+			submission_not_member: 'You are not a member of this group, and need to be a member to submit. Would you like to join the group?'
 		}
 	}
 }
