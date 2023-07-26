@@ -66,7 +66,8 @@
 			<q-btn
 				flat
 				:label="$t('common.buttons.submit')"
-				@click="submitForm"
+				@click="checkSubmit"
+				:loading="processing"
 			/>
 			<q-btn
 				flat
@@ -80,8 +81,15 @@
 <script>
 // title, subtitle, description, images, ballot ID, content URL
 import FileUploadGrid from 'src/pages/resolve/components/FileUploadGrid.vue'
-import { generateRandomId } from 'src/pages/resolve/util'
+import { generateRandomId, getSymbolInfo } from 'src/pages/resolve/util'
 import { mapGetters } from 'vuex'
+import {
+	calculateDecideFeeDeficit,
+	getFeeAmount,
+	getUserContractBalance
+} from '../util'
+import { lt } from 'biggystring'
+
 export default {
 	components: {
 		FileUploadGrid
@@ -89,15 +97,70 @@ export default {
 	props: ['submit', 'close'],
 	data() {
 		return {
-			title: '2023-03-10_',
+			title: 'NPM Library for Common Telos Utility Functions',
 			// subtitle: '',
 			description: 'This is just a test',
 			imageUrls: [],
-			contentUrls: []
+			contentUrls: [],
+			processing: false
 		}
 	},
 	methods: {
-		async submitForm() {
+		async checkSubmit() {
+			try {
+				this.processing = true
+				const deficit = await calculateDecideFeeDeficit(this.account)
+				const isEnough = lt(deficit, '0')
+				if (isEnough) return this.submitForm()
+				// check deficit vs TLOS balance
+				const coreLiquidBalance = this.accountData.core_liquid_balance
+				const { amount: liquid } = getSymbolInfo(coreLiquidBalance)
+				const feeAmount = await getFeeAmount('telos.decide', 'ballot')
+				const contractBalance = await getUserContractBalance(
+					'telos.decide',
+					this.account
+				)
+				// if has enough
+				if (lt(deficit, liquid)) {
+					this.$q
+						.dialog({
+							color: 'primary',
+							message: `<q-card class="text">
+												<p>${this.$t('pages.wishlist.submission_need_transfer', {
+													feeAmount,
+													contractBalance,
+													deficit
+												})}</p>
+											</q-card>`,
+							html: true,
+							cancel: true,
+							fullWidth: false,
+							ok: {
+								label: 'OK'
+							}
+						})
+						.onOk(() => this.submitForm(deficit))
+					return
+				}
+				// alert user of insufficient funds
+				this.$q.dialog({
+					color: 'primary',
+					message: `<q-card class="text">
+												<p>${this.$t('pages.wishlist.submission_insufficient_funds')}</p>
+											</q-card>`,
+					html: true,
+					fullWidth: false
+					// ok: {
+					// 	label: 'OK'
+					// }
+				})
+			} catch (err) {
+				console.log('error: ', err)
+			} finally {
+				this.processing = false
+			}
+		},
+		async submitForm(deficit) {
 			const currentTime = new Date()
 			const currentUnixTimestamp = currentTime.getTime()
 			const endTimestamp = currentUnixTimestamp + 86400 * 3 * 365 * 1000
@@ -108,7 +171,21 @@ export default {
 				imageUrls: this.imageUrls,
 				contentUrls: this.contentUrls
 			}
-			const actions = [
+			const formattedDeficit = parseFloat(deficit).toFixed(4)
+			const actions = []
+			if (deficit) {
+				actions.push({
+					account: 'eosio.token',
+					name: 'transfer',
+					data: {
+						from: this.account,
+						to: 'telos.decide',
+						quantity: `${formattedDeficit} TLOS`,
+						memo: 'deposit for wishlist'
+					}
+				})
+			}
+			actions.push(
 				{
 					account: 'telos.decide',
 					name: 'newballot',
@@ -147,7 +224,7 @@ export default {
 						end_time: utcIsoString
 					}
 				}
-			]
+			)
 			console.log('actions: ', actions)
 			try {
 				await this.$store.$api.signTransaction(actions)
@@ -167,7 +244,8 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			account: 'accounts/account'
+			account: 'accounts/account',
+			accountData: 'accounts/accountData'
 		}),
 		isFormReady() {
 			if (!this.title && !this.description) return false

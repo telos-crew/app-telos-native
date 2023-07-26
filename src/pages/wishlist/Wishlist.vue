@@ -135,7 +135,7 @@ const fetchEverything = async () => {
 onMounted(() => {
 	getBallots()
 	fetchEverything();
-	interval.value = setInterval(fetchEverything, 10000);
+	// interval.value = setInterval(fetchEverything, 10000);
 });
 
 onUnmounted(() => {

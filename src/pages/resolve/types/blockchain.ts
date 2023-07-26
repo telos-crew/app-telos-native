@@ -78,9 +78,9 @@ export type Arbitrator = {
 export interface SymbolInfo {
 	tokenSyntax: string
 	decimalCount: number
+	amount: string
 	whole: string
 	decimal: string
-	amount: string
 	symbol: string
 	amountNum: number
 	wholeNum: number

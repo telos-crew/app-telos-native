@@ -1,7 +1,9 @@
 import axios from 'axios'
+import { sub } from 'biggystring'
 import { BALLOTS_SEARCH_ENDPOINT } from 'src/const/endpoints'
 import { FetchItemConfig } from '../types/blockchain'
 import { TABLE_ROWS_ENDPOINT } from 'src/pages/resolve/constants'
+import { getSymbolInfo } from 'src/pages/resolve/util'
 
 export const stringifyUrlParams = (
 	url: string,
@@ -479,4 +481,55 @@ export const isUserTreasuryVoter = async (
 	} = await axios.post(TABLE_ROWS_ENDPOINT, payload)
 	const [row] = rows
 	return !!row
+}
+
+export const getFeeAmount = async (
+	contract: string,
+	feeKey: string
+): Promise<string> => {
+	const payload = {
+		code: contract,
+		table: 'config',
+		scope: contract,
+		json: true
+	}
+	const {
+		data: { rows }
+	} = await axios.post(TABLE_ROWS_ENDPOINT, payload)
+	const [row] = rows
+	if (!row || !row.fees) throw new Error('No config row found')
+	const result = row.fees.find((item: any) => item.key === feeKey)
+	if (!result) throw new Error('No fee found')
+	return result.value
+}
+
+export const getUserContractBalance = async (
+	contract: string,
+	account_name: string
+) => {
+	const payload = {
+		code: contract,
+		table: 'accounts',
+		scope: account_name,
+		json: true
+	}
+	const {
+		data: { rows }
+	} = await axios.post(TABLE_ROWS_ENDPOINT, payload)
+	const [row] = rows
+	if (!row || !row.balance) throw new Error('No balance row found')
+	return row.balance
+}
+
+export const calculateDecideFeeDeficit = async (account_name: string) => {
+	const feeAmountSyntax = await getFeeAmount('telos.decide', 'ballot')
+	const { amount: feeAmount } = getSymbolInfo(feeAmountSyntax)
+	const userBalanceSyntax = await getUserContractBalance(
+		'telos.decide',
+		account_name
+	)
+	const { amount: userBalance } = getSymbolInfo(userBalanceSyntax)
+	// backwards because we want the **deficit**
+	const deficit = sub(feeAmount, userBalance)
+	return deficit
 }

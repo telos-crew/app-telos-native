@@ -18,7 +18,7 @@
 				/>
 			</div>
 			<img
-				:src="content.imageUrls[0]"
+				:src="content?.imageUrls && content.imageUrls[0]"
 				class="ballot-image"
 			/>
 			<div class="item-content">
@@ -42,7 +42,7 @@
 								<div class="metaInfo">
 									<div class="iconWrap">
 										<q-icon
-											v-if="content.imageUrls.length"
+											v-if="content?.imageUrls?.length"
 											v-on:click="changeSlideshow('image')"
 											class="icon"
 											name="image"
@@ -51,7 +51,7 @@
 									</div>
 									<div class="iconWrap">
 										<q-icon
-											v-if="content.contentUrls.length"
+											v-if="content?.contentUrls?.length"
 											v-on:click="changeSlideshow('doc')"
 											class="icon"
 											name="article"
@@ -68,13 +68,15 @@
 					</div>
 				</div>
 				<image-slideshow
-					:imageUrls="content.imageUrls"
-					v-show="slideshow === 'image' && content.imageUrls.length"
+					v-if="content?.imageUrls && content?.imageUrls[0]"
+					:imageUrls="content?.imageUrls"
+					v-show="slideshow === 'image' && content?.imageUrls?.length"
 					class="slideShow"
 				/>
 				<doc-slideshow
-					:contentUrls="content.contentUrls"
-					v-show="slideshow === 'doc' && content.contentUrls.length"
+					v-if="content?.contentUrls && content?.contentUrls[0]"
+					:contentUrls="content?.contentUrls"
+					v-show="slideshow === 'doc' && content?.contentUrls?.length"
 					class="slideShow"
 				/>
 			</div>

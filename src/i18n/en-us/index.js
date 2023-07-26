@@ -747,7 +747,9 @@ export default {
 			create_new_title_hint: 'Display name for your item',
 			create_new_subtitle_hint: 'Subtitle',
 			create_new_description_hint: 'Detailed explanation of your item',
-			submission_not_member: 'You are not a member of this group, and need to be a member to submit. Would you like to join the group?'
+			submission_not_member: 'You are not a member of this group, and need to be a member to submit. Would you like to join the group?',
+			submission_need_transfer: 'Submission requires a fee of %{feeAmount} TLOS, but your Telos Decide balance of %{contractBalance} TLOS is short by %{deficit} TLOS. Would you like to include a transfer of %{deficit} TLOS from your TLOS liquid balance to cover this fee?',
+			submission_insufficient_funds: 'Submission requires a fee of %{feeAmount} TLOS but your Telos Decide balance of %{contractBalance} TLOS is short by %{deficit} TLOS. Please transfer %{deficit} TLOS to your Telos Decide account and try again.',
 		}
 	}
 }
