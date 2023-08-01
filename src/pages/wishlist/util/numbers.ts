@@ -6,5 +6,5 @@ export const formatVoteCount = (count: number) => {
 		return `${(count / 1000).toFixed(1)}K`
 	}
 
-	return count
+	return count.toFixed(0)
 }
