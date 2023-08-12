@@ -61,15 +61,11 @@
 			v-show="showChildren"
 			class="childrenComments"
 		>
-			<!-- showChildren is true BallotComment->Recent
-			{{ recentUserReplies }} -->
 			<BallotComment
 				v-for="reply in recentUserReplies"
 				:key="reply.id"
 				:comment="reply"
 			/>
-			<!-- BallotComment->Child
-			{{ childComments }} -->
 			<BallotComment
 				v-for="childComment in childCommentsWihoutRecent"
 				:key="childComment.id"
@@ -82,17 +78,15 @@
 <script setup lang="ts">
 import { DateTime } from 'luxon'
 import { defineProps, ref, computed } from 'vue'
-import { fetchReplies, postBallotComment, saveItemComment } from '../util'
+import { fetchReplies, saveItemComment } from '../util'
 import BallotComment from './BallotComment.vue'
 import MarkdownEditor from './MarkdownEditor.vue'
-import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 import MarkdownRenderer from './MarkdownRenderer.vue'
 import { AnchorResponse } from '../types/blockchain'
 
-const $q = useQuasar()
 const store = useStore()
-const { getters, $api } = store
+const { getters } = store
 const saveProgress = ref(0)
 const isSaving = ref(false)
 const recentUserReplies = ref([])

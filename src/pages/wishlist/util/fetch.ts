@@ -376,7 +376,7 @@ export const getAuth = async (store: any) => {
 	const { account: account_name } = store.state.accounts
 	await store.$auth.showApprovalDialog()
 	const response = await fetchNonce(account_name)
-	const [nonce, expiration] = response.split(':')
+	const [nonce] = response.split(':')
 	console.log('nonce2: ', nonce)
 	const { transaction } = await store.$api.signTransaction(
 		[

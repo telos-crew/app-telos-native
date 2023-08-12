@@ -35,13 +35,11 @@
 			<MarkdownRenderer :content="draftComments['0'].content" />
 		</div>
 		<div class="ballotCommentsArea">
-			a
 			<BallotComment
 				v-for="reply in recentUserComments"
 				:key="reply.id"
 				:comment="reply"
 			/>
-			BallotCommentSection:
 			<BallotCommentsSection :ballotComments="ballotComments" />
 			<!-- <BallotCommentBranch
 				:ballot_name="ballot_name"
@@ -53,34 +51,21 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { useQuasar } from 'quasar'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { AnchorResponse } from './types/blockchain'
-import {
-	fetchBallot,
-	postBallotComment,
-	fetchCommentByHash,
-	fetchItemComments,
-	fetchNonce,
-	saveItemComment,
-	checkAuth
-} from './util'
+import { fetchBallot, fetchItemComments, saveItemComment } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
-import BallotCommentBranch from './components/BallotCommentBranch.vue'
 import MarkdownEditor from './components/MarkdownEditor.vue'
 import MarkdownRenderer from './components/MarkdownRenderer.vue'
 
 const { params } = useRoute()
 const { ballot_name } = params
-const $q = useQuasar()
 const saveProgress = ref(0)
 const isSaving = ref(false)
 const ballot = ref(null)
 const ballotComments = ref(null)
-const emit = defineEmits(['doSignArb'])
 const draftComments = ref({
 	'0': {
 		parent_id: null,
@@ -89,7 +74,7 @@ const draftComments = ref({
 })
 const recentUserComments = ref([])
 const store = useStore()
-const { getters, $api, $auth } = store
+const { getters } = store
 
 const payload = {
 	contract: 'telos.decide',
