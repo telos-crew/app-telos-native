@@ -153,6 +153,7 @@ const onReplySave = async () => {
 	draftReply.value = ''
 	recentUserReplies.value.unshift(comment)
 	isReplyEditorVisible.value = false
+	showChildren.value = true
 }
 </script>
 
