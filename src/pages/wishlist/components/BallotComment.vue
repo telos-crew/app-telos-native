@@ -58,16 +58,20 @@
 			</div>
 		</div>
 		<div
-			v-if="showChildren"
+			v-show="showChildren"
 			class="childrenComments"
 		>
+			<!-- showChildren is true BallotComment->Recent
+			{{ recentUserReplies }} -->
 			<BallotComment
 				v-for="reply in recentUserReplies"
 				:key="reply.id"
 				:comment="reply"
 			/>
+			<!-- BallotComment->Child
+			{{ childComments }} -->
 			<BallotComment
-				v-for="childComment in childComments"
+				v-for="childComment in childCommentsWihoutRecent"
 				:key="childComment.id"
 				:comment="childComment"
 			/>
@@ -95,14 +99,15 @@ const recentUserReplies = ref([])
 const draftReply = ref('')
 const isReplyEditorVisible = ref(false)
 const showChildren = ref(false)
-const childComments = ref(null)
+const childComments = ref([])
 const props = defineProps(['comment'])
 
 const dateTimeFromIso = DateTime.fromISO(props.comment.created_at)
 const relativeTime = dateTimeFromIso.toRelative()
 
 const toggleShowChildren = (newValue: boolean) => {
-	if (newValue === true && !childComments.value) fetchBallotCommentReplies()
+	if (newValue === true && !childComments.value.length)
+		fetchBallotCommentReplies()
 	showChildren.value = newValue
 }
 
@@ -112,6 +117,14 @@ const onReplyClick = () => {
 
 const account = computed(() => {
 	return getters['accounts/account']
+})
+
+const childCommentsWihoutRecent = computed(() => {
+	return childComments.value.filter((childComment: AnchorResponse) => {
+		return !recentUserReplies.value.some((recentReply: AnchorResponse) => {
+			return recentReply.id === childComment.id
+		})
+	})
 })
 
 const onReplyChange = (newContent: string) => {

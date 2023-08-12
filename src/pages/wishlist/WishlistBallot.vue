@@ -41,14 +41,12 @@
 				:key="reply.id"
 				:comment="reply"
 			/>
-			b
+			BallotCommentSection:
 			<BallotCommentsSection :ballotComments="ballotComments" />
-			c
-			<BallotCommentBranch
+			<!-- <BallotCommentBranch
 				:ballot_name="ballot_name"
 				:parent_id="null"
-			/>
-			d
+			/> -->
 		</div>
 	</div>
 </template>
