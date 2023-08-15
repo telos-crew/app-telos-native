@@ -121,7 +121,7 @@ onMounted(() => {
 	.toolbar {
 		flex: 1;
 		flex-direction: row;
-		display: flex;
+		display: none; // can change to flex
 		justify-content: flex-start;
 	}
 
