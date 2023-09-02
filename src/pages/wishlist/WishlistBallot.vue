@@ -53,7 +53,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchBallot, fetchItemComments, saveItemComment } from './util'
+import { fetchBallot, fetchTop2CommentLevels, saveItemComment } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
@@ -110,7 +110,7 @@ const saveComment = async (level: string) => {
 
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name)
-	ballotComments.value = await fetchItemComments(payload)
+	ballotComments.value = await fetchTop2CommentLevels(payload)
 	console.log(ballot.value)
 })
 </script>

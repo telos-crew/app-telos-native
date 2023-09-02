@@ -67,6 +67,13 @@
 				:comment="reply"
 			/>
 			<BallotComment
+				v-if="props.comment.replies"
+				v-for="childComment in comment.replies"
+				:key="childComment.id"
+				:comment="childComment"
+			/>
+			<BallotComment
+				v-if="!props.comment.replies"
 				v-for="childComment in childCommentsWihoutRecent"
 				:key="childComment.id"
 				:comment="childComment"
@@ -92,9 +99,10 @@ const isSaving = ref(false)
 const recentUserReplies = ref([])
 const draftReply = ref('')
 const isReplyEditorVisible = ref(false)
-const showChildren = ref(false)
 const childComments = ref([])
 const props = defineProps(['comment'])
+const startRepliesVisible = props.comment.replies?.length > 0
+const showChildren = ref(startRepliesVisible)
 
 const dateTimeFromIso = DateTime.fromISO(props.comment.created_at)
 const relativeTime = dateTimeFromIso.toRelative()
@@ -112,7 +120,6 @@ const onReplyClick = () => {
 const account = computed(() => {
 	return getters['accounts/account']
 })
-
 const childCommentsWihoutRecent = computed(() => {
 	return childComments.value.filter((childComment: AnchorResponse) => {
 		return !recentUserReplies.value.some((recentReply: AnchorResponse) => {

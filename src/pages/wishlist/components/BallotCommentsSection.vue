@@ -5,7 +5,7 @@
 			class="topLevelComment"
 		>
 			<BallotComment
-				v-for="comment in topLevelComments"
+				v-for="comment in ballotComments"
 				:key="comment.id"
 				:comment="comment"
 			/>
@@ -14,18 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed } from 'vue';
-import { buildCommentTree } from '../util';
-import BallotComment from './BallotComment.vue';
-const props = defineProps(['ballotComments']);
-
-const topLevelComments = computed(() => {
-	console.log(
-		'ballotCommentsSection props.ballotComments',
-		props.ballotComments
-	);
-	return props.ballotComments ? buildCommentTree(props.ballotComments) : null;
-});
+import { defineProps } from 'vue'
+import BallotComment from './BallotComment.vue'
+const props = defineProps(['ballotComments'])
 </script>
 
 <style lang="scss" scoped>
