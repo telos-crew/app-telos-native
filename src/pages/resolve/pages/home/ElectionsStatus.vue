@@ -54,7 +54,7 @@ export default {
         },
         currentElectionContent() {
             let statusString =
-                ELECTION_STATUS_LIST[this.currentElection.status || 3];
+                ELECTION_STATUS_LIST[this.currentElection.status];
             if (statusString === 'LIVE') {
                 const endVotingUnixTimestamp = new Date(
                     `${this.currentElection.end_voting_ts}Z`

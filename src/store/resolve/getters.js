@@ -56,7 +56,7 @@ export const getCurrentElection = ({ elections, config }) => {
     const currentElection = elections.find(
         (election) => election.election_id === current_election_id
     );
-    return currentElection;
+    return currentElection || {};
 };
 
 export const isPastAddCandidates = ({ elections, config }) => {
