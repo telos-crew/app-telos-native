@@ -64,7 +64,7 @@
 						</div>
 					</div>
 					<div class="score">
-						{{ formatVoteCount(score) }}
+						{{ formatVoteCountAsStrings(score) }}
 					</div>
 				</div>
 				<image-slideshow
@@ -86,11 +86,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getBallotResults } from '../resolve/util'
-import { formatVoteCount, parseContent } from './util/'
+import { getBallotResultsAsStrings } from '../resolve/util'
+import { formatVoteCountAsStrings, parseContent } from './util/'
 import ImageSlideshow from './components/ImageSlideshow.vue'
 import DocSlideshow from './components/DocSlideshow.vue'
 import BezierEasing from 'bezier-easing'
+import { add, mul } from 'biggystring'
 
 const easing = BezierEasing(0.0, 0.0, 0.08, 1.0)
 
@@ -103,7 +104,7 @@ export default {
 	data() {
 		return {
 			slideshow: 'none',
-			score: 0
+			score: '0'
 		}
 	},
 	methods: {
@@ -119,7 +120,7 @@ export default {
 				else this.slideshow = 'none'
 			}
 		},
-		formatVoteCount
+		formatVoteCountAsStrings
 	},
 	computed: {
 		...mapGetters({
@@ -137,19 +138,22 @@ export default {
 			return voterVote.weighted_votes[0].key
 		}
 	},
-	mounted() {
-		const results = getBallotResults(this.ballot)
+	beforeMount() {
+		const results = getBallotResultsAsStrings(this.ballot)
 		const { netYes } = results
 		const totalIterations = 100
 		let iterator = 0
 		const theInterval = setInterval(() => {
 			const ratio = easing(iterator / totalIterations)
-			const adjustedScore = 0.5 * netYes + ratio * netYes * 0.5
+			const adjustedScore = add(
+				mul('0.5', netYes),
+				mul(mul(ratio.toString(), netYes), '0.5')
+			)
 			this.score = adjustedScore
 
 			if (iterator > totalIterations) {
 				clearInterval(theInterval)
-				this.score = parseInt(netYes, 10)
+				this.score = netYes
 			} else {
 				iterator += 1
 			}

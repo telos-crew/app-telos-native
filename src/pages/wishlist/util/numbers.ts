@@ -1,3 +1,5 @@
+import { gt, lt, div } from 'biggystring'
+
 export const formatVoteCount = (count: number): string => {
 	if (count < 0) return '0'
 	if (Math.abs(count) > 999999) {
@@ -8,4 +10,19 @@ export const formatVoteCount = (count: number): string => {
 	}
 
 	return count.toFixed(0)
+}
+
+export const formatVoteCountAsStrings = (count: string): string => {
+	// console.log('typeof count', typeof count)
+	if (lt(count, '0')) return '0'
+	if (gt(count, '999999')) {
+		const ratio = div(count, '1000000')
+		return `${ratio}M`
+	}
+	if (gt(count, '999')) {
+		const ratio = div(count, '1000')
+		return `${ratio}K`
+	}
+
+	return count.split('.')[0]
 }

@@ -1,5 +1,6 @@
 import { Ballot } from 'src/pages/wishlist/types/blockchain'
 import { Arbitrator, SymbolInfo } from '../types'
+import { sub, eq, add, div } from 'biggystring'
 
 const VALID_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz12345'
 
@@ -200,5 +201,42 @@ export const getBallotResults = (ballot: Ballot): BallotResults => {
 			yesNum + noNum + abstainNum === 0
 				? 0
 				: yesNum / (yesNum + noNum + abstainNum)
+	}
+}
+
+type BallotResultsAsStrings = {
+	netYes: string
+	yes: string
+	no: string
+	abstain: string
+	yesRatio: string
+	adjustedYesRatio: string
+}
+
+export const getBallotResultsAsStrings = (
+	ballot: Ballot
+): BallotResultsAsStrings => {
+	const { options } = ballot
+	const yes: string =
+		options.find((option) => option.key === 'yes')?.value || '0 WISH'
+	const no: string =
+		options.find((option) => option.key === 'no')?.value || '0 WISH'
+	const abstain: string =
+		options.find((option) => option.key === 'no')?.value || '0 WISH'
+	const { amount: yesString } = getSymbolInfo(yes)
+	const { amount: noString } = getSymbolInfo(no)
+	const { amount: abstainString } = getSymbolInfo(abstain)
+	const netYes = sub(yesString, noString)
+	return {
+		netYes,
+		yes: yesString,
+		no: noString,
+		abstain: abstainString,
+		yesRatio: eq(add(yesString, noString), '0')
+			? '0'
+			: div(yesString, add(yesString, noString)),
+		adjustedYesRatio: eq(add(add(yesString, noString), abstainString), '0')
+			? '0'
+			: div(yesString, add(add(yesString, noString), abstainString))
 	}
 }
