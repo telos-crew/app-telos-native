@@ -240,3 +240,34 @@ export const getBallotResultsAsStrings = (
 			: div(yesString, add(add(yesString, noString), abstainString))
 	}
 }
+
+type Results = {
+	abstain: number
+	no: number
+	yes: number
+	total: number
+}
+
+export const getBallotResultsAsStrings2 = (
+	ballotResults: Results
+): BallotResultsAsStrings => {
+	console.log('ballotResults', ballotResults)
+	const { yes, no, abstain } = ballotResults
+	const yesString = yes.toString()
+	const noString = no.toString()
+	const abstainString = abstain.toString()
+	// const totalString = total.toString()
+	const netYes = sub(yesString, noString)
+	return {
+		netYes,
+		yes: yesString,
+		no: noString,
+		abstain: abstainString,
+		yesRatio: eq(add(yesString, noString), '0')
+			? '0'
+			: div(yesString, add(yesString, noString)),
+		adjustedYesRatio: eq(add(add(yesString, noString), abstainString), '0')
+			? '0'
+			: div(yesString, add(add(yesString, noString), abstainString))
+	}
+}

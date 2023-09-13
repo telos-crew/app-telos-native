@@ -11,6 +11,7 @@
 			:ballot="ballot"
 			:fetchBallots="fetchBallots"
 			:form="form"
+			:results="results"
 			@toggleJoinModal="toggleJoinModal"
 			@castVote="castVote"
 			:voterVotes="voterVotes"
@@ -66,7 +67,9 @@ import {
 	fetchVoterVotes,
 	getCastVoteActions,
 	getJoinAndVoteActions,
-	joinGroupAction
+	joinGroupAction,
+	fetchResults
+
 } from './util';
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 
@@ -75,6 +78,7 @@ const ballots = ref(null);
 const form = ref(false);
 const voter = ref(null);
 const voterVotes = ref(null);
+const results = ref(null);
 const sort = ref('highest-approval');
 const castVoteData = ref({
 	ballot_name: null,
@@ -127,9 +131,14 @@ const getVoterVotes = async () => {
 	voterVotes.value = await fetchVoterVotes(account.value);
 };
 
+const getResults = async () => {
+	results.value = await fetchResults();
+};
+
 const fetchEverything = async () => {
 	getVoter();
 	getVoterVotes();
+	getResults()
 };
 
 onMounted(() => {

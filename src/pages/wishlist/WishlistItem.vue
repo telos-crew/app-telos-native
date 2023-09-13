@@ -86,7 +86,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getBallotResultsAsStrings } from '../resolve/util'
+import { getBallotResultsAsStrings2 } from '../resolve/util'
 import { formatVoteCountAsStrings, parseContent } from './util/'
 import ImageSlideshow from './components/ImageSlideshow.vue'
 import DocSlideshow from './components/DocSlideshow.vue'
@@ -96,7 +96,7 @@ import { add, mul } from 'biggystring'
 const easing = BezierEasing(0.0, 0.0, 0.08, 1.0)
 
 export default {
-	props: ['ballot', 'voterVotes', 'shortDescription'],
+	props: ['ballot', 'voterVotes', 'shortDescription', 'results'],
 	components: {
 		ImageSlideshow,
 		DocSlideshow
@@ -139,8 +139,17 @@ export default {
 		}
 	},
 	beforeMount() {
-		const results = getBallotResultsAsStrings(this.ballot)
-		const { netYes } = results
+		console.log('this.results', this.results)
+		console.log('this.ballot', this.ballot)
+		if (!this.results || !this.ballot) {
+			return this.score = '0'
+		}
+		const ballotResults = this.results[this.ballot.ballot_name]
+		if (!ballotResults) {
+			return this.score = '0'
+		}
+		const outcome = getBallotResultsAsStrings2(ballotResults)
+		const { netYes } = outcome
 		const totalIterations = 100
 		let iterator = 0
 		const theInterval = setInterval(() => {

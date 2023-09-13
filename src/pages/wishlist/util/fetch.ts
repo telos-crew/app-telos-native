@@ -81,6 +81,19 @@ export type PostBallotCommentPayload = {
 	parent_id: null | undefined | string
 }
 
+// ballots for treasury, ballots=ballots on
+// votes voter = voter eosio_token_balances
+
+export const fetchResults = async () => {
+	const {
+		data
+	} = await axios({
+		method: 'GET',
+		url: `${process.env.GOODBLOCK_HOSTNAME}/results`
+	})
+	return data
+}
+
 export const fetchItemComments = async (config: FetchItemConfig) => {
 	const path = `${process.env.COMMENT_INDEXER_HOSTNAME}/item/comments`
 	const searchParams = config
@@ -483,7 +496,8 @@ export const isUserTreasuryVoter = async (
 		// index_position: 'string', // 1
 		// key_type: 'string', / i64,
 		upper_bound: treasury_symbol,
-		lower_bound: treasury_symbol
+		lower_bound: treasury_symbol,
+		json: true
 	}
 	// TABLE_ROWS_ENDPOINT should be passed in or this._____
 	const {
