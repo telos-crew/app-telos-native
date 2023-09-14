@@ -91,7 +91,7 @@ import { formatVoteCountAsStrings, parseContent } from './util/'
 import ImageSlideshow from './components/ImageSlideshow.vue'
 import DocSlideshow from './components/DocSlideshow.vue'
 import BezierEasing from 'bezier-easing'
-import { add, mul } from 'biggystring'
+import { add, mul, sub, gt } from 'biggystring'
 
 const easing = BezierEasing(0.0, 0.0, 0.08, 1.0)
 
@@ -120,7 +120,40 @@ export default {
 				else this.slideshow = 'none'
 			}
 		},
-		formatVoteCountAsStrings
+		formatVoteCountAsStrings,
+		recalcScore(oldResults, newResults) {
+			// console.log('recalc')
+			// console.log('this.results', this.results)
+			// console.log('this.ballot', this.ballot)
+			if (!newResults || !this.ballot) {
+				return (this.score = '0')
+			}
+			const ballotResults = newResults[this.ballot.ballot_name]
+			if (!ballotResults) {
+				return (this.score = '0')
+			}
+			const outcome = getBallotResultsAsStrings2(ballotResults)
+			const { netYes } = outcome
+			const totalIterations = 100
+			let iterator = 0
+			const start = this.score || '0' // 50 150
+			const end = gt(netYes, '0') ? netYes : '0' // 150 50
+			const totalDifference = sub(end, start) // 100 -100
+
+			const theInterval = setInterval(() => {
+				const ratio = easing(iterator / totalIterations) // .1
+				const change = mul(totalDifference, ratio.toString()) // 5 -5
+				const result = add(start, change) // 55
+				this.score = result
+
+				if (iterator > totalIterations) {
+					clearInterval(theInterval)
+					this.score = netYes
+				} else {
+					iterator += 1
+				}
+			}, 30)
+		}
 	},
 	computed: {
 		...mapGetters({
@@ -138,35 +171,15 @@ export default {
 			return voterVote.weighted_votes[0].key
 		}
 	},
+	watch: {
+		results(_results, newResults) {
+			// console.log('results changed')
+			this.recalcScore(_results, newResults)
+		}
+	},
 	beforeMount() {
-		console.log('this.results', this.results)
-		console.log('this.ballot', this.ballot)
-		if (!this.results || !this.ballot) {
-			return this.score = '0'
-		}
-		const ballotResults = this.results[this.ballot.ballot_name]
-		if (!ballotResults) {
-			return this.score = '0'
-		}
-		const outcome = getBallotResultsAsStrings2(ballotResults)
-		const { netYes } = outcome
-		const totalIterations = 100
-		let iterator = 0
-		const theInterval = setInterval(() => {
-			const ratio = easing(iterator / totalIterations)
-			const adjustedScore = add(
-				mul('0.5', netYes),
-				mul(mul(ratio.toString(), netYes), '0.5')
-			)
-			this.score = adjustedScore
-
-			if (iterator > totalIterations) {
-				clearInterval(theInterval)
-				this.score = netYes
-			} else {
-				iterator += 1
-			}
-		}, 30)
+		// console.log('beforeMount')
+		this.recalcScore('0', this.results)
 	}
 }
 </script>

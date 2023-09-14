@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="ballots"
+		v-if="ballots && results"
 		id="wishlist"
 	>
 		<ballot-filters
@@ -99,7 +99,7 @@ const onSortChange = ({ value: newValue }: { value: string }) => {
 	getBallots()
 };
 
-const castVote = (type: string, ballot: any) => {
+const castVote = async (type: string, ballot: any) => {
 	if (!voter.value) {
 		castVoteData.value = {
 			ballot_name: ballot.ballot_name,
@@ -113,10 +113,12 @@ const castVote = (type: string, ballot: any) => {
 		ballot.ballot_name,
 		type
 	);
-	store.$api.signTransaction(castVoteActions);
+	await store.$api.signTransaction(castVoteActions);
+	console.log('signed')
 	castVoteData.value = { ballot_name: null, option: null };
-	setTimeout(fetchEverything, 1000);
-	setTimeout(fetchEverything, 3000);
+	setTimeout(fetchEverything, 4000);
+	setTimeout(fetchEverything, 7000);
+	setTimeout(fetchEverything, 10000);
 };
 
 const getBallots = async () => {
@@ -136,6 +138,7 @@ const getResults = async () => {
 };
 
 const fetchEverything = async () => {
+	console.log('fetching everything')
 	getVoter();
 	getVoterVotes();
 	getResults()
