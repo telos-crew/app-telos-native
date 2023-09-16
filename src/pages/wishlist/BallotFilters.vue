@@ -1,11 +1,9 @@
 <template>
 	<div id="ballot-filters">
-		<div class="sortWrap">
 			<q-select
 				v-model="sort"
 				label="Sort"
 				:options="options"
-				style="width: 250px"
 			>
 				<template v-slot:no-option>
 					<q-item>
@@ -13,7 +11,6 @@
 					</q-item>
 				</template>
 			</q-select>
-		</div>
 		<q-btn
 			v-if="account"
 			@click="checkMembership"
@@ -114,8 +111,20 @@ export default {
 	margin-bottom: 60px;
 	padding: 20px;
 
-	.sortWrap {
-		max-width: 300px;
+
+
+	.q-field {
+		width: 280px;
+
+		@media (max-width: $breakpoint-xs-max) {
+			width: 180px;
+		}		
+	}
+
+	.q-btn {
+		@media (max-width: $breakpoint-xs-max) {
+			font-size: 16px !important;
+		}
 	}
 }
 </style>

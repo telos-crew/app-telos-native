@@ -1,26 +1,28 @@
 <template>
 	<div class="wishlist-ballot">
 		<div class="critical">
-			<div class="vote-box">
-				<q-icon
-					name="fas fa-arrow-up"
-					class="vote-icon up"
-					:color="voterVoteKey === 'yes' ? 'primary' : 'secondary'"
-					size="42px"
-					@click="castVote('yes')"
-				/>
-				<q-icon
-					name="fas fa-arrow-down"
-					class="vote-icon down"
-					:color="voterVoteKey === 'no' ? 'primary' : 'secondary'"
-					size="42px"
-					@click="castVote('no')"
+			<div class="vote-and-image">
+				<div class="vote-box">
+					<q-icon
+						name="fas fa-arrow-up"
+						class="vote-icon up"
+						:color="voterVoteKey === 'yes' ? 'primary' : 'secondary'"
+						size="36px"
+						@click="castVote('yes')"
+					/>
+					<q-icon
+						name="fas fa-arrow-down"
+						class="vote-icon down"
+						:color="voterVoteKey === 'no' ? 'primary' : 'secondary'"
+						size="36px"
+						@click="castVote('no')"
+					/>
+				</div>
+				<img
+					:src="content?.imageUrls && content.imageUrls[0]"
+					class="ballot-image"
 				/>
 			</div>
-			<img
-				:src="content?.imageUrls && content.imageUrls[0]"
-				class="ballot-image"
-			/>
 			<div class="item-content">
 				<div class="main-content">
 					<div class="info">
@@ -193,11 +195,20 @@ export default {
 	padding: 12px;
 	margin-bottom: 20px;
 
+	@media (max-width: $breakpoint-xs-max) {
+		padding: 8px;
+	}
+
 	.critical {
 		flex: 1;
 		display: flex;
 		flex-direction: row;
 		align-items: flex-start;
+
+		.vote-and-image {
+			display: flex;
+			flex-direction: row;
+		}
 
 		.vote-box {
 			display: flex;
@@ -220,6 +231,14 @@ export default {
 			height: 100px;
 			min-height: 100px;
 			margin-right: 20px;
+
+			@media (max-width: $breakpoint-xs-max) {
+				width: 60px;
+				min-width: 60px;
+				height: 60px;
+				min-height: 60px;
+				margin-right: 10px;
+			}
 		}
 
 		.item-content {
@@ -246,6 +265,11 @@ export default {
 							margin-bottom: 8px;
 							font-family: 'silkalight';
 							font-weight: bold;
+
+							@media (max-width: $breakpoint-xs-max) {
+								font-size: 16px;
+								line-height: 18px;
+							}
 
 							a {
 								text-decoration: none;
@@ -304,6 +328,12 @@ export default {
 				min-width: 120px;
 				max-height: 8rem;
 				border: 1px solid #ccc;
+
+				@media (max-width: $breakpoint-xs-max) {
+					font-size: 24px;
+					min-width: 80px;
+					max-height: 6rem;
+				}
 			}
 		}
 	}
