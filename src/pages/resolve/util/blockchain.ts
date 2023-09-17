@@ -251,7 +251,6 @@ type Results = {
 export const getBallotResultsAsStrings2 = (
 	ballotResults: Results
 ): BallotResultsAsStrings => {
-	console.log('ballotResults', ballotResults)
 	const { yes, no, abstain } = ballotResults
 	const yesString = yes.toString()
 	const noString = no.toString()

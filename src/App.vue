@@ -46,8 +46,8 @@ export default {
 
 <template>
 	<div :style="{ height: '100%' }">
-		<component :is="layout" @doSignArb="doSignArb">
-			<router-view @doSignArb="doSignArb" />
+		<component :is="layout">
+			<router-view />
 		</component>
 		<q-inner-loading :showing="isAutoLoading">
 			<q-spinner size="3em" />

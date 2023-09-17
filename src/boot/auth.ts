@@ -2,7 +2,7 @@ import { boot } from 'quasar/wrappers'
 
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli/boot-files
-export default boot(async ({ app, router, store }) => {
+export default boot(async ({ app, store }) => {
 	// something to do
 	const showApprovalDialog = async () => {
 		await new Promise((resolve, reject) => {
