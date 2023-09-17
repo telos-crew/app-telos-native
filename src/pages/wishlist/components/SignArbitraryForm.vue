@@ -9,7 +9,7 @@
 			/>
 			<div class="text">
 				<p>
-					1This off-chain action requires you to sign an arbitrary piece of data
+					This off-chain action requires you to sign an arbitrary piece of data
 					for us to verify that you are the Telos user you say you are. No
 					on-chain actions are signed nor broadcasted, and you won't have to do
 					it again for a month.
@@ -20,7 +20,7 @@
 				size="1.2rem"
 				@click="$emit('do-sign-arb')"
 				>OK</q-btn
-			>
+			><br />
 			<q-btn
 				color="tertiary"
 				size="1.2rem"
