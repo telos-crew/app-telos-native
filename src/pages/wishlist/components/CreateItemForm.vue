@@ -9,7 +9,6 @@
 				Please fill out the following info for your requested wishlist item:
 			</p>
 		</q-card-section>
-
 		<q-card-section class="q-pt-none">
 			<q-input
 				v-model="title"
@@ -17,6 +16,16 @@
 				:label="$t('pages.wishlist.title')"
 				bottom-slots
 				:hint="$t('pages.wishlist.create_new_title_hint')"
+			/>
+		</q-card-section>
+		<q-card-section class="q-pt-none">
+			<q-select
+				v-model="wishlistCategory"
+				:options="existingCategories"
+				label="Category (or add new)"
+				new-value-mode="add-unique"
+				use-input
+				@new-value="onAddNewCategory"
 			/>
 		</q-card-section>
 
@@ -85,6 +94,7 @@ import { generateRandomId, getSymbolInfo } from 'src/pages/resolve/util'
 import { mapGetters } from 'vuex'
 import {
 	calculateDecideFeeDeficit,
+	fetchWishlistCategories,
 	getFeeAmount,
 	getUserContractBalance
 } from '../util'
@@ -97,17 +107,22 @@ export default {
 	props: ['submit', 'close'],
 	data() {
 		return {
-			title: 'NPM Library for Common Telos Utility Functions',
+			title: 'Telegram Bot Alert for Works and Amend',
 			// subtitle: '',
 			description: 'This is just a test',
 			imageUrls: [],
 			contentUrls: [],
+			wishlistCategory: '',
+			existingCategories: [],
 			processing: false
 		}
 	},
 	methods: {
 		async checkSubmit() {
 			try {
+				if (!this.wishlistCategory) {
+					throw new Error('Must choose a category')
+				}
 				this.processing = true
 				const deficit = await calculateDecideFeeDeficit(this.account)
 				const isEnough = lt(deficit, '0')
@@ -155,7 +170,10 @@ export default {
 					// }
 				})
 			} catch (err) {
-				console.log('error: ', err)
+				this.$q.notify({
+					message: err.message,
+					color: 'negative'
+				})
 			} finally {
 				this.processing = false
 			}
@@ -169,7 +187,8 @@ export default {
 			const ballot_name = `wish.gen.${generateRandomId().slice(0, 3)}`
 			const content = {
 				imageUrls: this.imageUrls,
-				contentUrls: this.contentUrls
+				contentUrls: this.contentUrls,
+				wishlistCategory: this.wishlistCategory.label.trim()
 			}
 			const formattedDeficit = parseFloat(deficit).toFixed(4)
 			const actions = []
@@ -240,6 +259,17 @@ export default {
 				return `https://api.dstor.cloud/ipfs/${file.hash}`
 			})
 			this[scope] = formattedFiles
+		},
+		async getWishlistCategories() {
+			this.existingCategories = await fetchWishlistCategories()
+		},
+		onAddNewCategory(e) {
+			const newCategory = {
+				label: e.trim(),
+				value: e.trim().replace(' ', '_').toLowerCase()
+			}
+			const newCategories = [...this.existingCategories, newCategory]
+			this.existingCategories = newCategories
 		}
 	},
 	computed: {
@@ -251,6 +281,9 @@ export default {
 			if (!this.title && !this.description) return false
 			return true
 		}
+	},
+	mounted() {
+		this.getWishlistCategories()
 	}
 }
 </script>

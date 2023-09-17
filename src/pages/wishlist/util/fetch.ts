@@ -85,9 +85,7 @@ export type PostBallotCommentPayload = {
 // votes voter = voter eosio_token_balances
 
 export const fetchResults = async () => {
-	const {
-		data
-	} = await axios({
+	const { data } = await axios({
 		method: 'GET',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/results`
 	})
@@ -467,6 +465,13 @@ export const saveItemComment = async (payload: any, store: any) => {
 	)
 	console.log('saveItemComment response: ', response)
 	return response
+}
+
+export const fetchWishlistCategories = async () => {
+	const { data } = await axios(
+		`${process.env.GOODBLOCK_HOSTNAME}/wishlist-categories`
+	)
+	return data
 }
 
 export const testFetch = async () => {
