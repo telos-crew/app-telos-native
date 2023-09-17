@@ -124,9 +124,6 @@ export default {
 		},
 		formatVoteCountAsStrings,
 		recalcScore(oldResults, newResults) {
-			// console.log('recalc')
-			// console.log('this.results', this.results)
-			// console.log('this.ballot', this.ballot)
 			if (!newResults || !this.ballot) {
 				return (this.score = '0')
 			}
@@ -175,12 +172,10 @@ export default {
 	},
 	watch: {
 		results(_results, newResults) {
-			// console.log('results changed')
 			this.recalcScore(_results, newResults)
 		}
 	},
 	beforeMount() {
-		// console.log('beforeMount')
 		this.recalcScore('0', this.results)
 	}
 }

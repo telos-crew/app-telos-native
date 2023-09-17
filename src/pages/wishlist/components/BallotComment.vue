@@ -156,7 +156,6 @@ const onReplySave = async () => {
 	const {
 		data: { comment }
 	} = await saveItemComment(payload, store)
-	console.log('comment: ', comment)
 	draftReply.value = ''
 	recentUserReplies.value.unshift(comment)
 	isReplyEditorVisible.value = false

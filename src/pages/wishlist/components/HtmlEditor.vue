@@ -4,7 +4,6 @@ import { defineProps } from 'vue'
 const props = defineProps(['draftComment', 'level', 'isSaving', 'progress'])
 const emit = defineEmits(['save', 'commentChange'])
 const onSave = () => {
-	console.log('onSave', props.level)
 	emit('save', props.level)
 }
 </script>

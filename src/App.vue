@@ -50,11 +50,6 @@ export default {
 			}
 		}
 	},
-	methods: {
-		doSignArb() {
-			console.log('doSignArb')
-		},
-	}
 }
 </script>
 

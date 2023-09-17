@@ -9,8 +9,6 @@ export const stringifyUrlParams = (
 	url: string,
 	params: { [key: string]: any }
 ) => {
-	console.log('url: ', url)
-	console.log('params: ', params)
 	let newURL = new URL(url)
 	for (const key in params) {
 		let serializedParam
@@ -33,17 +31,14 @@ export const fetchBallots = async () => {
 		method: 'GET',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/${BALLOTS_SEARCH_ENDPOINT}`
 	})
-	console.log('ballots: ', ballotData)
 	return ballotData
 }
 
 export const fetchBallot = async (ballot_name: string) => {
-	console.log('fetchBallot ballot_name: ', ballot_name)
 	const { data: ballotData } = await axios({
 		method: 'GET',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/ballot/${ballot_name}`
 	})
-	console.log('fetchBallot ballot: ', ballotData)
 	return ballotData
 }
 
@@ -51,6 +46,7 @@ export const fetchVoter = async (
 	account_name: string,
 	treasury_symbol: string
 ) => {
+	if (!account_name) return
 	const { data: voterData } = await axios({
 		method: 'POST',
 		url: `${process.env.GOODBLOCK_HOSTNAME}/treasury-voter`,
@@ -95,15 +91,12 @@ export const fetchResults = async () => {
 export const fetchItemComments = async (config: FetchItemConfig) => {
 	const path = `${process.env.COMMENT_INDEXER_HOSTNAME}/item/comments`
 	const searchParams = config
-	console.log('config: ', config)
 	// because we want to use 'get' and not 'post'
 	const url = stringifyUrlParams(path, searchParams)
-	console.log('url', url)
 	const { data } = await axios({
 		method: 'GET',
 		url
 	})
-	console.log('fetchItemComments: ', data)
 	return data
 }
 
@@ -139,7 +132,6 @@ export const fetchBallotComments = async (
 		primary_key: ballot_name,
 		parent_id: parent_id || null
 	}
-	console.log('fetchBallotComments config: ', config)
 	const itemComments = await fetchItemComments(config)
 	return itemComments
 }
@@ -233,7 +225,6 @@ export const fetchDstorUploadToken = async (
 		})
 		uploadToken = token
 	} catch (err: any) {
-		console.log('upload token error: ', err)
 		throw new Error(err && err.message)
 	}
 	return uploadToken
@@ -361,7 +352,6 @@ export const fetchNonce = async (account_name: string) => {
 			}
 		}
 	)
-	console.log('nonce: ', nonce)
 	return nonce
 }
 
@@ -398,7 +388,6 @@ export const getAuth = async (store: any) => {
 	await store.$auth.showApprovalDialog()
 	const response = await fetchNonce(account_name)
 	const [nonce] = response.split(':')
-	console.log('nonce2: ', nonce)
 	const { transaction } = await store.$api.signTransaction(
 		[
 			{
@@ -420,10 +409,6 @@ export const authFetch = async (
 	tryAgain = false,
 	store: any
 ) => {
-	console.log(
-		'authFetch store.state.accounts.account: ',
-		store.state.accounts.account
-	)
 	const exec = async () => {
 		try {
 			const response = await callback()
@@ -442,7 +427,6 @@ export const authFetch = async (
 }
 
 export const saveItemComment = async (payload: any, store: any) => {
-	console.log('saveItemComment store: ', store)
 	const response = await authFetch(
 		async () => {
 			const response = await axios.post(
@@ -457,13 +441,11 @@ export const saveItemComment = async (payload: any, store: any) => {
 					}
 				}
 			)
-			console.log('saveItemComment->authFetch response: ', response)
 			return response
 		},
 		true,
 		store
 	)
-	console.log('saveItemComment response: ', response)
 	return response
 }
 
@@ -475,7 +457,6 @@ export const fetchWishlistCategories = async () => {
 }
 
 export const testFetch = async () => {
-	console.log('testing fetch')
 	await axios.get(`${process.env.COMMENT_INDEXER_HOSTNAME}/auth/test`)
 }
 

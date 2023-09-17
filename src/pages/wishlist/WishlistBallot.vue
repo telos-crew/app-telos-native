@@ -89,7 +89,6 @@ const account = computed(() => {
 })
 
 const onTopCommentChange = (content: string) => {
-	console.log('onTopCommentChange: ', onTopCommentChange)
 	draftComments.value['0'].content = content
 }
 
@@ -103,7 +102,6 @@ const saveComment = async (level: string) => {
 	const {
 		data: { comment }
 	} = await saveItemComment(data, store)
-	console.log('comment: ', comment)
 	draftComments.value['0'] = { parent_id: null, content: '' }
 	recentUserComments.value.unshift(comment)
 }
@@ -111,7 +109,6 @@ const saveComment = async (level: string) => {
 onMounted(async () => {
 	ballot.value = await fetchBallot(ballot_name)
 	ballotComments.value = await fetchTop2CommentLevels(payload)
-	console.log(ballot.value)
 })
 </script>
 

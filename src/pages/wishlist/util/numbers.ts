@@ -13,7 +13,6 @@ export const formatVoteCount = (count: number): string => {
 }
 
 export const formatVoteCountAsStrings = (count: string): string => {
-	// console.log('typeof count', typeof count)
 	if (lt(count, '0')) return '0'
 	if (gt(count, '999999')) {
 		const ratio = div(count, '1000000')

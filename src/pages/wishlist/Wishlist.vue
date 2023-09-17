@@ -138,7 +138,6 @@ const getResults = async () => {
 };
 
 const fetchEverything = async () => {
-	console.log('fetching everything')
 	getVoter();
 	getVoterVotes();
 	getResults()

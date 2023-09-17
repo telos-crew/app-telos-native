@@ -70,7 +70,6 @@ export default {
 				})
 				.onOk(async () => {
 					await this.$store.$api.signTransaction(action)
-					console.log('something')
 					setTimeout(this.fetchMembership, 2000)
 					setTimeout(this.fetchMembership, 5000)
 				})
