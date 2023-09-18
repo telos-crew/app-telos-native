@@ -42,9 +42,11 @@ export const fetchBallot = async (ballot_name: string) => {
 	return ballotData
 }
 
+// gets decide token balances
 export const fetchVoter = async (
 	account_name: string,
-	treasury_symbol: string
+	treasury_symbol: string,
+	store: any
 ) => {
 	if (!account_name) return
 	const { data: voterData } = await axios({
@@ -55,9 +57,10 @@ export const fetchVoter = async (
 			treasury_symbol
 		}
 	})
-	return voterData
+	store.commit('wishlist/setVoter', voterData)
 }
 
+// gets profile and ballot votes
 export const fetchVoterVotes = async (account_name: string) => {
 	const {
 		data: {
