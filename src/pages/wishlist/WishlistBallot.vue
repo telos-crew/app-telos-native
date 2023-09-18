@@ -1,6 +1,6 @@
 <template>
 	<div class="wishlistBallotPage">
-		<div class="wishlistBallot">
+		<div class="wishlistItem">
 			<wishlist-item
 				v-if="ballot"
 				:ballot="ballot"
@@ -11,6 +11,7 @@
 				:voterVotes="voterVotes"
 				:key="ballot.ballot_name"
 				:shortDescription="false"
+				:results="results"
 			/>
 		</div>
 		<div class="textEditorWrap">
@@ -53,7 +54,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchBallot, fetchTop2CommentLevels, saveItemComment } from './util'
+import { fetchBallot, fetchResults, fetchTop2CommentLevels, saveItemComment } from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
@@ -65,6 +66,7 @@ const { ballot_name } = params
 const saveProgress = ref(0)
 const isSaving = ref(false)
 const ballot = ref(null)
+const results = ref(null);
 const ballotComments = ref(null)
 const draftComments = ref({
 	'0': {
@@ -92,6 +94,10 @@ const onTopCommentChange = (content: string) => {
 	draftComments.value['0'].content = content
 }
 
+const getResults = async () => {
+	results.value = await fetchResults();
+};
+
 const saveComment = async (level: string) => {
 	const data = {
 		...payload,
@@ -107,6 +113,7 @@ const saveComment = async (level: string) => {
 }
 
 onMounted(async () => {
+	getResults()
 	ballot.value = await fetchBallot(ballot_name)
 	ballotComments.value = await fetchTop2CommentLevels(payload)
 })
@@ -115,7 +122,7 @@ onMounted(async () => {
 <style lang="scss">
 .wishlistBallotPage {
 	margin-bottom: 52px;
-	.wishlistBallot {
+	.wishlistItem {
 		margin-top: 24px;
 	}
 
