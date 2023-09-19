@@ -22,7 +22,7 @@ const signTransaction = async function (actions, config) {
 			},
 			{
 				blocksBehind: 3,
-				expireSeconds: 30,
+				expireSeconds: 120,
 				...config
 			}
 		)
