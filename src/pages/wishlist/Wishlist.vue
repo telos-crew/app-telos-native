@@ -9,10 +9,7 @@
 		<wishlist-item
 			v-for="ballot in sortedBallots"
 			:ballot="ballot"
-			:fetchBallots="fetchBallots"
-			:form="form"
 			:results="results"
-			@toggleJoinModal="toggleJoinModal"
 			@castVote="castVote"
 			:voterVotes="voterVotes"
 			:key="ballot.ballot_name"
@@ -28,11 +25,9 @@ import BallotFilters from './BallotFilters.vue';
 import { BALLOT_SORT_MAP } from './constants/sort';
 import {
 	fetchBallots,
-	fetchVoter,
 	fetchVoterVotes,
 	getCastVoteActions,
 	getJoinAndVoteActions,
-	joinGroupAction,
 	fetchResults
 
 } from './util';
@@ -65,8 +60,7 @@ const castVote = async (type: string, ballot: any) => {
 			ballot_name: ballot.ballot_name,
 			option: [type]
 		};
-		emit('toggleJoinModal')
-		return;
+		return emit('toggleJoinModal')
 	}
 	const castVoteActions = getCastVoteActions(
 		account.value,

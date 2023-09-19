@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { fetchVoter, joinGroupAction } from './util';
 import { useStore } from 'vuex';
 
@@ -57,7 +57,18 @@ const joinGroup = async () => {
 	const actions = joinGroupAction(account.value);
 	await store.$api.signTransaction(actions);
 	// need to refetch voter decide balance
-	setTimeout(() => fetchVoter(account, 'WISH', store), 1000);
-	setTimeout(() => fetchVoter(account, 'WISH', store), 3000);
+	setTimeout(() => fetchVoter(account.value, 'WISH', store), 1000);
+	setTimeout(() => fetchVoter(account.value, 'WISH', store), 3000);
 };
+
+watch(account, async (newAccount) => {
+	if (newAccount) {
+		await fetchVoter(newAccount, 'WISH', store);
+	}
+});
+onMounted(() => {
+	if (account.value) {
+		fetchVoter(account.value, 'WISH', store);
+	}
+})
 </script>
