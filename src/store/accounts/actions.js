@@ -39,7 +39,7 @@ export const login = async function (
 			localStorage.setItem('autoLogin', authenticator.getName())
 			localStorage.setItem('account', accountName)
 			localStorage.setItem('returning', true)
-			this.$router.push({ path: '/wishlist', query: { arbData: true } })
+			this.$router.push({ path: '/wishlist'})
 			await dispatch('getAccount')
 		}
 	} catch (e) {
