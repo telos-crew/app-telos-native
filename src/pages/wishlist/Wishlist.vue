@@ -32,9 +32,11 @@ import {
 
 } from './util';
 import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['toggleJoinModal', 'castVote']);
 const interval: any = ref(null);
+const router = useRouter();
 const ballots = ref(null);
 const voterVotes = ref(null);
 const results = ref(null);
@@ -93,8 +95,7 @@ const onNewItemSuccess = async (ballot_name: string) => {
 	const checkId = () => {
 		const doesHashExist = document.getElementById(ballot_name)
 		if (doesHashExist) {
-			location.hash = '#' + ballot_name
-			return true
+			router.push('/wishlist/item/' + ballot_name)
 		}
 		return false
 	}
