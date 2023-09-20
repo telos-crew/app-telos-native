@@ -5,6 +5,7 @@
 	>
 		<ballot-filters
 			@onSortChange="onSortChange"
+			:createItemFormSuccess="onNewItemSuccess"
 		/>
 		<wishlist-item
 			v-for="ballot in sortedBallots"
@@ -79,6 +80,33 @@ const castVote = async (type: string, ballot: any) => {
 	setTimeout(fetchEverything, 10000);
 };
 
+const delay = (timeout: number) => {
+	return new Promise(resolve => {
+		setTimeout(() => {
+			resolve(true)
+		}, timeout)
+	})
+}
+
+const onNewItemSuccess = async (ballot_name: string) => {
+	console.log('createItemFormSuccess', ballot_name)
+	const checkId = () => {
+		const doesHashExist = document.getElementById(ballot_name)
+		if (doesHashExist) {
+			location.hash = '#' + ballot_name
+			return true
+		}
+		return false
+	}
+	let iterator = 0
+	while (iterator < 3) {
+		await delay(2000)
+		await getBallots()
+		if (checkId()) break
+		iterator++
+	}
+}
+
 const getBallots = async () => {
 	ballots.value = await fetchBallots();
 };
@@ -100,6 +128,7 @@ onMounted(() => {
 	getBallots()
 	fetchEverything();
 	// interval.value = setInterval(fetchEverything, 10000);
+	onNewItemSuccess('wish.gen.zdf')
 });
 
 onUnmounted(() => {

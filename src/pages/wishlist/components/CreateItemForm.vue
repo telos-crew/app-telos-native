@@ -104,12 +104,13 @@ export default {
 	components: {
 		FileUploadGrid
 	},
-	props: ['submit', 'close'],
+	props: ['submit', 'close', 'createItemFormSuccess'],
 	data() {
 		return {
-			title: 'Telegram Bot Alert for Works and Amend',
+			title: 'Telos Off-Chain Indexing Example Repository',
 			// subtitle: '',
-			description: 'This is just a test',
+			description:
+				'Would be nice to have an example GitHub repository showing developers how to best to off-chain indexing for Telos (possibly using Hyperion)',
 			imageUrls: [],
 			contentUrls: [],
 			wishlistCategory: '',
@@ -247,7 +248,7 @@ export default {
 			console.log('actions: ', actions)
 			try {
 				await this.$store.$api.signTransaction(actions)
-				this.$emit('create-item-form-success')
+				this.createItemFormSuccess(ballot_name)
 				setTimeout(this.close, 5000)
 			} catch (err) {
 				console.log('create ballot error: ', err)

@@ -21,7 +21,7 @@
 		</q-btn>
 	</div>
 	<q-dialog v-model="dialog">
-		<create-item-form :close="toggleDialog" />
+		<create-item-form :close="toggleDialog" :createItemFormSuccess="createItemFormSuccess" />
 	</q-dialog>
 </template>
 
@@ -39,6 +39,7 @@ export default {
 		CreateItemForm
 	},
 	emits: ['onSortChange'],
+	props: ['createItemFormSuccess'],
 	data() {
 		return {
 			options,

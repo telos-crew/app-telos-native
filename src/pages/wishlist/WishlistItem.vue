@@ -1,5 +1,5 @@
 <template>
-	<div class="wishlist-ballot">
+	<div class="wishlist-ballot" :id="ballot.ballot_name">
 		<div class="critical">
 			<div class="vote-and-image">
 				<div class="vote-box">
