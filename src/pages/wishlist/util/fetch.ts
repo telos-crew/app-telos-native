@@ -530,7 +530,7 @@ export const getUserContractBalance = async (
 		data: { rows }
 	} = await axios.post(TABLE_ROWS_ENDPOINT, payload)
 	const [row] = rows
-	if (!row || !row.balance) throw new Error('No balance row found')
+	if (!row || !row.balance) return '0.0000 TLOS'
 	return row.balance
 }
 
