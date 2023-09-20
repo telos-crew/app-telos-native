@@ -24,33 +24,6 @@ export const getCastVoteActions = (
 	return action
 }
 
-export const getJoinAndVoteActions = async (
-	account_name: string,
-	ballot_name: string,
-	options: string[]
-) => {
-	const actions = [
-		{
-			account: 'telos-decide',
-			name: 'regvoter',
-			data: {
-				voter: account_name,
-				treasury_symbol: '4,WISH'
-			}
-		},
-		{
-			account: 'telos-decide',
-			name: 'castvote',
-			data: {
-				voter: account_name,
-				ballot_name,
-				options: options
-			}
-		}
-	]
-	return actions
-}
-
 export const joinGroupAction = (account_name: string) => {
 	const action = [
 		{

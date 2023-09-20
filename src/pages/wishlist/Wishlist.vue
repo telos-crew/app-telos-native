@@ -27,7 +27,6 @@ import {
 	fetchBallots,
 	fetchVoterVotes,
 	getCastVoteActions,
-	getJoinAndVoteActions,
 	fetchResults
 
 } from './util';
@@ -111,16 +110,6 @@ const sortedBallots = computed(() => {
 	const sortedBallots = ballots.value.sort(BALLOT_SORT_MAP[sort.value]);
 	return sortedBallots;
 });
-
-const joinAndVote = async () => {
-	const joinAndVoteActions = getJoinAndVoteActions(
-		account.value,
-		castVoteData.value.ballot_name,
-		castVoteData.value.option
-	);
-	await store.$api.signTransaction(joinAndVoteActions);
-	castVoteData.value = { ballot_name: null, option: null };
-};
 </script>
 
 <style lang="scss">
