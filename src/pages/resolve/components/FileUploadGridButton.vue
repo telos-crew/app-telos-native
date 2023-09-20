@@ -65,13 +65,13 @@
 				<div class="text-h6">Delete File?</div>
 			</q-card-section>
 			<q-card-section class="q-pt-none">
-				Are you sure that you would like to delete this file?
+				Are you sure that you would like to remove this file?
 			</q-card-section>
 			<q-card-actions align="right">
 				<q-btn
 					@click="$emit('deleteFile', file?.key)"
 					flat
-					label="Delete"
+					label="Remove"
 					color="primary"
 					v-close-popup
 				/>
