@@ -52,25 +52,32 @@ import { Loading } from 'quasar'
 import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchBallot, fetchResults, fetchTop2CommentLevels, fetchVoterVotes, getCastVoteActions, saveItemComment } from './util'
+import {
+	fetchBallot,
+	fetchResults,
+	fetchTop2CommentLevels,
+	fetchVoterVotes,
+	getCastVoteActions,
+	saveItemComment
+} from './util'
 import WishlistItem from './WishlistItem.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
 import MarkdownEditor from './components/MarkdownEditor.vue'
 import MarkdownRenderer from './components/MarkdownRenderer.vue'
 
-const emit = defineEmits(['toggleJoinModal']);
+const emit = defineEmits(['toggleJoinModal'])
 const { params } = useRoute()
 const { ballot_name } = params
 const saveProgress = ref(0)
 const isSaving = ref(false)
 const ballot = ref(null)
-const results = ref(null);
-const voterVotes = ref(null);
+const results = ref(null)
+const voterVotes = ref(null)
 const castVoteData = ref({
 	ballot_name: null,
 	option: []
-});
+})
 const ballotComments = ref(null)
 const draftComments = ref({
 	'0': {
@@ -83,8 +90,8 @@ const store = useStore()
 const { getters } = store
 
 const voter = computed(() => {
-	return store.getters['wishlist/voter'];
-});
+	return store.getters['wishlist/voter']
+})
 
 const payload = {
 	contract: 'telos.decide',
@@ -103,36 +110,36 @@ const onTopCommentChange = (content: string) => {
 }
 
 const getResults = async () => {
-	results.value = await fetchResults();
-};
+	results.value = await fetchResults()
+}
 
 const getVoterVotes = async () => {
-	voterVotes.value = await fetchVoterVotes(account.value);
-};
+	voterVotes.value = await fetchVoterVotes(account.value)
+}
 
 const castVote = async (type: string, ballot: any) => {
 	if (!voter) {
 		castVoteData.value = {
 			ballot_name: ballot.ballot_name,
 			option: [type]
-		};
+		}
 		return emit('toggleJoinModal')
 	}
 	const castVoteActions = getCastVoteActions(
 		account.value,
 		ballot.ballot_name,
 		type
-	);
-	await store.$api.signTransaction(castVoteActions);
+	)
+	await store.$api.signTransaction(castVoteActions)
 	console.log('signed')
-	castVoteData.value = { ballot_name: null, option: null };
-	setTimeout(fetchEverything, 4000);
-	setTimeout(fetchEverything, 7000);
-	setTimeout(fetchEverything, 10000);
-};
+	castVoteData.value = { ballot_name: null, option: null }
+	setTimeout(fetchEverything, 4000)
+	setTimeout(fetchEverything, 7000)
+	setTimeout(fetchEverything, 10000)
+}
 
 const fetchEverything = () => {
-	getVoterVotes();
+	getVoterVotes()
 	getResults()
 }
 
@@ -150,9 +157,17 @@ const saveComment = async (level: string) => {
 	recentUserComments.value.unshift(comment)
 }
 
+let ballotFetches = 0
+
 const initialFetches = async () => {
 	let interval = setInterval(async () => {
 		const ballotData = await fetchBallot(ballot_name)
+		ballotFetches++
+		if (ballotFetches > 14) {
+			clearInterval(interval)
+			Loading.hide()
+			return
+		}
 		if (ballotData) {
 			ballot.value = ballotData
 			clearInterval(interval)
