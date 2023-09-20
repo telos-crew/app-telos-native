@@ -185,7 +185,7 @@ export default {
 			const endTimestamp = currentUnixTimestamp + 86400 * 3 * 365 * 1000
 			const utcDate = new Date(endTimestamp)
 			const [utcIsoString] = utcDate.toISOString().split('Z')
-			const ballot_name = `wish.gen.${generateRandomId().slice(0, 3)}`
+			const ballot_name = `wishlist.${generateRandomId().slice(0, 3)}`
 			const content = {
 				imageUrls: this.imageUrls,
 				contentUrls: this.contentUrls,
