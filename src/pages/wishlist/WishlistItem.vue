@@ -60,7 +60,10 @@
 											size="2rem"
 										/>
 									</div>
-									<p>Proposed by {{ ballot.publisher }}</p>
+									<div>
+										<p>Proposed by {{ ballot.publisher }}<br />
+										{{ ballot.ballot_name }}</p>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -292,7 +295,7 @@ export default {
 							.metaInfo {
 								display: flex;
 								flex-direction: row;
-								align-items: center;
+								align-items: flex-start;
 								margin-top: 8px;
 								font-size: 14px;
 								color: #666;
