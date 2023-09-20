@@ -44,8 +44,13 @@ const castVoteData = ref({
 });
 
 const store = useStore();
+
 const account = computed(() => {
 	return store.getters['accounts/account'];
+});
+
+const voter = computed(() => {
+	return store.getters['wishlist/voter'];
 });
 
 const onSortChange = ({ value: newValue }: { value: string }) => {
@@ -54,7 +59,7 @@ const onSortChange = ({ value: newValue }: { value: string }) => {
 };
 
 const castVote = async (type: string, ballot: any) => {
-	if (!voter.value) {
+	if (!voter) {
 		castVoteData.value = {
 			ballot_name: ballot.ballot_name,
 			option: [type]
@@ -77,10 +82,6 @@ const castVote = async (type: string, ballot: any) => {
 const getBallots = async () => {
 	ballots.value = await fetchBallots();
 };
-
-const voter = computed(() => {
-	return store.getters['wishlist/voter'];
-});
 
 const getVoterVotes = async () => {
 	voterVotes.value = await fetchVoterVotes(account.value);
