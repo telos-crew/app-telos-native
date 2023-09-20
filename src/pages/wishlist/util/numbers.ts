@@ -15,12 +15,20 @@ export const formatVoteCount = (count: number): string => {
 export const formatVoteCountAsStrings = (count: string): string => {
 	if (lt(count, '0')) return '0'
 	if (gt(count, '999999')) {
+		if (lt(count, '10000000')) {
+			const ratio = div(count, '100000')
+			return `${ratio.split('').join('.')}m`
+		}		
 		const ratio = div(count, '1000000')
-		return `${ratio}M`
+		return `${ratio}m`
 	}
 	if (gt(count, '999')) {
+		if (lt(count, '10000')) {
+			const ratio = div(count, '100')
+			return `${ratio.split('').join('.')}k`
+		}
 		const ratio = div(count, '1000')
-		return `${ratio}K`
+		return `${ratio}k`
 	}
 
 	return count.split('.')[0]
