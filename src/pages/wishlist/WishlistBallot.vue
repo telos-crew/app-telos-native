@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import { Loading } from 'quasar'
 import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -149,9 +150,22 @@ const saveComment = async (level: string) => {
 	recentUserComments.value.unshift(comment)
 }
 
+const initialFetches = async () => {
+	let interval = setInterval(async () => {
+		const ballotData = await fetchBallot(ballot_name)
+		if (ballotData) {
+			ballot.value = ballotData
+			clearInterval(interval)
+			Loading.hide()
+			return
+		}
+	}, 2000)
+}
+
 onMounted(async () => {
+	Loading.show()
 	fetchEverything()
-	ballot.value = await fetchBallot(ballot_name)
+	initialFetches()
 	ballotComments.value = await fetchTop2CommentLevels(payload)
 })
 </script>

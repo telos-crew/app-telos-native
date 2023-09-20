@@ -104,7 +104,7 @@ export default {
 	components: {
 		FileUploadGrid
 	},
-	props: ['submit', 'close', 'createItemFormSuccess'],
+	props: ['submit', 'close'],
 	data() {
 		return {
 			title: 'Telos Off-Chain Indexing Example Repository',
@@ -248,8 +248,8 @@ export default {
 			console.log('actions: ', actions)
 			try {
 				await this.$store.$api.signTransaction(actions)
-				this.createItemFormSuccess(ballot_name)
-				setTimeout(this.close, 5000)
+				this.close()
+				this.$router.push('/wishlist/item/' + ballot_name)
 			} catch (err) {
 				console.log('create ballot error: ', err)
 			}
