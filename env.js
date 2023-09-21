@@ -42,7 +42,7 @@ const TESTNET = {
 	BLOCKCHAIN_EXPLORER: 'https://explorer-test.telos.net',
 	NETWORK_ENV: 'testnet',
 	// GOODBLOCK_HOSTNAME: 'https://api.test.decidevoter.app',
-	GOODBLOCK_HOSTNAME: 'http://localhost:3888',
+	GOODBLOCK_HOSTNAME: 'https://api.test.decidevoter.app',
 	COMMENT_INDEXER_HOSTNAME: 'http://localhost:3838'
 }
 
