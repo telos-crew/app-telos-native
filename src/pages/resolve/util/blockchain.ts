@@ -241,7 +241,7 @@ export const getBallotResultsAsStrings = (
 	}
 }
 
-type Results = {
+export type Results = {
 	abstain: number
 	no: number
 	yes: number

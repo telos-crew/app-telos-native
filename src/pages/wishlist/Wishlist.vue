@@ -22,7 +22,7 @@
 import { useStore } from 'vuex';
 import WishlistItem from './WishlistItem.vue';
 import BallotFilters from './BallotFilters.vue';
-import { BALLOT_SORT_MAP } from './constants/sort';
+import { OUTCOME_SORT_MAP } from './constants/sort';
 import {
 	fetchBallots,
 	fetchVoterVotes,
@@ -31,11 +31,9 @@ import {
 
 } from './util';
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['toggleJoinModal', 'castVote']);
 const interval: any = ref(null);
-const router = useRouter();
 const ballots = ref(null);
 const voterVotes = ref(null);
 const results = ref(null);
@@ -110,7 +108,10 @@ onUnmounted(() => {
 
 const sortedBallots = computed(() => {
 	if (!ballots.value) return null;
-	const sortedBallots = ballots.value.sort(BALLOT_SORT_MAP[sort.value]);
+	// const sortedBallots = ballots.value.sort(OUTCOME_SORT_MAP[sort.value]);
+	const sortedBallots = ballots.value.sort(
+		OUTCOME_SORT_MAP(results.value)[sort.value]
+	)
 	return sortedBallots;
 });
 </script>

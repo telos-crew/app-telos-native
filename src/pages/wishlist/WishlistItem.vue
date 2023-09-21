@@ -1,5 +1,8 @@
 <template>
-	<div class="wishlist-ballot" :id="ballot.ballot_name">
+	<div
+		class="wishlist-ballot"
+		:id="ballot.ballot_name"
+	>
 		<div class="critical">
 			<div class="vote-and-image">
 				<div class="vote-box">
@@ -61,8 +64,10 @@
 										/>
 									</div>
 									<div>
-										<p>Proposed by {{ ballot.publisher }}<br />
-										{{ ballot.ballot_name }}</p>
+										<p>
+											Proposed by {{ ballot.publisher }}<br />
+											{{ ballot.ballot_name }}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -141,20 +146,20 @@ export default {
 			const start = this.score || '0' // 50 150
 			const end = gt(netYes, '0') ? netYes : '0' // 150 50
 			const totalDifference = sub(end, start) // 100 -100
+			this.score = end
+			// const theInterval = setInterval(() => {
+			// 	const ratio = easing(iterator / totalIterations) // .1
+			// 	const change = mul(totalDifference, ratio.toString()) // 5 -5
+			// 	const result = add(start, change) // 55
+			// 	this.score = result
 
-			const theInterval = setInterval(() => {
-				const ratio = easing(iterator / totalIterations) // .1
-				const change = mul(totalDifference, ratio.toString()) // 5 -5
-				const result = add(start, change) // 55
-				this.score = result
-
-				if (iterator > totalIterations) {
-					clearInterval(theInterval)
-					this.score = netYes
-				} else {
-					iterator += 1
-				}
-			}, 30)
+			// 	if (iterator > totalIterations) {
+			// 		clearInterval(theInterval)
+			// 		this.score = netYes
+			// 	} else {
+			// 		iterator += 1
+			// 	}
+			// }, 30)
 		}
 	},
 	computed: {
