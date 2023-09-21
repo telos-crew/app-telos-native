@@ -43,7 +43,7 @@ const TESTNET = {
 	NETWORK_ENV: 'testnet',
 	// GOODBLOCK_HOSTNAME: 'https://api.test.decidevoter.app',
 	GOODBLOCK_HOSTNAME: 'https://api.test.decidevoter.app',
-	COMMENT_INDEXER_HOSTNAME: 'http://localhost:3838'
+	COMMENT_INDEXER_HOSTNAME: 'https://testnet.comment.teloscrew.com'
 }
 
 const MAINNET = {
