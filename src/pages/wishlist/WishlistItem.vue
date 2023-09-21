@@ -5,7 +5,10 @@
 	>
 		<div class="critical">
 			<div class="vote-and-image">
-				<div class="vote-box">
+				<div
+					v-if="account"
+					class="vote-box"
+				>
 					<q-icon
 						name="fas fa-arrow-up"
 						class="vote-icon up"
