@@ -1,6 +1,5 @@
 <script>
 import { mapGetters } from 'vuex'
-import ResolveMenu from './ResolveMenu.vue'
 
 const NETWORK_ENV = process.env.NETWORK_ENV
 
@@ -14,9 +13,6 @@ export default {
 	},
 	props: {
 		activeFilter: {}
-	},
-	components: {
-		ResolveMenu
 	},
 	data() {
 		return {
@@ -79,9 +75,6 @@ q-tabs(
           :class="[el.filter === localFileter ? 'active-tab': '']"
         )
     div.custom-separator
-  ResolveMenu(
-    v-if="isTestnet"
-  )
 </template>
 
 <style lang="sass">
