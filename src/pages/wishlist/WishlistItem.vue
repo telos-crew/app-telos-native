@@ -146,20 +146,19 @@ export default {
 			const start = this.score || '0' // 50 150
 			const end = gt(netYes, '0') ? netYes : '0' // 150 50
 			const totalDifference = sub(end, start) // 100 -100
-			this.score = end
-			// const theInterval = setInterval(() => {
-			// 	const ratio = easing(iterator / totalIterations) // .1
-			// 	const change = mul(totalDifference, ratio.toString()) // 5 -5
-			// 	const result = add(start, change) // 55
-			// 	this.score = result
 
-			// 	if (iterator > totalIterations) {
-			// 		clearInterval(theInterval)
-			// 		this.score = netYes
-			// 	} else {
-			// 		iterator += 1
-			// 	}
-			// }, 30)
+			const theInterval = setInterval(() => {
+				const ratio = easing(iterator / totalIterations) // .1
+				const change = mul(totalDifference, ratio.toString()) // 5 -5
+				const result = add(start, change) // 55
+				this.score = result
+				if (iterator > totalIterations) {
+					clearInterval(theInterval)
+					this.score = netYes
+				} else {
+					iterator += 1
+				}
+			}, 30)
 		}
 	},
 	computed: {

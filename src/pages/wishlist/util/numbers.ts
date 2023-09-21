@@ -18,7 +18,7 @@ export const formatVoteCountAsStrings = (count: string): string => {
 		if (lt(count, '10000000')) {
 			const ratio = div(count, '100000')
 			return `${ratio.split('').join('.')}m`
-		}		
+		}
 		const ratio = div(count, '1000000')
 		return `${ratio}m`
 	}
