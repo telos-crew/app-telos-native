@@ -1,4 +1,3 @@
-export const voter = () => {
-
-
+export const voter = (wishlist) => {
+	return wishlist.voter
 }
