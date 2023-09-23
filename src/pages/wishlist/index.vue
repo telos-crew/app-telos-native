@@ -12,8 +12,7 @@
 					You must be a part of this group in order to cast a vote. Would you
 					like to join the group?
 					<strong
-						>Please note that your vote weight is proportional to your staked
-						TLOS balance.</strong
+						>Please note that your vote weight is proportional to your <span class="emphasis">staked</span> TLOS balance.</strong
 					>
 				</p>
 			</q-card-section>
@@ -71,3 +70,13 @@ onMounted(() => {
 	}
 })
 </script>
+
+<style lang="scss">
+#wishlist {
+	margin-top: 40px;
+}
+
+.emphasis {
+	text-decoration: underline;
+}
+</style>
