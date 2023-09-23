@@ -8,11 +8,9 @@
 	>
 		<q-card>
 			<q-card-section class="row items-center">
-				<span class="q-ml-sm"
-					>You must be a part of this group in order to cast a vote. Would you
-					like to join the group?</span
-				>
-				<p>
+				<p class="q-ml-sm">
+					You must be a part of this group in order to cast a vote. Would you
+					like to join the group?
 					<strong
 						>Please note that your vote weight is proportional to your staked
 						TLOS balance.</strong
@@ -57,8 +55,9 @@ const joinGroup = async () => {
 	const actions = joinGroupAction(account.value);
 	await store.$api.signTransaction(actions);
 	// need to refetch voter decide balance
-	setTimeout(() => fetchVoter(account.value, 'WISH', store), 1000);
 	setTimeout(() => fetchVoter(account.value, 'WISH', store), 3000);
+	setTimeout(() => fetchVoter(account.value, 'WISH', store), 7000);
+	setTimeout(() => fetchVoter(account.value, 'WISH', store), 1100);
 };
 
 watch(account, async (newAccount) => {

@@ -59,7 +59,9 @@ const onSortChange = ({ value: newValue }: { value: string }) => {
 };
 
 const castVote = async (type: string, ballot: any) => {
-	if (!voter.target) {
+	console.log('castVote voter: ', voter)
+	if (!voter) {
+		console.log('voter doesnt exist')
 		castVoteData.value = {
 			ballot_name: ballot.ballot_name,
 			option: [type]
