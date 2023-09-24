@@ -39,7 +39,9 @@ export const login = async function (
 			localStorage.setItem('autoLogin', authenticator.getName())
 			localStorage.setItem('account', accountName)
 			localStorage.setItem('returning', true)
-			this.$router.push({ path: '/wishlist'})
+			const { search } = location
+			const params = new URLSearchParams(search)
+			this.$router.push({ path: params.get('returnUrl') || '/wishlist'})
 			await dispatch('getAccount')
 		}
 	} catch (e) {
