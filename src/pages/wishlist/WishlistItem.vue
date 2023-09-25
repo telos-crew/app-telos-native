@@ -24,9 +24,10 @@
 						@click="castVote('no')"
 					/>
 				</div>
-				<img
+				<q-img
 					:src="content?.imageUrls && content.imageUrls[0]"
 					class="ballot-image"
+					spinner-color="grey"
 				/>
 			</div>
 			<div class="item-content">

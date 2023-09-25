@@ -10,6 +10,7 @@
 				:key="ballot_name"
 				:shortDescription="false"
 			/>
+			<wishlist-item-skeleton v-else />
 		</div>
 		<div class="textEditorWrap">
 			<MarkdownEditor
@@ -48,7 +49,6 @@
 </template>
 
 <script setup lang="ts">
-import { Loading } from 'quasar'
 import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -61,6 +61,7 @@ import {
 	saveItemComment
 } from './util'
 import WishlistItem from './WishlistItem.vue'
+import WishlistItemSkeleton from './WishlistItemSkeleton.vue'
 import BallotCommentsSection from './components/BallotCommentsSection.vue'
 import BallotComment from './components/BallotComment.vue'
 import MarkdownEditor from './components/MarkdownEditor.vue'
@@ -165,20 +166,17 @@ const initialFetches = async () => {
 		ballotFetches++
 		if (ballotFetches > 14) {
 			clearInterval(interval)
-			Loading.hide()
 			return
 		}
 		if (ballotData) {
 			ballot.value = ballotData
 			clearInterval(interval)
-			Loading.hide()
 			return
 		}
 	}, 2000)
 }
 
 onMounted(async () => {
-	Loading.show()
 	fetchEverything()
 	initialFetches()
 	ballotComments.value = await fetchTop2CommentLevels(payload)
