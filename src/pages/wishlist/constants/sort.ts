@@ -24,7 +24,6 @@ type ResultsResponse = {
 }
 
 export const OUTCOME_SORT_MAP = (results: ResultsResponse) => {
-	console.log('results:', results)
 	return {
 		'highest-approval': (aBallot: Ballot, bBallot: Ballot) => {
 			const aYes = getBallotResultsAsStrings2(
@@ -33,7 +32,6 @@ export const OUTCOME_SORT_MAP = (results: ResultsResponse) => {
 			const bYes = getBallotResultsAsStrings2(
 				results[bBallot.ballot_name]
 			).netYes
-			if (aBallot.ballot_name === 'hly4mrtmd4oo') console.log('aYes: ', aYes)
 			if (gt(aYes, bYes)) return -1
 			if (gt(bYes, aYes)) return 1
 			return 0
