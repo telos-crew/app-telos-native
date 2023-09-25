@@ -28,18 +28,18 @@ const routes = [
 		name: 'Home',
 		children: [
 			{
-				path: '/wishlist',
-				component: () => import('pages/wishlist/Wishlist.vue'),
-				name: 'wishlist	',
-				children: []
-			},
-			{
 				path: '/wishlist/item/:ballot_name',
 				component: () => import('src/pages/wishlist/WishlistBallot.vue'),
 				name: 'wishlistItem',
 				params: { dynamicName: true },
 				props: true
-			}
+			},
+			{
+				path: '/wishlist',
+				component: () => import('pages/wishlist/Wishlist.vue'),
+				name: 'wishlist',
+				children: []
+			},
 		]
 	},
 ]

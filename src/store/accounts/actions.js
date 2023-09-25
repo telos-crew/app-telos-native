@@ -41,7 +41,12 @@ export const login = async function (
 			localStorage.setItem('returning', true)
 			const { search } = location
 			const params = new URLSearchParams(search)
-			this.$router.push({ path: params.get('returnUrl') || '/wishlist'})
+			const { pathname } = location
+			let path = pathname
+			if (['/login', '/login/'].includes(pathname)) {
+				path = params.get('returnUrl') || '/wishlist'
+			}
+			this.$router.push({ path })
 			await dispatch('getAccount')
 		}
 	} catch (e) {
