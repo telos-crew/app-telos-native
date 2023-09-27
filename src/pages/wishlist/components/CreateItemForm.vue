@@ -107,10 +107,9 @@ export default {
 	props: ['submit', 'close'],
 	data() {
 		return {
-			title: 'Telos Off-Chain Indexing Example Repository',
+			title: '',
 			// subtitle: '',
-			description:
-				'Would be nice to have an example GitHub repository showing developers how to best to off-chain indexing for Telos (possibly using Hyperion)',
+			description: '',
 			imageUrls: [],
 			contentUrls: [],
 			wishlistCategory: '',
